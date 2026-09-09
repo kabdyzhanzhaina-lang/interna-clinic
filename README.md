@@ -45,6 +45,27 @@
 - Мобильная шапка: кнопки «Позвонить / Записаться» закреплены.
 - Вне объёма: интеграция с МИС, съёмка, юридические тексты, реклама.
 
+## Хостинг: GitHub Pages
+
+Репозиторий: https://github.com/kabdyzhanzhaina-lang/interna-clinic (публичный — Pages бесплатен только для публичных).
+Папки `docs/`, `content/`, `prototype/` в репозиторий **не попадают** (`.gitignore`) — они внутренние и живут только локально.
+
+Каждый push в `main` запускает `.github/workflows/deploy.yml`: сборка Astro → публикация.
+Текущий адрес: **https://kabdyzhanzhaina-lang.github.io/interna-clinic/**
+(переменные `SITE_URL`/`BASE_PATH` в воркфлоу дают префикс `/interna-clinic`; скрипт `scripts/apply-base.mjs` проставляет его во все ссылки).
+
+### Подключение домена internaclinic.kz (после согласования с клиникой)
+
+1. В настройках репозитория → Pages → Custom domain: `internaclinic.kz` (GitHub создаст файл `public/CNAME` — закоммитить).
+2. У регистратора домена клиники (DNS сейчас через DDoS-Guard):
+   - `A` записи для `internaclinic.kz` → `185.199.108.153`, `185.199.109.153`, `185.199.110.153`, `185.199.111.153`
+   - `CNAME` для `www` → `kabdyzhanzhaina-lang.github.io`
+3. В Settings → Variables репозитория: `SITE_URL=https://internaclinic.kz`, `BASE_PATH=/` — сайт соберётся без префикса.
+4. Включить «Enforce HTTPS» после выпуска сертификата (10–30 минут).
+5. Загрузить `public/_redirects` не работает на GitHub Pages — 301 со старых адресов делаем через страницы-заглушки с `<meta http-equiv="refresh">` + canonical (скрипт `scripts/redirects.mjs`, неделя 4) либо переносим хостинг на Cloudflare Pages, где есть настоящие 301.
+
+> Формы записи на GitHub Pages не имеют бэкенда: заявка уходит в Битрикс24 через встраиваемую CRM-форму Битрикса (без секретов в браузере). Функция `functions/api/lead.js` пригодится при переезде на Cloudflare Pages.
+
 ## Команды
 
 ```bash
