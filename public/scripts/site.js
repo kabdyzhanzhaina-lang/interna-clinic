@@ -153,6 +153,24 @@
     $$("[data-prep-set]").forEach((s) => (s.hidden = s.dataset.prepSet !== b.dataset.prep));
   });
 
+  /* ── параллакс при скролле (как в редакционных лонгридах): data-parallax="0.2" ── */
+  const px = $$("[data-parallax]");
+  if (px.length && !reduce) {
+    let pt = false;
+    const upd = () => {
+      const vc = innerHeight / 2;
+      px.forEach((el) => {
+        const r = el.getBoundingClientRect(); if (r.bottom < -200 || r.top > innerHeight + 200) return;
+        const d = (r.top + r.height / 2 - vc) * parseFloat(el.dataset.parallax || "0.2");
+        el.style.transform = `translate3d(0, ${(-d).toFixed(1)}px, 0)` + (el.dataset.parallaxScale ? ` scale(${el.dataset.parallaxScale})` : "");
+      });
+    };
+    addEventListener("scroll", () => { if (!pt) { pt = true; requestAnimationFrame(() => { upd(); pt = false; }); } }, { passive: true }); upd();
+  }
+  /* ── прогресс чтения статьи ── */
+  const prog = $("#readprog");
+  if (prog) addEventListener("scroll", () => { const a = $(".article .body"); if (!a) return; const r = a.getBoundingClientRect(); const total = r.height - innerHeight * 0.6; const p = Math.min(1, Math.max(0, -r.top / (total <= 0 ? 1 : total))); prog.style.width = (p * 100).toFixed(1) + "%"; }, { passive: true });
+
   /* ── свечение кнопок ── */
   document.addEventListener("pointermove", (e) => { const b = e.target.closest && e.target.closest(".btn"); if (!b) return; const r = b.getBoundingClientRect(); b.style.setProperty("--mx", e.clientX - r.left + "px"); b.style.setProperty("--my", e.clientY - r.top + "px"); });
 

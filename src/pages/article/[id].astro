@@ -1,6 +1,6 @@
 ---
+// Статья медиацентра — редакционный лонгрид: параллакс обложки и цитат, прогресс чтения, нумерованные разделы
 import Base from '../../layouts/Base.astro';
-import PageHero from '../../components/PageHero.astro';
 import Cta from '../../components/Cta.astro';
 import { ALL_MEDIA as articles } from '../../lib/media.js';
 import doctors from '../../data/doctors.json';
@@ -9,20 +9,49 @@ import { img } from '../../lib/site.js';
 export function getStaticPaths() { return articles.map((a) => ({ params: { id: a.id } })); }
 const a = articles.find((x) => x.id === Astro.params.id);
 const d = a.doc ? doctors.find((x) => x.id === a.doc) : null;
-const jsonld = { '@context': 'https://schema.org', '@type': 'MedicalWebPage', headline: a.t, author: { '@type': 'Person', name: a.by }, image: new URL(img(a.img), Astro.site).href };
+const others = articles.filter((x) => x.id !== a.id).slice(0, 4);
+const jsonld = { '@context': 'https://schema.org', '@type': 'MedicalWebPage', headline: a.t, author: { '@type': 'Person', name: a.by }, image: new URL(img(a.img), Astro.site).href, datePublished: a.date };
+let n = 0;
 ---
 <Base title={`${a.t} — Медиацентр Interna Clinic`} description={(a.body[0][1] || a.t).slice(0, 160)} active="media" jsonld={jsonld}>
-  <PageHero crumbs={[['Главная', '/'], ['Медиацентр', '/media'], ['Статья']]} title={a.t} sub={`${a.by} · ${a.date} · ${a.min}`}>
-    <span slot="extra" class="tag rise d3" style="background:rgba(255,255,255,.12);color:#fff;margin-top:14px;display:inline-block">{a.tag}</span>
-  </PageHero>
-  <section class="sec"><div class="shell"><div class="article">
-    <article class="body rv">{a.video ? <div class="cover" style="aspect-ratio:16/9"><iframe src={`https://www.youtube-nocookie.com/embed/${a.video}`} title={a.t} loading="lazy" allowfullscreen style="width:100%;height:100%;border:0"></iframe></div> : <div class="cover"><img src={img(a.img)} alt="" /></div>}
-      {a.body.map((b) => b[0] === 'h' ? <h3>{b[1]}</h3> : b[0] === 'q' ? <div class="pull">{b[1]}</div> : <p>{b[1]}</p>)}
+  <div class="readprog" id="readprog"></div>
+
+  <section class="ahero">
+    <span class="blob b1" style="opacity:.45;left:-200px;top:-100px" data-parallax="-0.15"></span>
+    <span class="ring" style="width:420px;height:420px;right:-120px;top:-160px" data-parallax="0.25"></span>
+    <span class="ring" style="width:160px;height:160px;right:18%;bottom:-40px" data-parallax="-0.3"></span>
+    <div class="shell">
+      <nav class="crumbs rise d1"><a href="/">Главная</a><span>/</span><a href="/media">Медиацентр</a><span>/</span><b>{a.tag.split(' · ')[0]}</b></nav>
+      <span class="tag rise d1" style="background:rgba(255,255,255,.12);color:#fff;margin:6px 0 18px;display:inline-block">{a.tag}</span>
+      <h1 class="rise d2">{a.t}</h1>
+      <p class="ameta rise d3">{a.by} · {a.date}{a.min ? ` · ${a.min}` : ''}</p>
+    </div>
+    <div class="shell acover-wrap">
+      {a.video
+        ? <div class="acover rise d3" style="aspect-ratio:16/9"><iframe src={`https://www.youtube-nocookie.com/embed/${a.video}`} title={a.t} loading="lazy" allowfullscreen></iframe></div>
+        : <div class="acover rise d3"><img src={img(a.img)} alt="" data-parallax="0.12" data-parallax-scale="1.12" /></div>}
+    </div>
+  </section>
+
+  <section class="sec" style="padding-top:60px"><div class="shell"><div class="article">
+    <article class="body abody rv">
+      {a.body.map((b, i) => {
+        if (b[0] === 'h') { n += 1; return <h3 class="anum" data-n={String(n).padStart(2, '0')}><span class="num" data-parallax="-0.08">{String(n).padStart(2, '0')}</span>{b[1]}</h3>; }
+        if (b[0] === 'q') return <div class="pull apull" data-parallax="0.06">{b[1]}</div>;
+        return <p class={i === 0 ? 'lead-p' : ''}>{b[1]}</p>;
+      })}
+      {a.url && <p class="small" style="margin-top:28px;color:var(--faint);font-weight:600">Материал перенесён со старого сайта клиники. Полный текст будет дополнен.</p>}
     </article>
     <aside class="side rv d2">
       {d && <div class="card" style="padding:22px"><div style="display:flex;gap:14px;align-items:center"><div style="width:64px;height:64px;border-radius:50%;overflow:hidden;flex:none"><img src={img(d.img)} alt="" style="width:100%;height:100%;object-fit:cover;object-position:top" /></div><div><b style="color:var(--ink);font-size:15px;display:block;line-height:1.3">{d.n}</b><span style="font-size:12.5px;color:var(--faint);font-weight:600">{d.r}</span></div></div><button class="btn btn-primary" data-book style="width:100%;margin-top:16px">Записаться к автору</button></div>}
-      <div class="toc"><b style="font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--faint);display:block;margin-bottom:10px">Читайте также</b>{articles.filter((x) => x.id !== a.id).map((x) => <a href={`/article/${x.id}`}>{x.t}</a>)}</div>
+      <div class="card" style="padding:22px;background:var(--navy);border-color:transparent;color:#fff"><b style="font-size:15px;display:block;margin-bottom:6px">Есть вопрос по теме?</b><p style="margin:0 0 14px;font-size:13.5px;color:#9CC4DB;font-weight:500">Запишитесь на приём — врач ответит на всё за один визит и назначит только нужные обследования.</p><button class="btn btn-sky sm" data-book style="width:100%">Записаться</button></div>
+      <div class="toc"><b style="font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--faint);display:block;margin-bottom:10px">Читайте также</b>{others.map((x) => <a href={`/article/${x.id}`}>{x.t}</a>)}</div>
     </aside>
   </div></div></section>
+
+  <section class="sec" style="padding-top:0"><div class="shell">
+    <div class="sec-head rv"><div><p class="kicker">Медиацентр</p><h2 class="h">Ещё <em>по теме</em></h2></div><a class="btn btn-line" href="/media">Все материалы →</a></div>
+    <div class="grid4">{others.map((x, i) => <a class={`card svc rv d${i + 1}`} href={`/article/${x.id}`}><div class="img"><img src={img(x.img)} alt="" loading="lazy" data-parallax="0.05" /></div><div class="bd"><span class="kicker" style="margin-bottom:8px;font-size:10px">{x.tag.split(' · ')[0]}</span><h3 style="font-size:15.5px;line-height:1.35">{x.t}</h3></div></a>)}</div>
+  </div></section>
   <Cta />
 </Base>
