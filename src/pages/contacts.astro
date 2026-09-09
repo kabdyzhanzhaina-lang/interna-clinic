@@ -1,0 +1,29 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHero from '../components/PageHero.astro';
+import ContactsStrip from '../components/ContactsStrip.astro';
+import { SITE, img } from '../lib/site.js';
+---
+<Base title="Контакты — Interna Clinic, Алматы, Богенбай батыра 248" description="Адрес, телефон, WhatsApp и часы работы клиники Interna Clinic. Работаем без выходных." active="contacts">
+  <PageHero crumbs={[['Главная', '/'], ['Контакты']]} title="Контакты" sub={`${SITE.address} · работаем без выходных`} chips={['Богенбай батыра, 248', 'работаем 7/7']} />
+  <section class="sec"><div class="shell"><div class="why" style="grid-template-columns:minmax(0,1.3fr) minmax(0,.7fr);align-items:start">
+    <div class="rv">
+      <div class="about-img" style="aspect-ratio:1.5;position:relative"><img src={img('winter')} alt="Клиника Interna Clinic" loading="lazy" /><div style="position:absolute;left:20px;bottom:20px;background:rgba(255,255,255,.94);border-radius:16px;padding:14px 18px;box-shadow:var(--sh)"><b style="color:var(--ink)">📍 Богенбай батыра, 248</b><p style="margin:2px 0 0;font-size:12.5px;font-weight:600">угол Ауэзова · парковка для пациентов</p></div></div>
+      <div class="grid3" style="margin-top:20px">
+        <div class="card" style="padding:20px"><b style="color:var(--ink)">Парковка</b><p style="margin:4px 0 0;font-size:13px;font-weight:600">бесплатная для пациентов, заезд с Ауэзова</p></div>
+        <div class="card" style="padding:20px"><b style="color:var(--ink)">Транспорт</b><p style="margin:4px 0 0;font-size:13px;font-weight:600">остановка «Богенбай батыра»</p></div>
+        <div class="card" style="padding:20px"><b style="color:var(--ink)">Реквизиты</b><p style="margin:4px 0 0;font-size:13px;font-weight:600">ТОО «ИГГМ» · БИН {SITE.bin}</p></div>
+      </div>
+    </div>
+    <form class="quiz rv d2" style="box-shadow:var(--sh)" method="post" action="/api/lead" onsubmit="return false">
+      <h3 class="serif" style="font-size:22px">Оставьте заявку</h3><p style="margin:4px 0 16px;font-size:13.5px;font-weight:500">Перезвоним в течение 10 минут в рабочее время.</p>
+      <div class="field"><label for="cName">Имя</label><input id="cName" placeholder="Как к вам обращаться" /></div>
+      <div class="field"><label for="cPhone">Телефон</label><input id="cPhone" placeholder="+7 ___ ___ __ __" inputmode="tel" /></div>
+      <div class="field"><label for="cMsg">Что беспокоит</label><input id="cMsg" placeholder="необязательно" /></div>
+      <label class="chk"><input type="checkbox" /> Согласен(на) с <a href="/legal" style="color:var(--blue-600)">политикой конфиденциальности</a> и обработкой персональных данных</label>
+      <button class="btn btn-primary" data-book style="width:100%" type="button">Отправить заявку</button>
+    </form>
+  </div></div></section>
+  <ContactsStrip />
+  <section class="sec" style="padding-top:0"><div class="shell"><div class="hours rv" style="flex-direction:row;flex-wrap:wrap;gap:20px;align-items:center;justify-content:space-between"><div><h3>Часы работы</h3><p style="margin:0;font-size:13px;color:#9CC4DB">Приём по записи. Экстренные вопросы — по телефону.</p></div><div style="display:flex;gap:10px;flex-wrap:wrap">{SITE.hours.map((h) => <span class="hrow" style="margin:0;gap:14px"><span>{h[0]}</span><span>{h[1]}</span></span>)}</div></div></div></section>
+</Base>

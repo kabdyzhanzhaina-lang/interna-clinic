@@ -1,0 +1,148 @@
+---
+import '../styles/global.css';
+import services from '../data/services.json';
+import { SITE, NAV, img } from '../lib/site.js';
+
+interface Props { title: string; description?: string; lang?: string; theme?: string; active?: string; jsonld?: object; }
+const { title, description = 'Institut гастроэнтерологии, гепатологии и метаболизма в Алматы. Диагноз на первом приёме.', lang = 'ru', theme = '', active = '', jsonld } = Astro.props;
+const canonical = new URL(Astro.url.pathname, Astro.site).href;
+const org = {
+  '@context': 'https://schema.org', '@type': 'MedicalClinic', name: SITE.name, url: Astro.site?.href,
+  telephone: SITE.phone, email: SITE.email,
+  address: { '@type': 'PostalAddress', streetAddress: 'ул. Богенбай батыра, 248', addressLocality: 'Алматы', addressCountry: 'KZ' },
+  openingHours: ['Mo-Fr 08:00-22:00', 'Sa-Su 09:00-17:00'],
+};
+---
+<!doctype html>
+<html lang={lang}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    <link rel="alternate" hreflang="ru-KZ" href={canonical} />
+    <link rel="alternate" hreflang="kk-KZ" href={new URL('/kk' + Astro.url.pathname, Astro.site).href} />
+    <link rel="icon" href="/images/logo.png" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:image" content={new URL('/images/team.jpg', Astro.site).href} />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Lora:ital,wght@0,500;0,600;1,500;1,600&family=Nunito:wght@700;800;900&display=swap" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,300..600,0..1,0&display=swap" />
+    <style set:html={`:root{--logo:url(${img('logo')})}`} />
+    <script type="application/ld+json" set:html={JSON.stringify(jsonld || org)} />
+  </head>
+  <body class={theme}>
+    <div class="topbar">
+      <div class="shell row">
+        <a href={SITE.phoneHref}>📞 {SITE.phone}</a>
+        <span class="hide-m">📍 {SITE.address}</span>
+        <span class="hide-m">🕐 {SITE.hoursShort}</span>
+        <span class="sp"></span>
+        <a href="/kids" class="hide-m">Interna KIDS</a>
+        <a href="/kk/">Қаз</a>
+      </div>
+    </div>
+
+    <header class="hdr" id="hdr">
+      <div class="shell">
+        <div class="navcard">
+          <a class="logo" href="/"><span class="logo-mark"></span>Interna Clinic</a>
+          <nav class="nav" id="nav">
+            <div class="has-dd" id="ddWrap">
+              <a href="/services" class={active === 'services' ? 'on' : ''}>Услуги <span class="msr">expand_more</span></a>
+              <div class="dd" id="dd">
+                <div class="dd-col"><h6>Направления</h6>
+                  {Object.entries(services).map(([k, s]) => (
+                    <a class="dd-item" href={`/service/${k}`}><span class="itile"><span class="msr">{s.icon}</span></span><span><b>{s.t}</b><small>{s.cat}</small></span><span class="price">{s.price}</span></a>
+                  ))}
+                </div>
+                <div class="dd-side"><p class="kicker">Программы</p>
+                  <a href="/checkup"><span class="msr">checklist</span>Check-up программы</a>
+                  <a href="/kids"><span class="msr">pediatrics</span>Interna KIDS</a>
+                  <a href="/prices"><span class="msr">payments</span>Цены</a>
+                  <a href="/prepare"><span class="msr">event_note</span>Подготовка</a>
+                  <a class="all" href="/services"><span class="msr" style="color:inherit">grid_view</span>Все услуги</a>
+                </div>
+              </div>
+            </div>
+            {NAV.slice(1).map(([href, label]) => <a href={href} class={active === href.slice(1) ? 'on' : ''}>{label}</a>)}
+          </nav>
+          <div class="hdr-cta">
+            <div class="hdr-phone"><b>{SITE.phone}</b><span>Пн–Пт 08:00–22:00</span></div>
+            <button class="btn btn-primary sm" data-book>Записаться</button>
+            <button class="burger" id="burger" aria-label="Меню"><i></i></button>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <div class="mnav" id="mnav">
+      <button class="x" id="mnavX" aria-label="Закрыть">✕</button>
+      <a href="/services">Услуги</a>
+      <div class="msub">
+        {Object.entries(services).map(([k, s]) => <a href={`/service/${k}`}><span class="msr">{s.icon}</span>{s.t}</a>)}
+        <a href="/checkup"><span class="msr">checklist</span>Check-up</a><a href="/kids"><span class="msr">pediatrics</span>Interna KIDS</a>
+      </div>
+      <a href="/doctors">Врачи</a><a href="/checkup">Check-up</a><a href="/prices">Цены</a>
+      <a href="/about">О клинике</a><a href="/prepare">Подготовка</a><a href="/faq">Вопросы</a><a href="/media">Медиацентр</a>
+      <a href="/promo">Акции</a><a href="/kids">Interna KIDS</a><a href="/contacts">Контакты</a>
+    </div>
+
+    <main id="app"><div class="page"><slot /></div></main>
+
+    <footer>
+      <div class="ghost">Interna</div>
+      <div class="shell">
+        <div class="top">
+          <div>
+            <a class="logo" href="/" style="color:#fff;margin-bottom:14px"><span class="logo-mark white"></span>Interna Clinic</a>
+            <p style="color:#9CC4DB;max-width:36ch;line-height:1.7">Институт гастроэнтерологии, гепатологии и метаболизма. Первая клиника доказательной медицины внутренних болезней в Центральной Азии.</p>
+          </div>
+          <div><h5>Клиника</h5><a href="/about">О нас</a><a href="/doctors">Врачи</a><a href="/about#equip">Оборудование</a><a href="/media">Медиацентр</a><a href="/promo">Акции</a></div>
+          <div><h5>Пациентам</h5><a href="/prices">Цены</a><a href="/prepare">Подготовка</a><a href="/faq">Вопросы и ответы</a><a href="/checkup">Check-up</a><a href="/kids">Interna KIDS</a></div>
+          <div><h5>Контакты</h5><p>{SITE.address}</p><a href={SITE.phoneHref}>{SITE.phone}</a><a href={SITE.whatsapp} rel="noopener">WhatsApp</a><a href="/contacts">2ГИС · Google Maps</a><a href="/legal">Оферта · Политика</a></div>
+        </div>
+        <p class="legal">{SITE.legalName} · БИН {SITE.bin} · Лицензия на медицинскую деятельность {SITE.license}<br />Имеются противопоказания, необходима консультация специалиста.</p>
+      </div>
+    </footer>
+
+    <div class="fab"><button class="btn btn-primary" data-book>📅 Записаться</button></div>
+    <div class="mcall"><a class="btn btn-line" href={SITE.phoneHref}>Позвонить</a><button class="btn btn-primary" data-book>Записаться</button></div>
+
+    <div class="modal" id="modal" role="dialog" aria-modal="true" aria-labelledby="mtitle">
+      <div class="mbox">
+        <button class="x" id="modalX" aria-label="Закрыть">✕</button>
+        <div id="mform">
+          <h3 id="mtitle">Запись на приём</h3>
+          <p class="sub">Выберите время — подтверждение придёт в WhatsApp. Или оставьте номер, перезвоним за 10 минут.</p>
+          <div class="field"><label for="mSvc">Направление</label>
+            <select id="mSvc">{Object.values(services).map((s) => <option>{s.t}</option>)}<option>Check-up</option><option>Детский приём (KIDS)</option></select></div>
+          <div class="field" id="mFormatWrap" hidden><label>Формат check-up</label>
+            <div class="seg" id="mFormat">
+              <button type="button" class="on" data-fmt="Амбулаторно"><b>Амбулаторно</b><small>всё за один день, с 08:00</small></button>
+              <button type="button" data-fmt="В стационаре"><b>В стационаре</b><small>1–2 дня, палата и наблюдение</small></button>
+            </div></div>
+          <div class="field"><label>Ближайшее время</label><div class="slots" id="mslots"></div></div>
+          <div class="field"><label for="mName">Имя</label><input id="mName" placeholder="Как к вам обращаться" /></div>
+          <div class="field"><label for="mPhone">Телефон</label><input id="mPhone" placeholder="+7 ___ ___ __ __" inputmode="tel" /></div>
+          <label class="chk"><input type="checkbox" id="mAgree" /> Согласен(на) с <a href="/legal" style="color:var(--blue-600)">политикой конфиденциальности</a> и обработкой персональных данных</label>
+          <button class="btn btn-primary" id="mSubmit" style="width:100%">Подтвердить запись</button>
+        </div>
+        <div id="mdone" hidden>
+          <div class="done">
+            <div class="ok">✓</div>
+            <h3>Вы записаны</h3>
+            <p class="sub" id="mdoneTxt"></p>
+            <p style="font-size:13px;color:var(--faint);font-weight:600">Администратор подтвердит время и пришлёт памятку по подготовке в WhatsApp.</p>
+            <button class="btn btn-line" id="mClose2">Закрыть</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script defer src="/scripts/site.js"></script>
+  </body>
+</html>

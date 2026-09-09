@@ -1,0 +1,12 @@
+node_modules/
+dist/
+.astro/
+.DS_Store
+.env
+.env.*
+!.env.example
+
+# Внутренние материалы студии и снимок старого сайта — не публикуем в открытом репозитории
+docs/
+content/
+prototype/

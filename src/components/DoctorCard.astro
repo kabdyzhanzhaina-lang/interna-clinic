@@ -1,0 +1,8 @@
+---
+import { img } from '../lib/site.js';
+const { d, delay = 1 } = Astro.props;
+---
+<a class={`card doc rv d${delay}`} href={`/doctor/${d.id}`} data-doc-cat={d.cat}>
+  <div class="ph"><img src={img(d.img)} alt={d.n} loading="lazy" /></div>
+  <div class="bd"><h3>{d.n}</h3><p>{d.r}</p><span class="tag">{d.tags[0]}</span></div>
+</a>

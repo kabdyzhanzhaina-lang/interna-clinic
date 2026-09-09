@@ -1,0 +1,16 @@
+---
+const { items, kicker = 'Вопросы', title = 'Что чаще всего <em>спрашивают</em>', lede = 'Остались сомнения — позвоните, врач ответит до записи.' } = Astro.props;
+const faq = { '@context': 'https://schema.org', '@type': 'FAQPage', mainEntity: items.map((q) => ({ '@type': 'Question', name: q[0], acceptedAnswer: { '@type': 'Answer', text: q[1] } })) };
+---
+<section class="sec" style="padding-top:0"><div class="shell"><div class="faq">
+  <div class="rv"><p class="kicker">{kicker}</p><h2 class="h" set:html={title} /><p class="lede">{lede}</p></div>
+  <div class="accordion rv d2" data-acc>
+    {items.map((q, i) => (
+      <div class={`acc-item${i === 0 ? ' open' : ''}`}>
+        <button class="acc-q">{q[0]}<span class="acc-ic"></span></button>
+        <div class="acc-a" style={i === 0 ? 'height:auto' : ''}><p>{q[1]}</p></div>
+      </div>
+    ))}
+  </div>
+</div></div></section>
+<script type="application/ld+json" set:html={JSON.stringify(faq)} />

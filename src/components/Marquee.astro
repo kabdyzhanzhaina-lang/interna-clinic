@@ -1,0 +1,6 @@
+---
+const { items } = Astro.props as { items: string[] };
+const list = [...items, ...items];
+---
+<div class="marq" aria-hidden="true"><div class="track">{list.map((i) => <span>{i} <b>✦</b></span>)}</div></div>
+<div style="height:64px"></div>

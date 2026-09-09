@@ -1,0 +1,19 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHero from '../components/PageHero.astro';
+import Cta from '../components/Cta.astro';
+import articles from '../data/articles.json';
+import { img } from '../lib/site.js';
+const [first, ...rest] = articles;
+---
+<Base title="Медиацентр — статьи и видео врачей Interna Clinic" description="Врачи Interna Clinic объясняют сложное простыми словами: статьи, видео и новости клиники." active="media">
+  <PageHero crumbs={[['Главная', '/'], ['Медиацентр']]} title="Медиацентр" sub="Врачи Interna Clinic объясняют сложное простыми словами: статьи, видео и новости клиники." chips={['пишут сами врачи', 'статьи · видео · новости']} />
+  <section class="sec"><div class="shell">
+    <a class="card rv" href={`/article/${first.id}`} style="display:grid;grid-template-columns:1.1fr 1fr;overflow:hidden;border-color:transparent;box-shadow:var(--sh-s)">
+      <div class="svc" style="border:none"><div class="img" style="aspect-ratio:1.5;height:100%"><img src={img(first.img)} alt="" loading="lazy" /></div></div>
+      <div style="padding:36px"><span class="tag">{first.tag}</span><h3 class="serif" style="font-size:clamp(22px,2.6vw,30px);margin:14px 0 12px;line-height:1.25">{first.t}</h3><p style="margin:0 0 16px;font-weight:500">{first.body[0][1].slice(0, 140)}…</p><p style="font-size:12.5px;color:var(--faint);font-weight:700">{first.by} · {first.date} · {first.min}</p></div>
+    </a>
+    <div class="grid4" style="margin-top:20px">{rest.map((a, i) => <a class={`card svc rv d${i + 1}`} href={`/article/${a.id}`}><div class="img"><img src={img(a.img)} alt="" loading="lazy" /></div><div class="bd"><span class="kicker" style="margin-bottom:8px;font-size:10px">{a.tag.split(' · ')[0]}</span><h3 style="font-size:16px;line-height:1.35">{a.t}</h3><p style="font-size:12.5px;color:var(--faint);margin:0">{a.min} чтения</p></div></a>)}</div>
+  </div></section>
+  <Cta title="Есть вопрос <em>к врачу</em>?" text="Задайте его на приёме — запишитесь онлайн или по телефону." />
+</Base>

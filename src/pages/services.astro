@@ -1,0 +1,17 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHero from '../components/PageHero.astro';
+import ServiceCard from '../components/ServiceCard.astro';
+import Cta from '../components/Cta.astro';
+import services from '../data/services.json';
+---
+<Base title="Услуги и направления — Interna Clinic" description="Гастроэнтерология, гепатология, эндокринология, эндоскопия, УЗИ, check-up. Приём и обследования в один визит в Алматы." active="services">
+  <PageHero crumbs={[['Главная', '/'], ['Услуги']]} title="Услуги и направления" sub="Диагностика и лечение заболеваний ЖКТ, печени и эндокринной системы. Приём и обследования — в один визит." chips={[`${Object.keys(services).length} направлений`, 'цены открыто']} />
+  <section class="sec"><div class="shell"><div class="grid3">{Object.entries(services).map(([k, s], i) => <ServiceCard slug={k} s={s} delay={(i % 3) + 1} />)}</div></div></section>
+  <section class="sec" style="padding-top:0"><div class="shell"><div class="grid3">
+    <a class="card bcard rv d1" href="/checkup"><div class="ic">⭐</div><h3>Check-up программы</h3><p>Женский, мужской, гастро, кардио, эндокринный — готовые комплексы обследования за один день.</p></a>
+    <a class="card bcard rv d2" href="/kids"><div class="ic">🧸</div><h3>Interna KIDS</h3><p>Детское отделение: гастроэнтеролог, эндокринолог, педиатрические check-up.</p></a>
+    <a class="card bcard rv d3" href="/prices"><div class="ic">💳</div><h3>Стационар и процедуры</h3><p>Дневной и круглосуточный стационар, процедурный кабинет, капельницы.</p></a>
+  </div></div></section>
+  <Cta />
+</Base>

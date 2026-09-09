@@ -1,0 +1,16 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHero from '../components/PageHero.astro';
+import DoctorCard from '../components/DoctorCard.astro';
+import Cta from '../components/Cta.astro';
+import doctors from '../data/doctors.json';
+import { CATS } from '../lib/site.js';
+---
+<Base title="Врачи Interna Clinic — гастроэнтерологи, эндокринологи, эндоскописты в Алматы" description="Кандидаты и доктора наук, профессура. Приём на русском и казахском языках. Запись онлайн." active="doctors">
+  <PageHero crumbs={[['Главная', '/'], ['Врачи']]} title="Врачи Interna Clinic" sub={`${doctors.length} специалистов: кандидаты и доктора наук, профессура. Приём на русском и казахском языках.`} chips={[`${doctors.length} специалистов`, 'доктора и кандидаты наук']} />
+  <section class="sec"><div class="shell">
+    <div class="chips rv" id="docfilter">{Object.entries(CATS).map(([k, v], i) => <button class={`chip${i === 0 ? ' on' : ''}`} data-cat={k}>{v}</button>)}</div>
+    <div class="grid4" id="docgrid" style="margin-top:34px">{doctors.map((d, i) => <DoctorCard d={d} delay={(i % 4) + 1} />)}</div>
+  </div></section>
+  <Cta title="Не знаете, к кому <em>записаться</em>?" text="Опишите жалобы по телефону или в WhatsApp — администратор подберёт врача и время." />
+</Base>

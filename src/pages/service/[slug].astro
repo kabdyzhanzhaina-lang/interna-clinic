@@ -1,0 +1,50 @@
+---
+import Base from '../../layouts/Base.astro';
+import PageHero from '../../components/PageHero.astro';
+import Cta from '../../components/Cta.astro';
+import Marquee from '../../components/Marquee.astro';
+import Faq from '../../components/Faq.astro';
+import services from '../../data/services.json';
+import doctors from '../../data/doctors.json';
+import { img } from '../../lib/site.js';
+
+export function getStaticPaths() { return Object.keys(services).map((slug) => ({ params: { slug } })); }
+const { slug } = Astro.params;
+const s = services[slug];
+const d = doctors.find((x) => x.id === s.doc);
+const jsonld = { '@context': 'https://schema.org', '@type': 'MedicalProcedure', name: s.t, description: s.sub, offers: s.prices.map((p) => ({ '@type': 'Offer', name: p[0], price: p[2].replace(/[^\d]/g, ''), priceCurrency: 'KZT' })) };
+---
+<Base title={`${s.h1} — цена, запись | Interna Clinic`} description={s.sub} active="services" jsonld={jsonld}>
+  <PageHero crumbs={[['Главная', '/'], ['Услуги', '/services'], [s.cat, '/services'], [s.t]]} title={s.h1} sub={s.sub}>
+    <div slot="extra" class="facts rise d3">{s.facts.map((f) => <div class="fact"><b>{f[0]}</b><span>{f[1]}</span></div>)}</div>
+    <aside slot="right" class="pricecard rise d2"><h3>Стоимость</h3><p class="dt">цены по прайсу клиники</p>
+      {s.prices.map((p) => <div class="prow"><span><b>{p[0]}</b><small>{p[1]}</small></span><span class="pv">{p[2]}</span></div>)}
+      <button class="btn btn-primary" data-book data-svc={s.t}>Записаться</button>
+      <p style="margin:12px 0 0;font-size:12px;color:var(--faint);font-weight:600">Перед процедурой нужна подготовка — памятку выдаём при записи и дублируем в WhatsApp.</p></aside>
+  </PageHero>
+
+  <section class="sec"><div class="shell"><div class="why">
+    <div class="rv"><p class="kicker">Об исследовании</p><h2 class="h">Зачем нужна <em>{s.t.toLowerCase()}</em></h2><p class="lede">{s.why}</p></div>
+    <div class="checks rv d2">{s.checks.map((c) => <span class="check"><i></i>{c}</span>)}</div>
+  </div></div></section>
+
+  <section class="sec" style="padding-top:0"><div class="shell"><div class="band">
+    <div class="center rv"><p class="kicker">Как это проходит</p><h2 class="h">Пять шагов — <em>без сюрпризов</em></h2><p class="lede">Процедуры чаще всего откладывают из-за страха неизвестного. Поэтому мы показываем весь путь заранее.</p></div>
+    <div class="tl" id="tl">{s.steps.map((st, i) => <div class={`st${i === 0 ? ' on' : ''}`} data-step={i} data-title={st[0]} data-text={st[2]}><div class="n">{i + 1}</div><h4>{st[0]}</h4><p>{st[1]}</p></div>)}</div>
+    <div class="tl-panel"><div class="big" id="tlNum">1</div><div id="tlBody"><h4>{s.steps[0][0]}</h4><p>{s.steps[0][2]}</p></div></div>
+  </div></div></section>
+
+  <section class="sec" style="padding-top:0"><div class="shell"><div class="equip rv">
+    <div class="txt"><p class="kicker on-dark">Оборудование</p><h2 class="h">{s.equip.n}</h2><p class="d">{s.equip.d}</p>{s.equip.specs.map((sp) => <div class="spec"><span>{sp[0]}</span><b>{sp[1]}</b></div>)}</div>
+    <div class="vis"><img src={img(s.equip.img)} alt={s.equip.n} loading="lazy" /></div>
+  </div></div></section>
+
+  {d && <section class="sec" style="padding-top:0"><div class="shell"><div class="dcard rv">
+    <div class="ph"><img src={img(d.img)} alt={d.n} loading="lazy" /></div>
+    <div><p class="kicker">Кто проводит</p><h3 class="serif" style="font-size:clamp(22px,3vw,30px);margin-bottom:10px">{d.n}</h3><p style="margin:0 0 6px;font-weight:700;color:var(--blue-600)">{d.r}</p><p style="margin:0 0 22px;font-size:15px;font-weight:500;max-width:60ch">{d.bio}</p><div style="display:flex;gap:10px;flex-wrap:wrap"><button class="btn btn-primary" data-book data-svc={s.t}>Записаться к врачу</button><a class="btn btn-line" href={`/doctor/${d.id}`}>Профиль врача</a></div></div>
+  </div></div></section>}
+
+  <Faq items={s.faq} />
+  <Marquee items={[s.t, 'Interna Clinic', 'Без боли и страха', 'Результат в тот же день']} />
+  <Cta title="Не откладывайте <em>из-за страха</em>" text="Позвоните — подробно расскажем, как всё пройдёт, и подберём удобное время." />
+</Base>

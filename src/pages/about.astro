@@ -1,0 +1,31 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHero from '../components/PageHero.astro';
+import Cta from '../components/Cta.astro';
+import doctors from '../data/doctors.json';
+import { SITE, img } from '../lib/site.js';
+const equip = [['versana', 'Olympus EVIS X1', 'ЭНДОСКОПИЯ', 'Флагманская видеосистема: NBI, RDI и TXI показывают изменения около миллиметра.'], ['logiq', 'GE Logiq E10s', 'УЗИ', 'Ультразвук экспертного класса с ИИ-обработкой изображения: брюшная полость, сердце, сосуды.'], ['fibroscan', 'FibroScan', 'ГЕПАТОЛОГИЯ', 'Эталонный метод оценки фиброза и стеатоза печени — 10 минут, без прокола.']];
+---
+<Base title="О клинике — Interna Clinic, институт гастроэнтерологии, гепатологии и метаболизма" description="Первая клиника доказательной медицины внутренних болезней в Центральной Азии. Оборудование экспертного класса, профессура, лицензия." active="about">
+  <PageHero crumbs={[['Главная', '/'], ['О клинике']]} title="Первая клиника доказательной медицины в Центральной Азии" sub="Interna Clinic — институт гастроэнтерологии, гепатологии и метаболизма. Мы лечим по международным протоколам: только те назначения, эффективность которых доказана исследованиями." image="team" />
+  <section class="sec"><div class="shell"><div class="grid3">
+    <div class="card bcard rv d1"><div class="ic">📋</div><h3>Протоколы, а не мнения</h3><p>Схемы лечения соответствуют рекомендациям EASL, ACG и ВОЗ — и мы готовы показать источник каждого назначения.</p></div>
+    <div class="card bcard rv d2"><div class="ic">🚫</div><h3>Без лишних назначений</h3><p>Не назначаем анализы и процедуры «на всякий случай». Каждое обследование отвечает на конкретный клинический вопрос.</p></div>
+    <div class="card bcard rv d3"><div class="ic">🎓</div><h3>Врачи, которые учат других</h3><p>Наши доктора преподают, публикуются и ведут школы для пациентов — от школы диабета до школы инсулиновой помпы.</p></div>
+  </div></div></section>
+  <section class="sec" style="padding-top:0"><div class="shell"><div class="why">
+    <div class="about-img rv"><img src={img('building')} alt="Здание Interna Clinic" loading="lazy" /></div>
+    <div class="rv d2"><p class="kicker">Клиника</p><h2 class="h">Богенбай батыра, 248 — <em>всё под одной крышей</em></h2><p class="lede">Приём врачей, эндоскопия, УЗИ, лаборатория, дневной и круглосуточный стационар — в одном здании. Парковка для пациентов бесплатная.</p>
+      <div class="hero-meta" style="border-color:var(--line);margin-top:28px"><div><b style="color:var(--blue-700)" data-count={doctors.length}>{doctors.length}</b><span style="color:var(--faint)">врачей</span></div><div><b style="color:var(--blue-700)">7/7</b><span style="color:var(--faint)">дней в неделю</span></div><div><b style="color:var(--blue-700)">2</b><span style="color:var(--faint)">языка приёма</span></div></div></div>
+  </div></div></section>
+  <section class="sec" id="equip" style="padding-top:0"><div class="shell">
+    <div class="sec-head rv"><div><p class="kicker">Оборудование</p><h2 class="h">Техника уровня <em>университетских клиник</em></h2></div></div>
+    <div class="grid3">{equip.map((e, i) => <div class={`card svc rv d${i + 1}`}><div class="img" style="background:var(--paper);aspect-ratio:1.3"><img src={img(e[0])} alt={e[1]} style="object-fit:contain;padding:20px" loading="lazy" /></div><div class="bd"><span class="kicker" style="margin-bottom:6px">{e[2]}</span><h3>{e[1]}</h3><p>{e[3]}</p></div></div>)}</div>
+  </div></section>
+  <section class="sec" style="padding-top:0"><div class="shell"><div class="card rv" style="display:flex;gap:20px;align-items:center;padding:26px 28px;background:var(--ice-50);border-color:transparent;flex-wrap:wrap">
+    <div style="width:54px;height:54px;border-radius:16px;background:#fff;display:grid;place-items:center;font-size:24px">🛡️</div>
+    <div style="flex:1;min-width:260px"><b style="font-size:16px;color:var(--ink)">Лицензия на медицинскую деятельность {SITE.license}</b><p style="margin:3px 0 0;font-size:13px;font-weight:600">{SITE.legalName} · БИН {SITE.bin}</p></div>
+    <a class="btn btn-white sm" href="/legal">Документы</a>
+  </div></div></section>
+  <Cta />
+</Base>

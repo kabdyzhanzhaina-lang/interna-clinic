@@ -1,0 +1,28 @@
+---
+import Base from '../layouts/Base.astro';
+import DoctorCard from '../components/DoctorCard.astro';
+import Cta from '../components/Cta.astro';
+import doctors from '../data/doctors.json';
+import { img } from '../lib/site.js';
+const kidsDocs = doctors.filter((d) => ['abdrakhmanov', 'omar', 'ismailova', 'kasymova'].includes(d.id));
+const cards = [['🧸', 'Детский гастроэнтеролог', 'Боли в животе, запоры, пищевая непереносимость — бережная диагностика с первого визита.', 'abdrakhmanov'], ['🌱', 'Детский эндокринолог', 'Рост, вес, щитовидная железа, ранняя диагностика диабета. Школа диабета для родителей.', 'omar'], ['🎈', 'Детский check-up', 'Полное обследование за одно посещение — пока ребёнок не устал и не испугался.', null], ['🍎', 'Детский гинеколог и диетолог', 'Приём детского гинеколога, питание по возрасту, аллергии и дефициты.', 'ismailova']];
+---
+<Base title="Interna KIDS — детская клиника в Алматы" description="Детское отделение Interna Clinic: гастроэнтеролог, эндокринолог, гинеколог, педиатрические check-up. Врачи, которые умеют разговаривать с детьми." theme="kids">
+  <section class="phero kidshero">
+    <span class="blob b2" style="opacity:.35;right:-100px"></span>
+    <span class="kid-shape" style="width:120px;height:120px;background:#FFC845;left:6%;top:18%;opacity:.9"></span>
+    <span class="kid-shape" style="width:54px;height:54px;background:#5ED4B0;left:14%;bottom:14%;animation-delay:1.5s"></span>
+    <span class="kid-shape" style="width:80px;height:80px;background:#FF8A6B;right:9%;bottom:10%;animation-delay:.8s"></span>
+    <span class="kid-shape" style="width:36px;height:36px;background:#fff;right:30%;top:16%;opacity:.7;animation-delay:2.2s"></span>
+    <div class="shell"><div class="phero-grid">
+      <div><nav class="crumbs rise d1"><a href="/">Главная</a><span>/</span><b>Interna KIDS</b></nav><span class="kidtag rise d1">Interna KIDS · детская клиника</span><h1 class="rise d1">Детям тут <em style="font-style:normal;color:var(--sky)">не страшно</em></h1><p class="sub rise d2">Детское отделение Interna Clinic: гастроэнтеролог, эндокринолог, гинеколог, педиатрические check-up. Врачи, которые умеют разговаривать с детьми, и обследования без слёз.</p><div class="hero-actions rise d3"><button class="btn btn-sky" data-book data-svc="Детский приём (KIDS)">Записать ребёнка</button><a class="btn btn-ghost" href="/checkup">Детский check-up</a></div></div>
+      <div class="phero-img rise d2"><img src={img('kids')} alt="Детский врач Interna KIDS" /></div>
+    </div></div>
+  </section>
+  <section class="sec"><div class="shell"><div class="grid4">
+    {cards.map((c, i) => <div class={`card bcard rv d${i + 1}`}><div class="ic">{c[0]}</div><h3 style="font-size:17px">{c[1]}</h3><p>{c[2]}</p>{c[3] && <a href={`/doctor/${c[3]}`} class="more" style="margin-top:14px;display:inline-flex">Врач →</a>}</div>)}
+  </div></div></section>
+  <section class="sec" style="padding-top:0"><div class="shell"><div class="testi rv" style="grid-template-columns:1fr auto;align-items:center"><div><p class="kicker">Родителям</p><h2 class="h">Родители — рядом <em>на каждом этапе</em></h2><p class="lede">Присутствуете на приёме и при обследованиях, врач объясняет всё вам и ребёнку — на понятном языке. Результаты и назначения дублируем в WhatsApp.</p></div><button class="btn btn-primary" data-book data-svc="Детский приём (KIDS)">Задать вопрос</button></div></div></section>
+  <section class="sec" style="padding-top:0"><div class="shell"><div class="sec-head rv"><div><p class="kicker">Детские врачи</p><h2 class="h">Кто принимает <em>в KIDS</em></h2></div></div><div class="grid4">{kidsDocs.map((d, i) => <DoctorCard d={d} delay={i + 1} />)}</div></div></section>
+  <Cta title="Запишите <em>ребёнка</em>" text="Подберём врача и удобное время — утром или после школы." />
+</Base>

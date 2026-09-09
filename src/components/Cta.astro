@@ -1,0 +1,10 @@
+---
+import { SITE } from '../lib/site.js';
+const { title = 'Запишитесь <em>на приём</em>', text = 'Позвоните или выберите время онлайн — ответим в течение 10 минут в рабочее время.', typed } = Astro.props;
+---
+<section class="sec" style="padding-top:0"><div class="shell"><div class="cta rv">
+  <h2 class="h">{typed ? <>Запишитесь на <em data-words={typed}>приём</em><span class="caret"></span></> : <Fragment set:html={title} />}</h2>
+  <p>{text}</p>
+  <div class="row"><button class="btn btn-sky" data-book>Записаться онлайн</button><a class="btn btn-white" href={SITE.phoneHref}>{SITE.phone}</a></div>
+  <p class="fine">Имеются противопоказания, необходима консультация специалиста. Лицензия {SITE.license}.</p>
+</div></div></section>

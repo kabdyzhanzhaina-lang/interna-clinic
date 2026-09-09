@@ -1,0 +1,9 @@
+---
+import { SITE } from '../lib/site.js';
+---
+<section class="sec" style="padding-top:0"><div class="shell"><div class="cstrip">
+  <a class="ccell rv d1" href={SITE.phoneHref}><div class="ic">📞</div><h4>Телефон</h4><p>{SITE.phone}</p><p style="color:var(--faint);font-size:12.5px">единый контактный центр</p></a>
+  <a class="ccell rv d2" href="/contacts"><div class="ic">📍</div><h4>Адрес</h4><p>Богенбай батыра, 248</p><p style="color:var(--faint);font-size:12.5px">Алматы · открыть в 2ГИС</p></a>
+  <a class="ccell rv d3" href={SITE.whatsapp} rel="noopener"><div class="ic">💬</div><h4>WhatsApp</h4><p>Написать в чат</p><p style="color:var(--faint);font-size:12.5px">ответим за 10 минут</p></a>
+  <a class="ccell rv d4" href={`mailto:${SITE.email}`}><div class="ic">✉️</div><h4>Почта</h4><p>{SITE.email}</p><p style="color:var(--faint);font-size:12.5px">для документов</p></a>
+</div></div></section>

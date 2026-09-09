@@ -1,0 +1,26 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHero from '../components/PageHero.astro';
+import Cta from '../components/Cta.astro';
+import prices from '../data/prices.json';
+const cats = Object.keys(prices);
+const total = Object.values(prices).reduce((a, v) => a + v.length, 0);
+---
+<Base title="Цены на услуги — Interna Clinic, Алматы" description="Прайс клиники: эндоскопия, приёмы врачей, УЗИ, check-up, диагностика, стационар. Цены фиксированы." active="prices">
+  <PageHero crumbs={[['Главная', '/'], ['Цены']]} title="Цены на услуги" sub={`Прайс клиники: ${total} позиций по ${cats.length} направлениям. Цены фиксированы — доплат на месте не будет.`} chips={[`${total} позиций`, 'цены фиксированы']}>
+    <div slot="extra" class="search rise d3" style="margin-top:26px"><span>🔍</span><input id="psearch" placeholder="Найти услугу, например «колоноскопия»" aria-label="Поиск по прайсу" /><button class="btn btn-primary sm" type="button">Найти</button></div>
+  </PageHero>
+  <section class="sec"><div class="shell">
+    <div class="chips rv" id="ptabs">{cats.map((k, i) => <button class={`chip${i === 0 ? ' on' : ''}`} data-tab={k}>{k}</button>)}</div>
+    <div class="rv d2" style="margin-top:28px">
+      {cats.map((k, i) => (
+        <div class="tbl" data-price-tab={k} hidden={i !== 0} style={i ? 'margin-top:18px' : ''}>
+          <div class="th"><span>{k}</span><span>Цена</span></div>
+          {prices[k].map((r) => <div class="tr"><div class="n"><b>{r[0]}</b><small>{r[1]}</small></div><span class="pv">{r[2]}</span><button class="btn btn-line sm" data-book>Записаться</button></div>)}
+        </div>
+      ))}
+    </div>
+    <p style="margin:16px 0 0;font-size:12.5px;color:var(--faint);font-weight:600">Актуальные цены уточняйте при записи. Имеются противопоказания, необходима консультация специалиста.</p>
+  </div></section>
+  <Cta title="Нужна помощь <em>с выбором</em>?" text="Администратор подскажет, какие исследования нужны именно вам, и посчитает стоимость комплекса." />
+</Base>

@@ -1,0 +1,12 @@
+---
+import { img } from '../lib/site.js';
+const { slug, s, delay = 1 } = Astro.props;
+---
+<a class={`card svc rv d${delay}`} href={`/service/${slug}`}>
+  <div class="img"><img src={img(s.img)} alt={s.t} loading="lazy" /><span class="tag"><span class="msr" style="font-size:15px;vertical-align:-3px">{s.icon}</span> {s.cat}</span></div>
+  <div class="bd">
+    <div style="display:flex;align-items:center;gap:12px;margin-bottom:8px"><span class="itile"><span class="msr">{s.icon}</span></span><h3 style="margin:0">{s.t}</h3></div>
+    <p>{s.short}</p>
+    <div class="ft"><span class="price-chip">{s.price}</span><span class="more">Подробнее →</span></div>
+  </div>
+</a>

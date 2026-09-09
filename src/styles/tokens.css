@@ -1,0 +1,33 @@
+/* Дизайн-токены Interna Clinic — источник: prototype/site-template.html */
+:root{
+  
+  --navy:#0A2E45;
+   --navy-2:#0D3D5C;
+   --blue-700:#0A6DB4;
+   --blue-600:#0C86CE;
+   --blue:#009EE9;
+  
+  --sky:#7BD7FF;
+   --sky-dark:#063A5C;
+   --ice:#DCF2FC;
+   --ice-50:#E8F6FE;
+   --paper:#F3FAFE;
+  
+  --ink:#0F2E40;
+   --body:#4A6B80;
+   --faint:#7E9AAC;
+   --line:#DBE9F1;
+   --white:#FFFFFF;
+  
+  --amber:#F2B34C;
+   --green:#2BC593;
+  
+  --r-lg:28px;
+   --r-md:20px;
+   --r-sm:14px;
+  
+  --sh:0 18px 50px -22px rgba(10,46,69,.35);
+   --sh-s:0 8px 24px -14px rgba(10,46,69,.22);
+  
+  --ease:cubic-bezier(.2,.85,.3,1);
+}

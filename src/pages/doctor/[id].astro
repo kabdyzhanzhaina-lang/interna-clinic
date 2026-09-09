@@ -1,0 +1,33 @@
+---
+import Base from '../../layouts/Base.astro';
+import PageHero from '../../components/PageHero.astro';
+import DoctorCard from '../../components/DoctorCard.astro';
+import Cta from '../../components/Cta.astro';
+import doctors from '../../data/doctors.json';
+import { img } from '../../lib/site.js';
+
+export function getStaticPaths() { return doctors.map((d) => ({ params: { id: d.id } })); }
+const d = doctors.find((x) => x.id === Astro.params.id);
+const rel = doctors.filter((x) => x.cat === d.cat && x.id !== d.id).slice(0, 4);
+const jsonld = { '@context': 'https://schema.org', '@type': 'Physician', name: d.n, jobTitle: d.r, description: d.bio, image: new URL(img(d.img), Astro.site).href, worksFor: { '@type': 'MedicalClinic', name: 'Interna Clinic' } };
+---
+<Base title={`${d.n} — ${d.r} | Interna Clinic`} description={d.bio} active="doctors" jsonld={jsonld}>
+  <PageHero crumbs={[['Главная', '/'], ['Врачи', '/doctors'], [d.n.split(' ')[0]]]} title={d.n} sub={d.r}>
+    <div slot="extra">
+      <div class="chips rise d3" style="margin-top:22px">{d.tags.map((t) => <span class="chip" style="background:rgba(255,255,255,.12);color:#fff">{t}</span>)}<span class="chip" style="background:rgba(255,255,255,.12);color:#fff">стаж {d.exp}</span></div>
+      <div class="hero-actions rise d4"><button class="btn btn-sky" data-book>Записаться к врачу</button><span class="btn btn-ghost">Ближайшее время: сегодня 16:00</span></div>
+    </div>
+    <div slot="right" class="phero-img rise d2" style="aspect-ratio:.85;max-width:380px;margin-left:auto"><img src={img(d.img)} alt={d.n} style="object-position:top" /></div>
+  </PageHero>
+  <section class="sec"><div class="shell"><div class="grid2">
+    <div class="card rv" style="padding:30px"><h3 class="serif" style="font-size:22px;margin-bottom:14px">О враче</h3><p style="margin:0 0 18px;font-size:15.5px;line-height:1.7;font-weight:500">{d.bio}</p>
+      <div class="checks" style="grid-template-columns:1fr;margin-top:0"><span class="check"><i></i>Приём по протоколам доказательной медицины</span><span class="check"><i></i>Обследования в тот же день</span><span class="check"><i></i>Приём на русском и казахском языках</span><span class="check"><i></i>Стаж {d.exp}</span></div></div>
+    <div class="card rv d2" style="padding:30px;background:var(--paper);border-color:transparent"><h3 class="serif" style="font-size:22px;margin-bottom:12px">Приёмы и услуги</h3>
+      <div class="prow"><span><b>Первичный приём</b><small>45–60 минут</small></span><span class="pv">{d.price}</span></div>
+      <div class="prow"><span><b>Повторный приём</b><small>30 минут</small></span><span class="pv">15 000 ₸</span></div>
+      <div class="prow"><span><b>Приём + обследование</b><small>комплекс, в один визит</small></span><span class="pv">от 32 000 ₸</span></div>
+      <button class="btn btn-primary" data-book style="width:100%;margin-top:18px">Выбрать время приёма</button></div>
+  </div></div></section>
+  {rel.length > 0 && <section class="sec" style="padding-top:0"><div class="shell"><div class="sec-head rv"><div><p class="kicker">Коллеги</p><h2 class="h">Врачи того же <em>направления</em></h2></div><a class="btn btn-line" href="/doctors">Все врачи →</a></div><div class="grid4">{rel.map((x, i) => <DoctorCard d={x} delay={i + 1} />)}</div></div></section>}
+  <Cta />
+</Base>

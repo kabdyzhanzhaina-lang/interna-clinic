@@ -1,0 +1,113 @@
+---
+import Base from '../layouts/Base.astro';
+import ServiceCard from '../components/ServiceCard.astro';
+import DoctorCard from '../components/DoctorCard.astro';
+import Cta from '../components/Cta.astro';
+import Marquee from '../components/Marquee.astro';
+import Faq from '../components/Faq.astro';
+import ContactsStrip from '../components/ContactsStrip.astro';
+import services from '../data/services.json';
+import doctors from '../data/doctors.json';
+import reviews from '../data/reviews.json';
+import { SITE, img } from '../lib/site.js';
+
+const faq = [
+  ['Как записаться на приём?', 'Онлайн на сайте — выбираете врача и свободное время, либо по телефону или через WhatsApp. Подтверждение придёт сразу.'],
+  ['Можно ли пройти приём и обследование за один визит?', 'Да, это наш основной формат. Комплекс «приём + обследование» построен так, чтобы врач мог поставить диагноз уже на первом посещении.'],
+  ['Есть ли стационар?', 'Да, работает дневной и круглосуточный стационар. Условия и стоимость подскажет менеджер при записи.'],
+  ['Принимаете ли вы на казахском языке?', 'Конечно. Приём ведётся на русском и казахском языках.'],
+];
+const story = [
+  ['01', 'Диагноз — <em>в один визит</em>', 'Приём врача и все нужные обследования проходят в один день, в одном здании. Вы уходите не с направлениями, а с ответом.', ['Приём', 'УЗИ', 'Эндоскопия', 'Анализы', 'Заключение']],
+  ['02', 'Оборудование <em>экспертного класса</em>', 'Техника уровня университетских клиник: видны изменения размером около миллиметра — то, что решает исход на ранних стадиях.', ['Olympus EVIS X1', 'GE Logiq E10s', 'FibroScan']],
+  ['03', 'Команда <em>профессора Нерсесова</em>', 'Кандидаты и доктора медицинских наук, работающие по международным протоколам доказательной медицины.', ['Гастроэнтерология', 'Гепатология', 'Эндокринология', 'Эндоскопия']],
+];
+---
+<Base title="Медицинский центр в Алматы — Interna Clinic" description="Interna Clinic — институт гастроэнтерологии, гепатологии и метаболизма в Алматы. Консультация врача и все обследования в один визит. Запись онлайн." active="">
+  <section class="hero" id="hero">
+    <span class="blob b1"></span><span class="blob b2"></span>
+    <span class="ring" style="width:340px;height:340px;left:44%;top:-140px"></span>
+    <span class="ring" style="width:180px;height:180px;right:6%;top:10%"></span>
+    <div class="shell"><div class="hero-grid">
+      <div>
+        <p class="typed rise d1" aria-hidden="true"><span>Interna — это&nbsp;</span><span class="tw" data-words="точность|забота|наука|комфорт">точность</span><span class="caret"></span></p>
+        <h1 class="rise d1">Медицинский центр в Алматы:<br /><em>диагноз на первом приёме</em></h1>
+        <p class="sub rise d2">Институт гастроэнтерологии, гепатологии и метаболизма. Консультация врача и все нужные обследования — в один визит, по принципам доказательной медицины.</p>
+        <div class="hero-actions rise d3"><button class="btn btn-sky" data-book>Записаться на приём</button><a class="btn btn-ghost" href="/checkup">Подобрать check-up</a></div>
+        <div class="hero-meta rise d4">
+          <div><b data-count="30">30</b><span>лет опыта руководителя</span></div>
+          <div><b>7/7</b><span>дней в неделю</span></div>
+          <div><b>1 визит</b><span>до диагноза</span></div>
+          <div><b data-count={doctors.length}>{doctors.length}</b><span>врачей на сайте</span></div>
+        </div>
+      </div>
+      <div class="hero-visual">
+        <div class="hero-photo"><img src={img('hero')} alt="Врач Interna Clinic на консультации" /></div>
+        <span class="badge-float" style="right:6%;top:26px"><i></i>Лицензия {SITE.license.split(' от')[0]}</span>
+        <div class="book">
+          <div class="top"><b>Онлайн-запись</b><span class="live"><i></i>сейчас</span></div>
+          <div class="slots" data-slots></div>
+          <button class="btn btn-primary" data-book data-slotbtn>Забронировать 14:30</button>
+        </div>
+      </div>
+    </div></div>
+  </section>
+
+  <section class="story" id="story">
+    <div class="story-stage">
+      {story.map((s, i) => (
+        <div class={`sframe${i === 0 ? ' on' : ''}`}><div class="in"><div class="gnum">{s[0]}</div><h2 class="h" set:html={s[1]} /><p class="lede">{s[2]}</p><div class="chiprow">{s[3].map((c) => <span>{c}</span>)}</div></div></div>
+      ))}
+      <div class="sdots">{story.map((_, i) => <i class={i === 0 ? 'on' : ''}></i>)}</div>
+      <div class="sprog" id="sprog"></div>
+    </div>
+  </section>
+
+  <section class="sec"><div class="shell"><div class="why">
+    <div class="rv"><p class="kicker">Почему мы</p><h2 class="h">Почему пациенты выбирают <em>Interna Clinic</em></h2><p class="lede">Первая клиника доказательной медицины в области внутренних заболеваний в Центральной Азии. Мы не назначаем лишнего — только то, что подтверждено международными протоколами.</p><div style="margin-top:28px"><a class="btn btn-line" href="/about">О клинике →</a></div></div>
+    <div class="bento">
+      <div class="card bcard rv d1"><div class="ic">🩺</div><h3>Диагноз на первом приёме</h3><p>Приём врача и обследования — в один визит. Комплекс «приём + диагностика» экономит недели.</p></div>
+      <div class="card bcard fill rv d2"><div class="ic">👨‍⚕️</div><h3>Опытные врачи</h3><p>Команда под руководством профессора Нерсесова: кандидаты и доктора медицинских наук.</p></div>
+      <div class="card bcard fill rv d3"><div class="ic">🔬</div><h3>Экспертное оборудование</h3><p>Olympus EVIS X1, GE Logiq E10s, FibroScan — техника уровня университетских клиник.</p></div>
+      <div class="card bcard rv d4"><div class="ic">🛡️</div><h3>Безопасность</h3><p>Автоматическая дезинфекция эндоскопов и контроль стерильности на каждом этапе.</p></div>
+    </div>
+  </div></div></section>
+
+  <section class="sec" style="padding-top:0"><div class="shell"><div class="band">
+    <div class="center rv"><p class="kicker">Услуги</p><h2 class="h">Чем мы можем <em>помочь</em></h2><p class="lede">Диагностика и лечение заболеваний ЖКТ, печени и эндокринной системы — от консультации до эндоскопии с седацией.</p></div>
+    <div class="grid3" style="margin-top:44px">{Object.entries(services).map(([k, s], i) => <ServiceCard slug={k} s={s} delay={(i % 3) + 1} />)}</div>
+    <div class="center" style="margin-top:34px"><a class="btn btn-line" href="/services">Все услуги и цены →</a></div>
+  </div></div></section>
+
+  <section class="sec" style="padding-top:0"><div class="shell">
+    <div class="sec-head rv"><div><p class="kicker">Команда</p><h2 class="h">Врачи <em>Interna Clinic</em></h2></div><a class="btn btn-line" href="/doctors">Все специалисты →</a></div>
+    <div class="team">
+      <div class="grid3">{doctors.slice(0, 3).map((d, i) => <DoctorCard d={d} delay={i + 1} />)}</div>
+      <aside class="hours rv d4"><h3>🕐 Часы работы</h3><p style="font-size:13px;color:#9CC4DB;margin:0 0 16px">Планируйте визит — принимаем и по выходным.</p>
+        {SITE.hours.map((h) => <div class="hrow"><span>{h[0]}</span><span>{h[1]}</span></div>)}
+        <button class="btn btn-sky" data-book style="margin-top:auto;width:100%">Записаться на приём</button></aside>
+    </div>
+  </div></section>
+
+  <section class="sec" style="padding-top:0"><div class="shell"><div class="about-img rv" style="aspect-ratio:2.2"><img src={img('team')} alt="Команда Interna Clinic" loading="lazy" /></div></div></section>
+
+  <section class="sec" style="padding-top:0"><div class="shell"><div class="stats rv">
+    <div class="stat"><b><span data-count="30">30</span> <em>лет</em></b><span>стаж руководителя — профессора Нерсесова</span></div>
+    <div class="stat"><b>до <span data-count="22">22</span>:00</b><span>приём в будни, работаем и по выходным</span></div>
+    <div class="stat"><b><span data-count="7">7</span>/7</b><span>дней в неделю открыта клиника</span></div>
+    <div class="stat"><b><span data-count="10">10</span> <em>мин</em></b><span>среднее время ответа в WhatsApp</span></div>
+  </div></div></section>
+
+  <section class="sec" style="padding-top:0"><div class="shell"><div class="testi rv">
+    <div class="ph"><img src={img('coats')} alt="Interna Clinic" loading="lazy" /></div>
+    <div><p class="kicker">Отзывы</p><h2 class="h">Что говорят наши <em>пациенты</em></h2>
+      <div class="ttrack" id="ttrack">{reviews.map((r) => <div class="tslide"><div class="stars">★★★★★</div><p class="quote">«{r[0]}»</p><p class="q-name">{r[1]}</p><p class="q-role">пациент клиники · отзыв с сайта</p></div>)}</div>
+      <div class="tnav"><button class="tbtn" data-tprev aria-label="Назад">←</button><button class="tbtn" data-tnext aria-label="Вперёд">→</button><span class="tdots" id="tdots">{reviews.map((_, i) => <i class={i === 0 ? 'on' : ''}></i>)}</span></div>
+    </div>
+  </div></div></section>
+
+  <Faq items={faq} kicker="Вопросы" title="Частые <em>вопросы</em>" lede="Не нашли ответ? Напишите в WhatsApp — ответим в течение 10 минут в рабочее время." />
+  <Marquee items={['Записаться на приём', 'Interna Clinic', 'Гастроэнтерология', 'Эндоскопия', 'Check-up', 'Доказательная медицина']} />
+  <Cta typed="приём|check-up|колоноскопию|УЗИ" />
+  <ContactsStrip />
+</Base>

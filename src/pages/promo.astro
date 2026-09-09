@@ -1,0 +1,15 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHero from '../components/PageHero.astro';
+import Cta from '../components/Cta.astro';
+import promos from '../data/promos.json';
+import { SITE } from '../lib/site.js';
+---
+<Base title="Акции и специальные цены — Interna Clinic" description="Комплексы дешевле отдельных услуг и сезонные предложения клиники. Цена фиксируется при записи.">
+  <PageHero crumbs={[['Главная', '/'], ['Акции']]} title="Акции и специальные цены" sub="Комплексы дешевле отдельных услуг и сезонные предложения. Цена фиксируется в момент записи." chips={['выгода до 25%', 'цена фиксируется при записи']} />
+  <section class="sec"><div class="shell"><div class="grid3">
+    {promos.map((p, i) => <div class={`card bcard promo${p.hot ? ' fill' : ''} rv d${i + 1}`}><div style="display:flex;justify-content:space-between;align-items:center"><span class="off">{p.off}</span><span style={`font-size:12px;font-weight:700;color:${p.hot ? '#9FCFEA' : 'var(--faint)'}`}>{p.till}</span></div><h3 style="font-size:20px;margin:16px 0 8px">{p.t}</h3><p>{p.d}</p><div style="display:flex;gap:10px;align-items:baseline;margin:18px 0 14px"><b style={`font-size:24px;color:${p.hot ? 'var(--sky)' : 'var(--blue-700)'}`}>{p.p}</b><span style={`font-size:12.5px;font-weight:600;color:${p.hot ? '#9FCFEA' : 'var(--faint)'}`}>{p.old}</span></div><button class={`btn ${p.hot ? 'btn-sky' : 'btn-line'}`} data-book style="width:100%">Записаться по акции</button></div>)}
+  </div>
+  <p style="margin:20px 0 0;font-size:12.5px;color:var(--faint);font-weight:600">Скидки не суммируются. Подробные условия — по телефону {SITE.phone}. Имеются противопоказания, необходима консультация специалиста.</p></div></section>
+  <Cta />
+</Base>

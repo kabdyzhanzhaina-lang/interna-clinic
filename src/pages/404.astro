@@ -1,0 +1,7 @@
+---
+import Base from '../layouts/Base.astro';
+import { SITE } from '../lib/site.js';
+---
+<Base title="Страница не найдена — Interna Clinic" description="Такой страницы нет. Перейдите на главную или в раздел услуг.">
+  <section class="phero"><div class="shell notfound"><div class="n rise d1">404</div><h1 class="rise d2" style="font-size:32px">Такой страницы нет</h1><p class="sub rise d3" style="margin:12px auto 0">Возможно, адрес изменился при обновлении сайта. Вот куда можно пойти:</p><div class="hero-actions rise d4" style="justify-content:center"><a class="btn btn-sky" href="/">На главную</a><a class="btn btn-ghost" href="/services">Все услуги</a><a class="btn btn-ghost" href={SITE.phoneHref}>Позвонить</a></div></div></section>
+</Base>

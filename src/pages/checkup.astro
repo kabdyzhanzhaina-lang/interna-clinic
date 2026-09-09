@@ -1,0 +1,41 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHero from '../components/PageHero.astro';
+import Cta from '../components/Cta.astro';
+import Faq from '../components/Faq.astro';
+import checkups from '../data/checkups.json';
+const faq = [
+  ['Сколько времени занимает check-up?', 'Обычно 3–4 часа: все исследования проходят в один день, результаты и разбор с врачом — в тот же визит.'],
+  ['Амбулаторно или в стационаре — в чём разница?', 'Амбулаторно — приезжаете утром натощак и уезжаете вечером с результатами. В стационаре — 1–2 дня в палате под наблюдением врача, с питанием и процедурами; удобно при сложных программах и для пациентов из других городов.'],
+  ['Нужна ли подготовка?', 'Прийти натощак для анализов и УЗИ брюшной полости. Подробную памятку пришлём в WhatsApp.'],
+  ['Можно ли изменить состав программы?', 'Да, врач корректирует программу под ваши жалобы и историю — без лишних исследований.'],
+];
+---
+<Base title="Check-up программы в Алматы — полное обследование за один день | Interna Clinic" description="Гастро, кардио, эндокринный, женский, мужской и детский check-up. Амбулаторно или в стационаре. Результаты в тот же день." active="checkup">
+  <PageHero crumbs={[['Главная', '/'], ['Check-up']]} title="Check-up программы" sub="Полное обследование за один день: готовые комплексы, собранные врачами под возраст, пол и жалобы. Результаты и разбор — в тот же визит.">
+    <div slot="right" class="quiz rise d2" id="quiz"><b style="font-size:16.5px">Подобрать check-up за 30 секунд</b>
+      <div class="q" style="margin-top:14px"><label>Кому</label><div class="opts" data-q="who"><button type="button" data-v="f">Женщине</button><button type="button" data-v="m">Мужчине</button><button type="button" data-v="k">Ребёнку</button></div></div>
+      <div class="q"><label>Возраст</label><div class="opts" data-q="age"><button type="button" data-v="30">до 30</button><button type="button" data-v="45">30–45</button><button type="button" data-v="60">45+</button></div></div>
+      <div class="q"><label>Что беспокоит</label><div class="opts" data-q="pain"><button type="button" data-v="gi">ЖКТ</button><button type="button" data-v="heart">сердце</button><button type="button" data-v="horm">гормоны</button><button type="button" data-v="none">ничего</button></div></div>
+      <div class="res" id="quizres">Ответьте на три вопроса — покажем программу</div></div>
+  </PageHero>
+  <section class="sec"><div class="shell">
+    <div class="seg wide rv" id="cuFormat">
+      <button type="button" class="on" data-fmt="amb"><b>Амбулаторно</b><small>все обследования за один день, домой вечером</small></button>
+      <button type="button" data-fmt="stac"><b>В стационаре</b><small>1–2 дня в палате: наблюдение врача, питание, капельницы</small></button>
+    </div>
+    <p class="center rv" id="cuNote" style="margin:-10px 0 26px;font-size:13px;color:var(--faint);font-weight:600">Амбулаторный формат: приезжаете утром натощак, к вечеру — результаты и разбор с врачом.</p>
+    <div class="grid3" id="cugrid">
+      {checkups.map((c, i) => (
+        <div class={`card bcard${c.hot ? ' fill' : ''} rv d${(i % 3) + 1}`} data-cu data-title={c.t} data-price={c.p} data-who={c.who.join(',')} data-age={c.age.join(',')} data-pain={c.pain.join(',')}>
+          <h3 style="font-size:20px">{c.t}</h3>
+          <p style={`font-weight:800;color:${c.hot ? 'var(--sky)' : 'var(--blue-600)'};font-size:13px;margin:4px 0 12px`}>{c.s}</p>
+          <p>{c.c}</p>
+          <div class="ft" style="display:flex;justify-content:space-between;align-items:center;margin-top:18px"><b style={`font-size:18px;color:${c.hot ? '#fff' : 'var(--blue-700)'}`}>{c.p}</b><button class={`btn ${c.hot ? 'btn-sky' : 'btn-line'} sm`} data-book data-svc="Check-up">Записаться</button></div>
+        </div>
+      ))}
+    </div>
+  </div></section>
+  <Faq items={faq} />
+  <Cta title="Один визит <em>вместо трёх</em>" text="Запишитесь — подберём обследования, которые действительно нужны, и проведём их в тот же день." />
+</Base>
