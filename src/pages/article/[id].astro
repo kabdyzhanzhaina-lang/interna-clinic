@@ -2,21 +2,21 @@
 import Base from '../../layouts/Base.astro';
 import PageHero from '../../components/PageHero.astro';
 import Cta from '../../components/Cta.astro';
-import articles from '../../data/articles.json';
+import { ALL_MEDIA as articles } from '../../lib/media.js';
 import doctors from '../../data/doctors.json';
 import { img } from '../../lib/site.js';
 
 export function getStaticPaths() { return articles.map((a) => ({ params: { id: a.id } })); }
 const a = articles.find((x) => x.id === Astro.params.id);
-const d = doctors.find((x) => x.id === a.doc);
+const d = a.doc ? doctors.find((x) => x.id === a.doc) : null;
 const jsonld = { '@context': 'https://schema.org', '@type': 'MedicalWebPage', headline: a.t, author: { '@type': 'Person', name: a.by }, image: new URL(img(a.img), Astro.site).href };
 ---
-<Base title={`${a.t} — Медиацентр Interna Clinic`} description={a.body[0][1].slice(0, 160)} active="media" jsonld={jsonld}>
+<Base title={`${a.t} — Медиацентр Interna Clinic`} description={(a.body[0][1] || a.t).slice(0, 160)} active="media" jsonld={jsonld}>
   <PageHero crumbs={[['Главная', '/'], ['Медиацентр', '/media'], ['Статья']]} title={a.t} sub={`${a.by} · ${a.date} · ${a.min}`}>
     <span slot="extra" class="tag rise d3" style="background:rgba(255,255,255,.12);color:#fff;margin-top:14px;display:inline-block">{a.tag}</span>
   </PageHero>
   <section class="sec"><div class="shell"><div class="article">
-    <article class="body rv"><div class="cover"><img src={img(a.img)} alt="" /></div>
+    <article class="body rv">{a.video ? <div class="cover" style="aspect-ratio:16/9"><iframe src={`https://www.youtube-nocookie.com/embed/${a.video}`} title={a.t} loading="lazy" allowfullscreen style="width:100%;height:100%;border:0"></iframe></div> : <div class="cover"><img src={img(a.img)} alt="" /></div>}
       {a.body.map((b) => b[0] === 'h' ? <h3>{b[1]}</h3> : b[0] === 'q' ? <div class="pull">{b[1]}</div> : <p>{b[1]}</p>)}
     </article>
     <aside class="side rv d2">

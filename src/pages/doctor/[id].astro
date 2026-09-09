@@ -14,14 +14,14 @@ const jsonld = { '@context': 'https://schema.org', '@type': 'Physician', name: d
 <Base title={`${d.n} — ${d.r} | Interna Clinic`} description={d.bio} active="doctors" jsonld={jsonld}>
   <PageHero crumbs={[['Главная', '/'], ['Врачи', '/doctors'], [d.n.split(' ')[0]]]} title={d.n} sub={d.r}>
     <div slot="extra">
-      <div class="chips rise d3" style="margin-top:22px">{d.tags.map((t) => <span class="chip" style="background:rgba(255,255,255,.12);color:#fff">{t}</span>)}<span class="chip" style="background:rgba(255,255,255,.12);color:#fff">стаж {d.exp}</span></div>
+      <div class="chips rise d3" style="margin-top:22px">{d.tags.map((t) => <span class="chip" style="background:rgba(255,255,255,.12);color:#fff">{t}</span>)}{d.exp && <span class="chip" style="background:rgba(255,255,255,.12);color:#fff">стаж {d.exp}</span>}</div>
       <div class="hero-actions rise d4"><button class="btn btn-sky" data-book>Записаться к врачу</button><span class="btn btn-ghost">Ближайшее время: сегодня 16:00</span></div>
     </div>
     <div slot="right" class="phero-img rise d2" style="aspect-ratio:.85;max-width:380px;margin-left:auto"><img src={img(d.img)} alt={d.n} style="object-position:top" /></div>
   </PageHero>
   <section class="sec"><div class="shell"><div class="grid2">
     <div class="card rv" style="padding:30px"><h3 class="serif" style="font-size:22px;margin-bottom:14px">О враче</h3><p style="margin:0 0 18px;font-size:15.5px;line-height:1.7;font-weight:500">{d.bio}</p>
-      <div class="checks" style="grid-template-columns:1fr;margin-top:0"><span class="check"><i></i>Приём по протоколам доказательной медицины</span><span class="check"><i></i>Обследования в тот же день</span><span class="check"><i></i>Приём на русском и казахском языках</span><span class="check"><i></i>Стаж {d.exp}</span></div></div>
+      <div class="checks" style="grid-template-columns:1fr;margin-top:0"><span class="check"><i></i>Приём по протоколам доказательной медицины</span><span class="check"><i></i>Обследования в тот же день</span><span class="check"><i></i>Приём на русском и казахском языках</span>{d.exp && <span class="check"><i></i>Стаж {d.exp}</span>}</div></div>
     <div class="card rv d2" style="padding:30px;background:var(--paper);border-color:transparent"><h3 class="serif" style="font-size:22px;margin-bottom:12px">Приёмы и услуги</h3>
       <div class="prow"><span><b>Первичный приём</b><small>45–60 минут</small></span><span class="pv">{d.price}</span></div>
       <div class="prow"><span><b>Повторный приём</b><small>30 минут</small></span><span class="pv">15 000 ₸</span></div>

@@ -1,0 +1,40 @@
+---
+// Страницы услуг и направлений, перенесённые со старого сайта (тексты — из content/migrated)
+import Base from '../../layouts/Base.astro';
+import PageHero from '../../components/PageHero.astro';
+import DoctorCard from '../../components/DoctorCard.astro';
+import Cta from '../../components/Cta.astro';
+import extra from '../../data/services_extra.json';
+import doctors from '../../data/doctors.json';
+import prices from '../../data/prices.json';
+
+export function getStaticPaths() { return Object.keys(extra).map((slug) => ({ params: { slug } })); }
+const { slug } = Astro.params;
+const s = extra[slug];
+const kw = (s.h1 + ' ' + slug).toLowerCase();
+const catFor = /гастро|гепат|печен|жкт|колоно|эгдс/.test(kw) ? 'gastro' : /эндокрин|диабет|щитовид/.test(kw) ? 'endo' : /кардио|сердц/.test(kw) ? 'cardio' : /детск|child/.test(kw) ? 'kids' : /эндоскоп|капсул/.test(kw) ? 'endoscopy' : null;
+const rel = (catFor ? doctors.filter((d) => d.cat === catFor) : doctors.filter((d) => new RegExp(s.t.split(' ')[0].slice(0, 6), 'i').test(d.r))).slice(0, 4);
+const keys = Object.keys(prices);
+const stem = s.t.split(' ')[0].slice(0, 6).toLowerCase();
+const priceKey = prices[s.cat] ? s.cat : (keys.find((k) => k.toLowerCase().includes(stem)) || keys.find((k) => /гастро/i.test(k)) || keys[0]);
+const priceRows = (prices[priceKey] || []).filter((r) => r[2] !== 'по запросу').slice(0, 4);
+const paras = s.paragraphs.length ? s.paragraphs : [];
+---
+<Base title={s.title || `${s.h1} — Interna Clinic`} description={s.description || s.lead} active="services">
+  <PageHero crumbs={[['Главная', '/'], ['Услуги', '/services'], [s.cat, '/services'], [s.t]]} title={s.h1} sub={s.lead} chips={[s.cat, 'приём и обследование в один визит']} />
+  <section class="sec"><div class="shell"><div class="article">
+    <article class="body rv">
+      <div style="display:flex;align-items:center;gap:14px;margin-bottom:22px"><span class="itile"><span class="msr">{s.icon}</span></span><p class="kicker" style="margin:0">{s.cat}</p></div>
+      {paras.length > 0 ? paras.map((p) => <p>{p}</p>) : <div class="pull">Подробное описание переносится со старого сайта. Записаться и уточнить детали можно по телефону или через форму — администратор ответит в течение 10 минут.</div>}
+    </article>
+    <aside class="side rv d2">
+      <div class="pricecard"><h3>Стоимость</h3><p class="dt">{priceKey}</p>
+        {priceRows.map((p) => <div class="prow"><span><b>{p[0]}</b><small>{p[1]}</small></span><span class="pv">{p[2]}</span></div>)}
+        <button class="btn btn-primary" data-book data-svc={s.t}>Записаться</button>
+        <p style="margin:12px 0 0;font-size:12px;color:var(--faint);font-weight:600">Полный прайс — на странице <a href="/prices" style="color:var(--blue-600)">Цены</a>.</p></div>
+      <div class="toc"><b style="font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--faint);display:block;margin-bottom:10px">Смежные разделы</b><a href="/prepare">Подготовка к процедурам</a><a href="/checkup">Check-up программы</a><a href="/doctors">Все врачи</a><a href="/faq">Вопросы и ответы</a></div>
+    </aside>
+  </div></div></section>
+  {rel.length > 0 && <section class="sec" style="padding-top:0"><div class="shell"><div class="sec-head rv"><div><p class="kicker">Врачи</p><h2 class="h">Кто <em>принимает</em></h2></div><a class="btn btn-line" href="/doctors">Все врачи →</a></div><div class="grid4">{rel.map((d, i) => <DoctorCard d={d} delay={i + 1} />)}</div></div></section>}
+  <Cta />
+</Base>
