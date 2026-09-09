@@ -12,9 +12,10 @@ const files = walk('dist').filter((f) => /\.(html|css|js|xml|txt)$/.test(f));
 let n = 0;
 for (const f of files) {
   const src = readFileSync(f, 'utf8');
+  const b = base.slice(1); // без ведущего слэша — чтобы не префиксовать уже префиксованные Astro пути
   const out = src
-    .replace(/(href|src|content|action)="\/(?!\/)/g, `$1="${base}/`)
-    .replace(/url\(\/(?!\/)/g, `url(${base}/`)
+    .replace(new RegExp(`(href|src|content|action)="/(?!/|${b}/)`, 'g'), `$1="${base}/`)
+    .replace(new RegExp(`url\\(/(?!/|${b}/)`, 'g'), `url(${base}/`)
     .replace(/fetch\("\/api\//g, `fetch("${base}/api/`);
   if (out !== src) { writeFileSync(f, out); n++; }
 }
