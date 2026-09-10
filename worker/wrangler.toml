@@ -1,0 +1,17 @@
+# API-слой сайта Interna Clinic — Cloudflare Worker (бесплатный тариф: 100 000 запросов/день)
+# Деплой: cd worker && npx wrangler login && npx wrangler kv namespace create SETTINGS && npx wrangler deploy
+name = "interna-api"
+main = "src/index.js"
+compatibility_date = "2026-06-01"
+
+# Хранилище настроек интеграций и журнала заявок
+[[kv_namespaces]]
+binding = "SETTINGS"
+id = "REPLACE_WITH_KV_ID"   # подставится после `wrangler kv namespace create SETTINGS`
+
+[vars]
+# Откуда разрешены запросы (сайт). Через запятую.
+ALLOWED_ORIGINS = "https://kabdyzhanzhaina-lang.github.io,https://internaclinic.kz,https://www.internaclinic.kz,http://127.0.0.1:4321"
+
+# Секреты задаются командой, не в файле:
+#   npx wrangler secret put ADMIN_PASSWORD   — пароль админки /admin

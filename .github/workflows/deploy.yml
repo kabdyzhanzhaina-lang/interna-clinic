@@ -30,6 +30,8 @@ jobs:
           # После подключения домена internaclinic.kz переменную убрать (см. README).
           SITE_URL: ${{ vars.SITE_URL || 'https://kabdyzhanzhaina-lang.github.io' }}
           BASE_PATH: ${{ vars.BASE_PATH || '/interna-clinic' }}
+          # Адрес API (Cloudflare Worker из папки worker/). Пусто — форма работает в демо-режиме.
+          PUBLIC_API_URL: ${{ vars.PUBLIC_API_URL || '' }}
       - uses: actions/upload-pages-artifact@v3
         with:
           path: dist

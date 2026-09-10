@@ -10,3 +10,5 @@ dist/
 docs/
 content/
 prototype/
+worker/.dev.vars
+worker/.wrangler/

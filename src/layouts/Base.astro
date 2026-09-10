@@ -143,6 +143,7 @@ const org = {
       </div>
     </div>
 
+    <script set:html={`window.SITE_API=${JSON.stringify(import.meta.env.PUBLIC_API_URL || "")};`} />
     <script defer src="/scripts/site.js"></script>
   </body>
 </html>

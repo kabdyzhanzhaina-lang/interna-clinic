@@ -209,8 +209,13 @@
     if (!phone) { $("#mPhone").focus(); $("#mPhone").style.borderColor = "#B4342C"; return; }
     const slot = $('#mslots .slot[aria-pressed="true"]'); const st = slot ? slot.firstChild.nodeValue.trim() + ", " + $("small", slot).textContent : "ближайшее время";
     const fmt = $("#mFormatWrap").hidden ? "" : " (" + $("#mFormat .on").dataset.fmt.toLowerCase() + ")";
-    const payload = { name, phone, service: $("#mSvc").value + fmt, slot: st, agree: true, page: location.pathname };
-    try { await fetch("/api/lead", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify(payload) }); } catch (_) { /* демо-режим без бэкенда */ }
+    const utm = Object.fromEntries([...new URLSearchParams(location.search)].filter(([k]) => k.startsWith("utm_")));
+    const payload = { name, phone, service: $("#mSvc").value, format: fmt.replace(/[() ]/g, ""), slot: st, agree: true, page: location.pathname, ...utm };
+    // Адрес API задаётся при сборке (PUBLIC_API_URL); куда дальше уходит заявка — настраивается в админке API (/admin)
+    const api = window.SITE_API ? window.SITE_API.replace(/\/$/, "") + "/lead" : null;
+    $("#mSubmit").disabled = true;
+    if (api) { try { await fetch(api, { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify(payload) }); } catch (_) { /* заявка покажется в журнале API, даже если CRM не ответила */ } }
+    $("#mSubmit").disabled = false;
     $("#mdoneTxt").textContent = `${name ? name + ", " : ""}${$("#mSvc").value}${fmt} — ${st}. Подтверждение отправим на ${phone}.`;
     $("#mform").hidden = true; $("#mdone").hidden = false;
   });
