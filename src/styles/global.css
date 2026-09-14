@@ -532,3 +532,16 @@ body.kids .readprog{background:linear-gradient(90deg,#FF6B4A,#FFC845)}
 @media(max-width:1100px){.abody .spin.margin{display:none}.sticker.hero{width:96px!important;height:96px!important}.sticker svg text{font-size:12.5px}.sticker.more{display:none}}
 @media(max-width:900px){.phero .sticker{display:none}}
 @media(max-width:640px){.apull .spin{right:-8px;top:-22px;width:40px;height:40px}.sticker.cover{right:12px!important;top:-40px!important}}
+
+/* ── перенесённые статьи: подзаголовки, списки, тайм-коды видео ── */
+.abody .asub{font-family:"Lora",serif;font-weight:600;font-size:20px;line-height:1.35;margin:28px 0 10px;color:var(--ink)}
+.abody .alist{margin:0 0 22px;padding-left:22px;max-width:66ch}
+.abody .alist li{font-size:16.5px;line-height:1.7;font-weight:500;margin:0 0 8px}
+.abody ul.alist{list-style:none;padding-left:0}
+.abody ul.alist li{position:relative;padding-left:26px}
+.abody ul.alist li::before{content:"";position:absolute;left:0;top:11px;width:12px;height:12px;border-radius:50%;background:var(--blue);opacity:.85}
+.tc{display:flex;flex-direction:column;gap:6px;margin:8px 0 28px;padding:22px;border-radius:20px;background:var(--ice-50);border:1.5px solid var(--line)}
+.tc .kicker{margin-bottom:8px}
+.tc button{display:flex;align-items:baseline;gap:14px;text-align:left;border:0;background:none;padding:8px 10px;border-radius:12px;font:inherit;font-weight:600;font-size:15px;color:var(--ink);cursor:pointer;transition:background .2s}
+.tc button:hover{background:#fff}
+.tc button span{font-variant-numeric:tabular-nums;color:var(--blue);font-weight:800;font-size:13px;min-width:52px}

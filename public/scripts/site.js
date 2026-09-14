@@ -171,6 +171,12 @@
     };
     addEventListener("scroll", () => { if (!pt) { pt = true; requestAnimationFrame(() => { upd(); pt = false; }); } }, { passive: true }); upd();
   }
+  /* ── тайм-коды видео: клик перематывает встроенный ролик ── */
+  document.addEventListener("click", (e) => {
+    const b = e.target.closest("[data-seek]"); const fr = $("#ytframe"); if (!b || !fr) return;
+    fr.src = `https://www.youtube-nocookie.com/embed/${fr.dataset.video}?start=${b.dataset.seek}&autoplay=1`;
+    fr.closest(".acover").scrollIntoView({ behavior: "smooth", block: "center" });
+  });
   /* ── прогресс чтения статьи ── */
   const prog = $("#readprog");
   if (prog) addEventListener("scroll", () => { const a = $(".article .body"); if (!a) return; const r = a.getBoundingClientRect(); const total = r.height - innerHeight * 0.6; const p = Math.min(1, Math.max(0, -r.top / (total <= 0 ? 1 : total))); prog.style.width = (p * 100).toFixed(1) + "%"; }, { passive: true });
