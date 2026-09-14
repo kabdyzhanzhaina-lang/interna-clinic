@@ -1,22 +1,31 @@
 ---
+// Документы: договор оферты и правила возврата — перенесены со старого сайта полностью (scripts/migrate-pages.mjs → src/data/legal.json)
 import Base from '../layouts/Base.astro';
 import PageHero from '../components/PageHero.astro';
+import Body from '../components/Body.astro';
+import legal from '../data/legal.json';
 import { SITE } from '../lib/site.js';
-const toc = ['Публичная оферта', 'Политика конфиденциальности', 'Согласие на обработку ПД', 'Правила возврата средств', 'Реквизиты'];
+const toc = [['s1', 'Договор публичной оферты'], ['s2', 'Правила возврата денег'], ['s3', 'Согласие на обработку персональных данных'], ['s4', 'Реквизиты']];
 ---
-<Base title="Документы — оферта, политика конфиденциальности | Interna Clinic" description="Публичная оферта, политика конфиденциальности и согласие на обработку персональных данных клиники Interna Clinic.">
-  <PageHero crumbs={[['Главная', '/'], ['Документы'], ['Публичная оферта']]} title="Документы" sub="Публичная оферта, политика конфиденциальности и согласие на обработку персональных данных." />
+<Base title="Документы — публичная оферта и правила возврата | Interna Clinic" description="Договор открытой (публичной) оферты на оказание платных медицинских услуг, правила возврата денег, согласие на обработку персональных данных и реквизиты ТОО «Институт гастроэнтерологии, гепатологии и метаболизма»." active="">
+  <PageHero crumbs={[['Главная', '/'], ['Документы']]} title="Документы" sub="Договор публичной оферты, правила возврата денег за медицинские услуги и реквизиты клиники." chips={['оферта от 17.10.2022', 'правила возврата № 17-П от 12.12.2024']} />
   <section class="sec"><div class="shell"><div class="legalgrid">
-    <div class="toc rv">{toc.map((t, i) => <a href={`#s${i + 1}`} class={i === 0 ? 'on' : ''}>{i + 1}. {t}</a>)}</div>
-    <div class="body rv d2" style="max-width:74ch">
-      <h3 id="s1" class="serif" style="font-size:26px;margin-bottom:12px">1. Публичная оферта</h3>
-      <p style="font-size:15px;line-height:1.75;font-weight:500">{SITE.legalName}, именуемое в дальнейшем «Исполнитель», в лице Генерального директора, действующего на основании Устава и лицензии на занятие медицинской деятельностью {SITE.license}, выражает намерение заключить договор на оказание платных медицинских услуг с Заказчиками на условиях настоящей оферты.</p>
-      <p style="font-size:15px;line-height:1.75;font-weight:500">1.1. Настоящий документ является публичной офертой в соответствии со статьёй 395 Гражданского кодекса Республики Казахстан.<br />1.2. Акцептом оферты считается запись на приём любым из доступных способов либо оплата услуг Исполнителя.<br />1.3. Актуальная редакция размещена на сайте internaclinic.kz и доступна в регистратуре.</p>
-      <h3 id="s2" class="serif" style="font-size:26px;margin:32px 0 12px">2. Политика конфиденциальности</h3>
-      <p style="font-size:15px;line-height:1.75;font-weight:500">Оператор обрабатывает персональные данные пациентов в соответствии с Законом Республики Казахстан «О персональных данных и их защите». Данные используются исключительно для оказания медицинских услуг, записи на приём и информирования о результатах. Передача третьим лицам без согласия субъекта не осуществляется.</p>
-      <div class="pull">Тексты документов — заготовка структуры. Финальные формулировки предоставляет юрист клиники (бриф, раздел 9).</div>
-      <h3 id="s5" class="serif" style="font-size:26px;margin:32px 0 12px">5. Реквизиты</h3>
-      <p style="font-size:15px;line-height:1.75;font-weight:500">{SITE.legalName} · БИН {SITE.bin} · {SITE.address} · {SITE.email}</p>
+    <div class="toc rv" style="position:sticky;top:100px">{toc.map(([id, t], i) => <a href={`#${id}`} class={i === 0 ? 'on' : ''}>{i + 1}. {t}</a>)}<a class="btn btn-line sm" href="https://internaclinic.kz/oferta" target="_blank" rel="noopener" style="margin-top:14px">Версия на казахском ↗</a></div>
+    <div class="body legal rv d2" style="max-width:76ch">
+      <h3 id="s1" class="serif" style="font-size:26px;margin-bottom:6px">1. {legal.oferta.title}</h3>
+      <p class="small" style="color:var(--faint);font-weight:700">г. Алматы · {legal.oferta.date}</p>
+      <Body body={legal.oferta.body} />
+
+      <h3 id="s2" class="serif" style="font-size:26px;margin:44px 0 6px">2. {legal.rules.title}</h3>
+      <p class="small" style="color:var(--faint);font-weight:700">{legal.rules.approved}</p>
+      <Body body={legal.rules.body} />
+
+      <h3 id="s3" class="serif" style="font-size:26px;margin:44px 0 12px">3. Согласие на обработку персональных данных</h3>
+      <p>Отправляя форму записи на сайте, пациент даёт согласие ТОО «Институт гастроэнтерологии, гепатологии и метаболизма» на обработку указанных персональных данных (имя, номер телефона) в целях записи на приём и информирования о его времени в соответствии с Законом Республики Казахстан «О персональных данных и их защите». Данные не передаются третьим лицам, кроме случаев, предусмотренных законодательством, и хранятся в течение срока, необходимого для оказания услуги.</p>
+      <div class="pull">Формулировку согласия согласовывает юрист клиники перед запуском сайта.</div>
+
+      <h3 id="s4" class="serif" style="font-size:26px;margin:44px 0 12px">4. Реквизиты</h3>
+      <ul class="alist">{legal.requisites.map((r) => <li>{r}</li>)}<li>Лицензия на медицинскую деятельность № 22 016 017 от 31.08.2022</li><li>{SITE.email}</li></ul>
     </div>
   </div></div></section>
 </Base>

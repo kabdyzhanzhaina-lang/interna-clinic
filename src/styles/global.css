@@ -546,3 +546,45 @@ body.kids .readprog{background:linear-gradient(90deg,#FF6B4A,#FFC845)}
 .tc button{display:flex;align-items:baseline;gap:14px;text-align:left;border:0;background:none;padding:8px 10px;border-radius:12px;font:inherit;font-weight:600;font-size:15px;color:var(--ink);cursor:pointer;transition:background .2s}
 .tc button:hover{background:#fff}
 .tc button span{font-variant-numeric:tabular-nums;color:var(--blue);font-weight:800;font-size:13px;min-width:52px}
+
+/* ── Check-up: карточки программ, матрица сравнения, аккордеоны ── */
+.cugrid{display:grid;grid-template-columns:repeat(5,1fr);gap:14px}
+.cugrid .cu{display:flex;flex-direction:column;padding:24px 22px}
+.cucount{font-size:12.5px;font-weight:800;color:var(--blue-600);margin:0 0 10px}
+.cu.fill .cucount{color:var(--sky)}
+.cuinc{list-style:none;padding:0;margin:0;font-size:13px;font-weight:600;color:var(--muted);line-height:1.45}
+.cuinc li{position:relative;padding-left:18px;margin-bottom:6px}
+.cuinc li::before{content:"";position:absolute;left:0;top:6px;width:8px;height:8px;border-radius:50%;background:var(--blue)}
+.cuinc li.more{color:var(--faint);font-style:italic}.cuinc li.more::before{background:var(--line)}
+.cu.fill .cuinc{color:#C9E6F5}.cu.fill .cuinc li::before{background:var(--sky)}
+@media(max-width:1200px){.cugrid{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:760px){.cugrid{grid-template-columns:1fr 1fr}}
+@media(max-width:520px){.cugrid{grid-template-columns:1fr}}
+.cmpwrap{overflow-x:auto;border:1.5px solid var(--line);border-radius:20px;background:#fff}
+.cmp{width:100%;border-collapse:collapse;min-width:860px;font-size:14px}
+.cmp th,.cmp td{padding:12px 14px;border-bottom:1px solid var(--line);text-align:center;vertical-align:middle}
+.cmp th:first-child,.cmp td:first-child{text-align:left;font-weight:600;color:var(--ink);max-width:340px}
+.cmp thead th{position:sticky;top:0;background:var(--ice-50);font-size:12.5px;font-weight:800;color:var(--navy);line-height:1.3}
+.cmp thead th small{display:block;color:var(--blue-600);font-weight:800;font-size:12px;margin-top:4px}
+.cmp tr.grp td{background:var(--paper);font-size:11px;letter-spacing:.12em;text-transform:uppercase;font-weight:800;color:var(--faint);text-align:left;padding:10px 14px}
+.cmp td.yes .material-symbols-rounded{color:var(--blue);font-size:22px;font-variation-settings:'wght' 700}
+.cmp td.no .dash{color:var(--line);font-weight:700}
+.cmp tbody tr:hover td{background:#F7FBFE}
+.acc{border:1.5px solid var(--line);border-radius:16px;padding:0;margin:0 0 12px;background:#fff}
+.acc summary{list-style:none;cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:14px;padding:16px 20px;font-weight:700;color:var(--ink)}
+.acc summary::-webkit-details-marker{display:none}
+.acc summary::after{content:"expand_more";font-family:"Material Symbols Rounded";font-size:22px;color:var(--blue);transition:transform .25s;margin-left:auto}
+.acc[open] summary::after{transform:rotate(180deg)}
+.acc .cnt{font-size:12px;font-weight:800;color:var(--blue-600);background:var(--ice);border-radius:999px;padding:4px 10px;white-space:nowrap}
+.acc .alist{padding:0 20px 18px 42px;margin:0}.acc ul.alist{padding-left:20px}
+.acc .alist li{font-size:14.5px;margin-bottom:6px}
+.alist.light li,.alist.light{color:#DCEFF9}.alist.light li::before{background:var(--sky)!important}
+.toclink{display:block;width:100%;text-align:left;background:none;border:0;padding:8px 0;font:inherit;font-weight:600;font-size:14px;color:var(--ink);cursor:pointer;border-bottom:1px solid var(--line)}
+.toclink:hover{color:var(--blue-600)}
+.prepset .body .asub{margin-top:22px}
+.prepset .body p{font-size:15.5px;line-height:1.7;font-weight:500;margin:0 0 14px}
+.body.legal p{font-size:14.5px;line-height:1.75;font-weight:500;margin:0 0 12px;text-align:justify}
+.body.legal h4.asub{margin-top:30px;font-size:19px}
+.body .bh{font-family:"Lora",serif;font-weight:600;font-size:24px;margin:32px 0 12px;line-height:1.25}
+[hidden]{display:none!important}
+.cu .ft{flex-wrap:wrap;gap:10px}.cu .ft b{white-space:nowrap;font-size:17px!important}

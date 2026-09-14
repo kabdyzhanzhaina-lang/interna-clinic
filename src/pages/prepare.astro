@@ -1,26 +1,42 @@
 ---
+// Подготовка к процедурам — памятки перенесены со старого сайта полностью (scripts/migrate-pages.mjs → src/data/prepare.json)
 import Base from '../layouts/Base.astro';
 import PageHero from '../components/PageHero.astro';
 import Cta from '../components/Cta.astro';
 import Faq from '../components/Faq.astro';
-const TABS = ['Колоноскопия', 'ЭГДС', 'УЗИ брюшной полости', 'Фиброскан', 'Анализы'];
-const DATA = [
-  [['ЗА 3 ДНЯ', 'Диета без клетчатки', 'Исключите овощи, фрукты, хлеб грубого помола, орехи и грибы. Можно: бульон, яйца, рис, нежирное мясо и рыбу.'], ['НАКАНУНЕ', 'Приём препарата', 'Раствор по схеме, которую выдаст врач при записи. Последний приём пищи — за 18 часов, воду можно.'], ['В ДЕНЬ ПРОЦЕДУРЫ', 'Приезжайте натощак', 'Не есть и не пить за 4 часа. После седации нельзя за руль — планируйте сопровождение.']],
-  [['НАКАНУНЕ', 'Лёгкий ужин', 'Ужин до 20:00, без жирного и тяжёлого.'], ['УТРОМ', 'Натощак', 'Не есть 8 часов, не пить 4 часа до процедуры. Лекарства — по согласованию с врачом.'], ['В ДЕНЬ', 'Документы и сопровождение', 'Возьмите прошлые заключения. После седации — сопровождающий.']],
-  [['ЗА 2 ДНЯ', 'Без газообразующего', 'Исключите бобовые, капусту, газировку, чёрный хлеб.'], ['УТРОМ', 'Натощак', 'Не есть 6 часов до исследования, не пить за 1 час.'], ['В ДЕНЬ', 'Без подготовки', 'Щитовидная железа и сердце — подготовка не нужна.']],
-  [['ШАГ 1', 'Без подготовки', 'Фиброскан не требует диеты и голодания. Желательно не есть 2–3 часа.'], ['ШАГ 2', '10 минут', 'Датчик прикладывается к правому боку — как при УЗИ.'], ['ШАГ 3', 'Сразу результат', 'Цифры фиброза и стеатоза с расшифровкой врача.']],
-  [['УТРОМ', 'Натощак', 'Кровь сдаётся утром после 8–10 часов голода. Воду можно.'], ['ЗА СУТКИ', 'Без алкоголя и нагрузок', 'Исключите алкоголь, тяжёлые тренировки, баню.'], ['ЛЕКАРСТВА', 'Согласуйте с врачом', 'Некоторые препараты влияют на результаты — предупредите при записи.']],
+import Body from '../components/Body.astro';
+import prep from '../data/prepare.json';
+import doctors from '../data/doctors.json';
+import { img } from '../lib/site.js';
+const prof = doctors.find((d) => d.id === prep.professor.doc);
+const faq = [
+  ['Что будет, если подготовиться неправильно?', 'Врач может не рассмотреть слизистую полностью, и исследование придётся повторить. Поэтому при записи мы дублируем памятку в WhatsApp и отвечаем на вопросы по подготовке.'],
+  ['Можно ли пить воду перед ЭГДС и колоноскопией?', 'Прозрачную воду — до 2 часов до исследования без анестезии. При анестезии за 3 часа нужно прекратить приём любой жидкости.'],
+  ['Я принимаю лекарства постоянно. Что делать?', 'Скажите об этом при записи: антикоагулянты, препараты железа и от диабета требуют отдельных рекомендаций врача. Самостоятельно ничего не отменяйте.'],
+  ['Нужен ли сопровождающий?', 'Да, если исследование проводится под седацией: в день процедуры нельзя управлять автомобилем.'],
 ];
-const faq = [['Что будет, если подготовиться неправильно?', 'Врач может не рассмотреть слизистую полностью, и исследование придётся повторить. Поэтому мы дублируем памятку в WhatsApp и отвечаем на вопросы до процедуры.'], ['Можно ли пить воду?', 'Для эндоскопии — до 4 часов до процедуры, для УЗИ — можно.'], ['Что взять с собой?', 'Документ, результаты прошлых исследований, список лекарств. После седации — сопровождающего.'], ['Где взять препарат для подготовки?', 'Схему и название выдаст врач при записи, препарат продаётся в любой аптеке.']];
+const TABS = [...prep.sections.map((s) => ({ id: s.id, t: s.title })), { id: 'nersesov', t: 'К приёму профессора Нерсесова' }];
 ---
-<Base title="Подготовка к процедурам — Interna Clinic" description="Пошаговые памятки: колоноскопия, ЭГДС, УЗИ, фиброскан, анализы. Памятка дублируется в WhatsApp при записи.">
-  <PageHero crumbs={[['Главная', '/'], ['Пациентам', '/faq'], ['Подготовка']]} title="Подготовка к процедурам" sub="От качества подготовки зависит точность исследования. Выберите процедуру — покажем пошаговую памятку. Она же придёт вам в WhatsApp при записи." chips={['памятка — в WhatsApp', '5 шагов без сюрпризов']} />
+<Base title="Подготовка к процедурам — Interna Clinic" description="Полные памятки по подготовке: УЗИ, фиброскан, колоноскопия, ЭГДС, видеокапсульная эндоскопия, анестезия. Перечень обследований к приёму профессора Нерсесова." active="patients">
+  <PageHero crumbs={[['Главная', '/'], ['Пациентам', '/faq'], ['Подготовка']]} title="Подготовка к процедурам" sub="От качества подготовки зависит точность исследования. Выберите процедуру — памятка ниже. При записи мы дублируем её в WhatsApp." chips={[`${prep.sections.length} памяток`, 'как на приёме у врача']} />
   <section class="sec"><div class="shell">
-    <div class="chips rv" id="preptabs">{TABS.map((t, i) => <button class={`chip${i === 0 ? ' on' : ''}`} data-prep={i}>{t}</button>)}</div>
+    <div class="chips rv" id="preptabs" role="tablist">{TABS.map((t, i) => <button class={`chip${i === 0 ? ' on' : ''}`} data-prep={t.id} role="tab" aria-selected={i === 0 ? 'true' : 'false'}>{t.t}</button>)}</div>
     <div class="rv d2" style="margin-top:30px">
-      {DATA.map((set, i) => <div class="grid3" data-prep-set={i} hidden={i !== 0}>{set.map((s, k) => <div class={`card bcard${k === 2 ? ' fill' : ''}`}><span class="tag" style={k === 2 ? 'background:var(--sky);color:var(--sky-dark)' : ''}>{s[0]}</span><h3 style="font-size:19px;margin:14px 0 8px">{s[1]}</h3><p>{s[2]}</p></div>)}</div>)}
+      {prep.sections.map((s, i) => <div class="article prepset" data-prep-set={s.id} hidden={i !== 0}>
+        <article class="body card" style="padding:34px 38px"><h3 class="serif" style="font-size:26px;margin:0 0 18px">Подготовка: {s.title}</h3><Body body={s.body} /></article>
+        <aside class="side"><div class="card" style="padding:22px;background:var(--navy);border-color:transparent;color:#fff"><b style="font-size:15px;display:block;margin-bottom:6px">Остались вопросы по подготовке?</b><p style="margin:0 0 14px;font-size:13.5px;color:#9CC4DB;font-weight:500">Администратор ответит в WhatsApp в течение 10 минут и пришлёт памятку.</p><button class="btn btn-sky sm" data-book data-svc={s.title} style="width:100%">Записаться</button></div>
+          <div class="toc"><b style="font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--faint);display:block;margin-bottom:10px">Другие памятки</b>{prep.sections.filter((x) => x.id !== s.id).slice(0, 6).map((x) => <button type="button" class="toclink" data-prep-go={x.id}>{x.title}</button>)}</div></aside>
+      </div>)}
+      <div class="article prepset" data-prep-set="nersesov" hidden>
+        <article class="body card" style="padding:34px 38px">
+          <h3 class="serif" style="font-size:26px;margin:0 0 8px">Перечень обследований к приёму профессора Нерсесова А.В.</h3>
+          <p style="font-weight:500;color:var(--muted)">Базовый перечень обязателен для всех. Дополнительные — по вашему диагнозу. Все анализы можно сдать в Interna Clinic за один визит до приёма.</p>
+          {prep.professor.lists.map((l, i) => <details class="acc" open={i === 0}><summary><b>{l.title}</b><span class="cnt">{l.items.length}</span></summary><ol class="alist">{l.items.map((x) => <li>{x}</li>)}</ol></details>)}
+        </article>
+        <aside class="side">{prof && <div class="card" style="padding:22px"><div style="display:flex;gap:14px;align-items:center"><div style="width:64px;height:64px;border-radius:50%;overflow:hidden;flex:none"><img src={img(prof.img)} alt="" style="width:100%;height:100%;object-fit:cover;object-position:top" /></div><div><b style="color:var(--ink);font-size:15px;display:block;line-height:1.3">{prof.n}</b><span style="font-size:12.5px;color:var(--faint);font-weight:600">{prof.r}</span></div></div><a class="btn btn-line sm" href={`/doctor/${prof.id}`} style="width:100%;margin-top:14px">О враче</a><button class="btn btn-primary" data-book data-svc="Приём профессора Нерсесова" style="width:100%;margin-top:10px">Записаться на приём</button></div>}</aside>
+      </div>
     </div>
-    <div class="warn rv d3" style="margin-top:22px"><i>!</i>Постоянно принимаете лекарства (антикоагулянты, препараты от диабета)? Обязательно скажите об этом при записи — врач скорректирует схему подготовки.</div>
+    <div class="warn rv d3" style="margin-top:22px"><i>!</i>Постоянно принимаете лекарства (антикоагулянты, препараты от диабета, железо)? Обязательно скажите об этом при записи — врач даст отдельные рекомендации. Самостоятельно ничего не отменяйте.</div>
   </div></section>
   <Faq items={faq} />
   <Cta />

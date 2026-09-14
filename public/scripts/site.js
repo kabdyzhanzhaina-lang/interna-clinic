@@ -146,12 +146,18 @@
   }
 
   /* ── подготовка: вкладки ── */
-  const prep = $("#preptabs");
-  if (prep) prep.addEventListener("click", (e) => {
-    const b = e.target.closest("[data-prep]"); if (!b) return;
-    $$(".chip", prep).forEach((c) => c.classList.toggle("on", c === b));
-    $$("[data-prep-set]").forEach((s) => (s.hidden = s.dataset.prepSet !== b.dataset.prep));
+  /* ── вкладки-чипы: любая группа [data-prep] переключает свои [data-prep-set]; [data-prep-go] — ссылка на вкладку ── */
+  const switchPrep = (id) => {
+    const btn = $(`[data-prep="${id}"]`); if (!btn) return;
+    const group = btn.closest(".chips"); const ids = $$("[data-prep]", group).map((b) => b.dataset.prep);
+    $$("[data-prep]", group).forEach((c) => { c.classList.toggle("on", c === btn); c.setAttribute("aria-selected", c === btn ? "true" : "false"); });
+    $$("[data-prep-set]").forEach((set) => { if (ids.includes(set.dataset.prepSet)) set.hidden = set.dataset.prepSet !== id; });
+  };
+  document.addEventListener("click", (e) => {
+    const b = e.target.closest("[data-prep]"); if (b) return switchPrep(b.dataset.prep);
+    const g = e.target.closest("[data-prep-go]"); if (g) { switchPrep(g.dataset.prepGo); $(`[data-prep="${g.dataset.prepGo}"]`).closest(".chips").scrollIntoView({ behavior: "smooth", block: "start" }); }
   });
+  if (location.hash && $(`[data-prep="${location.hash.slice(1)}"]`)) switchPrep(location.hash.slice(1));
 
   /* ── параллакс при скролле (как в редакционных лонгридах): data-parallax="0.2" ── */
   /* data-rotate="0.08" — элемент крутится при скролле (градусов на пиксель прокрутки), можно вместе с data-parallax */

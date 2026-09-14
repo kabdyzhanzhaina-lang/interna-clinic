@@ -1,0 +1,14 @@
+---
+// Рендер структурированного текста, перенесённого со старого сайта: [['h'|'h3'|'p'|'ul'|'ol'|'file', ...]]
+const { body = [], numbered = false } = Astro.props;
+let n = 0;
+---
+{body.map((b) => {
+  if (b[0] === 'h') { n += 1; return <h3 class="bh">{numbered ? `${n}. ` : ''}{b[1]}</h3>; }
+  if (b[0] === 'h3') return <h4 class="asub">{b[1]}</h4>;
+  if (b[0] === 'q') return <div class="pull">{b[1]}</div>;
+  if (b[0] === 'ul') return <ul class="alist">{b[1].map((x) => <li>{x}</li>)}</ul>;
+  if (b[0] === 'ol') return <ol class="alist">{b[1].map((x) => <li>{x}</li>)}</ol>;
+  if (b[0] === 'file') return <p><a class="btn btn-line sm" href={b[2]} target="_blank" rel="noopener">{b[1]} · PDF ↗</a></p>;
+  return <p>{b[1]}</p>;
+})}
