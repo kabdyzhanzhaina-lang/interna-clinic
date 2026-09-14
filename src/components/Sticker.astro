@@ -1,0 +1,12 @@
+---
+// Круглый стикер с текстом по окружности — вращается при скролле (data-rotate), иконка в центре остаётся на месте
+const { text = 'МЕДИАЦЕНТР · INTERNA CLINIC · ', icon = 'arrow_downward', speed = '0.08', size = 132, class: cls = '', style = '' } = Astro.props;
+const id = 'cp' + Math.random().toString(36).slice(2, 8);
+---
+<div class={`sticker ${cls}`} style={`width:${size}px;height:${size}px;${style}`} aria-hidden="true">
+  <svg viewBox="0 0 120 120" data-rotate={speed}>
+    <defs><path id={id} d="M60,60 m-46,0 a46,46 0 1,1 92,0 a46,46 0 1,1 -92,0" /></defs>
+    <text><textPath href={`#${id}`} textLength="289">{text}</textPath></text>
+  </svg>
+  <span class="material-symbols-rounded">{icon}</span>
+</div>

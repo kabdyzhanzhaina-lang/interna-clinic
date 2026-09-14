@@ -2,6 +2,9 @@
 // Статья медиацентра — редакционный лонгрид: параллакс обложки и цитат, прогресс чтения, нумерованные разделы
 import Base from '../../layouts/Base.astro';
 import Cta from '../../components/Cta.astro';
+import Sticker from '../../components/Sticker.astro';
+const STAR = '<svg viewBox="0 0 100 100"><path d="M50 0C53 30 70 47 100 50 70 53 53 70 50 100 47 70 30 53 0 50 30 47 47 30 50 0Z"/></svg>';
+const FLOWER = '<svg viewBox="0 0 100 100"><path d="M50 4a17 17 0 0 1 17 17 17 17 0 0 1 29 29 17 17 0 0 1 0 0 17 17 0 0 1-29 29A17 17 0 0 1 50 96a17 17 0 0 1-17-17A17 17 0 0 1 4 50a17 17 0 0 1 29-29A17 17 0 0 1 50 4Z"/><circle cx="50" cy="50" r="9" fill="#fff"/></svg>';
 import { ALL_MEDIA as articles } from '../../lib/media.js';
 import doctors from '../../data/doctors.json';
 import { img } from '../../lib/site.js';
@@ -19,7 +22,9 @@ let n = 0;
   <section class="ahero">
     <span class="blob b1" style="opacity:.45;left:-200px;top:-100px" data-parallax="-0.15"></span>
     <span class="ring" style="width:420px;height:420px;right:-120px;top:-160px" data-parallax="0.25"></span>
-    <span class="ring" style="width:160px;height:160px;right:18%;bottom:-40px" data-parallax="-0.3"></span>
+    <span class="ring dashed" style="width:160px;height:160px;right:18%;bottom:-40px" data-parallax="-0.3" data-rotate="0.12"></span>
+    <span class="ring dashed" style="width:260px;height:260px;left:38%;top:-90px;opacity:.6" data-rotate="-0.06"></span>
+    <span class="spin" style="right:9%;top:120px;width:38px;height:38px" data-rotate="0.25" data-parallax="0.1" set:html={STAR}></span>
     <div class="shell">
       <nav class="crumbs rise d1"><a href="/">Главная</a><span>/</span><a href="/media">Медиацентр</a><span>/</span><b>{a.tag.split(' · ')[0]}</b></nav>
       <span class="tag rise d1" style="background:rgba(255,255,255,.12);color:#fff;margin:6px 0 18px;display:inline-block">{a.tag}</span>
@@ -27,6 +32,7 @@ let n = 0;
       <p class="ameta rise d3">{a.by} · {a.date}{a.min ? ` · ${a.min}` : ''}</p>
     </div>
     <div class="shell acover-wrap">
+      <Sticker class="hero cover" text="ЧИТАТЬ · МЕДИАЦЕНТР · INTERNA CLINIC · " icon="arrow_downward" speed="0.1" style="right:36px;top:-58px" />
       {a.video
         ? <div class="acover rise d3" style="aspect-ratio:16/9"><iframe src={`https://www.youtube-nocookie.com/embed/${a.video}`} title={a.t} loading="lazy" allowfullscreen></iframe></div>
         : <div class="acover rise d3"><img src={img(a.img)} alt="" data-parallax="0.12" data-parallax-scale="1.12" /></div>}
@@ -36,8 +42,8 @@ let n = 0;
   <section class="sec" style="padding-top:60px"><div class="shell"><div class="article">
     <article class="body abody rv">
       {a.body.map((b, i) => {
-        if (b[0] === 'h') { n += 1; return <h3 class="anum" data-n={String(n).padStart(2, '0')}><span class="num" data-parallax="-0.08">{String(n).padStart(2, '0')}</span>{b[1]}</h3>; }
-        if (b[0] === 'q') return <div class="pull apull" data-parallax="0.06">{b[1]}</div>;
+        if (b[0] === 'h') { n += 1; return <h3 class="anum" data-n={String(n).padStart(2, '0')}><span class="num" data-parallax="-0.08">{String(n).padStart(2, '0')}</span>{n === 2 && <span class="spin margin" style="top:90px" data-rotate="0.08" set:html={FLOWER} />}{b[1]}</h3>; }
+        if (b[0] === 'q') return <div class="pull apull" data-parallax="0.06">{b[1]}<span class="spin" data-rotate={n % 2 ? '0.2' : '-0.2'} set:html={STAR} /></div>;
         return <p class={i === 0 ? 'lead-p' : ''}>{b[1]}</p>;
       })}
       {a.url && <p class="small" style="margin-top:28px;color:var(--faint);font-weight:600">Материал перенесён со старого сайта клиники. Полный текст будет дополнен.</p>}
@@ -49,7 +55,9 @@ let n = 0;
     </aside>
   </div></div></section>
 
-  <section class="sec" style="padding-top:0"><div class="shell">
+  <section class="sec" style="padding-top:0;position:relative;overflow:hidden"><div class="shell" style="position:relative;isolation:isolate">
+    <Sticker class="navy more" text="ЕЩЁ ПО ТЕМЕ · ЧИТАЙТЕ · СМОТРИТЕ · " icon="menu_book" speed="-0.09" size={104} style="left:460px;top:0" />
+    <span class="spin ice" style="left:-40px;bottom:-30px;width:120px;height:120px;z-index:-1" data-rotate="0.05" set:html={FLOWER}></span>
     <div class="sec-head rv"><div><p class="kicker">Медиацентр</p><h2 class="h">Ещё <em>по теме</em></h2></div><a class="btn btn-line" href="/media">Все материалы →</a></div>
     <div class="grid4">{others.map((x, i) => <a class={`card svc rv d${i + 1}`} href={`/article/${x.id}`}><div class="img"><img src={img(x.img)} alt="" loading="lazy" data-parallax="0.05" /></div><div class="bd"><span class="kicker" style="margin-bottom:8px;font-size:10px">{x.tag.split(' · ')[0]}</span><h3 style="font-size:15.5px;line-height:1.35">{x.t}</h3></div></a>)}</div>
   </div></section>

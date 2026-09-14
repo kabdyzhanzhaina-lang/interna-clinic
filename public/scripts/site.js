@@ -154,15 +154,19 @@
   });
 
   /* ── параллакс при скролле (как в редакционных лонгридах): data-parallax="0.2" ── */
-  const px = $$("[data-parallax]");
+  /* data-rotate="0.08" — элемент крутится при скролле (градусов на пиксель прокрутки), можно вместе с data-parallax */
+  const px = $$("[data-parallax],[data-rotate]");
   if (px.length && !reduce) {
     let pt = false;
     const upd = () => {
-      const vc = innerHeight / 2;
+      const vc = innerHeight / 2, y = scrollY;
       px.forEach((el) => {
         const r = el.getBoundingClientRect(); if (r.bottom < -200 || r.top > innerHeight + 200) return;
-        const d = (r.top + r.height / 2 - vc) * parseFloat(el.dataset.parallax || "0.2");
-        el.style.transform = `translate3d(0, ${(-d).toFixed(1)}px, 0)` + (el.dataset.parallaxScale ? ` scale(${el.dataset.parallaxScale})` : "");
+        let t = "";
+        if (el.dataset.parallax) { const d = (r.top + r.height / 2 - vc) * parseFloat(el.dataset.parallax); t += `translate3d(0, ${(-d).toFixed(1)}px, 0)`; }
+        if (el.dataset.rotate) t += ` rotate(${(y * parseFloat(el.dataset.rotate)).toFixed(2)}deg)`;
+        if (el.dataset.parallaxScale) t += ` scale(${el.dataset.parallaxScale})`;
+        el.style.transform = t;
       });
     };
     addEventListener("scroll", () => { if (!pt) { pt = true; requestAnimationFrame(() => { upd(); pt = false; }); } }, { passive: true }); upd();
