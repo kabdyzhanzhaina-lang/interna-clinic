@@ -463,7 +463,8 @@ body.scrolled .fab{opacity:1;transform:none;pointer-events:auto}
 .article{display:grid;grid-template-columns:minmax(0,1fr) 320px;gap:48px;align-items:start}
 @media(max-width:900px){.article{grid-template-columns:1fr}}
 .article .body p{font-size:16.5px;line-height:1.8;font-weight:500;margin:0 0 20px}
-.article .body h3{font-family:"Lora",serif;font-weight:600;font-size:26px;margin:32px 0 12px}
+.article .body h3{font-family:"Lora",serif;font-weight:600;font-size:26px;margin:36px 0 12px;line-height:1.25}
+.article .body h3:first-child{margin-top:0}
 .pull{background:var(--ice-50);border-left:4px solid var(--blue);border-radius:16px;padding:22px 26px;font-weight:700;color:var(--blue-700);font-size:15.5px;line-height:1.6;margin:0 0 24px}
 .cover{border-radius:24px;overflow:hidden;aspect-ratio:1.9;margin-bottom:28px}
 .cover img{width:100%;height:100%;object-fit:cover}
@@ -534,12 +535,12 @@ body.kids .readprog{background:linear-gradient(90deg,#FF6B4A,#FFC845)}
 @media(max-width:640px){.apull .spin{right:-8px;top:-22px;width:40px;height:40px}.sticker.cover{right:12px!important;top:-40px!important}}
 
 /* ── перенесённые статьи: подзаголовки, списки, тайм-коды видео ── */
-.abody .asub{font-family:"Lora",serif;font-weight:600;font-size:20px;line-height:1.35;margin:28px 0 10px;color:var(--ink)}
-.abody .alist{margin:0 0 22px;padding-left:22px;max-width:66ch}
-.abody .alist li{font-size:16.5px;line-height:1.7;font-weight:500;margin:0 0 8px}
-.abody ul.alist{list-style:none;padding-left:0}
-.abody ul.alist li{position:relative;padding-left:26px}
-.abody ul.alist li::before{content:"";position:absolute;left:0;top:11px;width:12px;height:12px;border-radius:50%;background:var(--blue);opacity:.85}
+.body .asub,.abody .asub{font-family:"Lora",serif;font-weight:600;font-size:20px;line-height:1.35;margin:28px 0 10px;color:var(--ink)}
+.body .alist,.abody .alist{margin:0 0 22px;padding-left:22px;max-width:66ch}
+.body .alist li,.abody .alist li{font-size:16.5px;line-height:1.7;font-weight:500;margin:0 0 8px}
+.body ul.alist,.abody ul.alist{list-style:none;padding-left:0}
+.body ul.alist li,.abody ul.alist li{position:relative;padding-left:26px}
+.body ul.alist li::before,.abody ul.alist li::before{content:"";position:absolute;left:0;top:11px;width:12px;height:12px;border-radius:50%;background:var(--blue);opacity:.85}
 .tc{display:flex;flex-direction:column;gap:6px;margin:8px 0 28px;padding:22px;border-radius:20px;background:var(--ice-50);border:1.5px solid var(--line)}
 .tc .kicker{margin-bottom:8px}
 .tc button{display:flex;align-items:baseline;gap:14px;text-align:left;border:0;background:none;padding:8px 10px;border-radius:12px;font:inherit;font-weight:600;font-size:15px;color:var(--ink);cursor:pointer;transition:background .2s}

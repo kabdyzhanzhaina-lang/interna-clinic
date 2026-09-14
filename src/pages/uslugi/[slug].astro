@@ -18,14 +18,24 @@ const keys = Object.keys(prices);
 const stem = s.t.split(' ')[0].slice(0, 6).toLowerCase();
 const priceKey = prices[s.cat] ? s.cat : (keys.find((k) => k.toLowerCase().includes(stem)) || keys.find((k) => /гастро/i.test(k)) || keys[0]);
 const priceRows = (prices[priceKey] || []).filter((r) => r[2] !== 'по запросу').slice(0, 4);
-const paras = s.paragraphs.length ? s.paragraphs : [];
+const paras = s.paragraphs?.length ? s.paragraphs : [];
+// Если на старом сайте был один абзац — он уже показан в шапке, не дублируем
+const raw = s.body || [];
+const body = raw.length === 1 && raw[0][0] === 'p' && (s.lead || '').startsWith(raw[0][1].slice(0, 40)) ? [] : raw;
 ---
 <Base title={s.title || `${s.h1} — Interna Clinic`} description={s.description || s.lead} active="services">
   <PageHero crumbs={[['Главная', '/'], ['Услуги', '/services'], [s.cat, '/services'], [s.t]]} title={s.h1} sub={s.lead} chips={[s.cat, 'приём и обследование в один визит']} />
   <section class="sec"><div class="shell"><div class="article">
     <article class="body rv">
       <div style="display:flex;align-items:center;gap:14px;margin-bottom:22px"><span class="itile"><span class="msr">{s.icon}</span></span><p class="kicker" style="margin:0">{s.cat}</p></div>
-      {paras.length > 0 ? paras.map((p) => <p>{p}</p>) : <div class="pull">Подробное описание переносится со старого сайта. Записаться и уточнить детали можно по телефону или через форму — администратор ответит в течение 10 минут.</div>}
+      {body.length > 0 ? body.map((b) => {
+        if (b[0] === 'h') return <h3>{b[1]}</h3>;
+        if (b[0] === 'h3') return <h4 class="asub">{b[1]}</h4>;
+        if (b[0] === 'ul') return <ul class="alist">{b[1].map((x) => <li>{x}</li>)}</ul>;
+        if (b[0] === 'ol') return <ol class="alist">{b[1].map((x) => <li>{x}</li>)}</ol>;
+        if (b[0] === 'file') return <p><a class="btn btn-line sm" href={b[2]} target="_blank" rel="noopener">{b[1]} · PDF ↗</a></p>;
+        return <p>{b[1]}</p>;
+      }) : paras.length > 0 ? paras.map((p) => <p>{p}</p>) : <div class="pull">Подробное описание уточняйте у администратора — на старом сайте у этой услуги был только краткий анонс. Записаться можно по телефону или через форму, ответим в течение 10 минут.</div>}
     </article>
     <aside class="side rv d2">
       <div class="pricecard"><h3>Стоимость</h3><p class="dt">{priceKey}</p>
