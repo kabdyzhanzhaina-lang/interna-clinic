@@ -1,15 +1,38 @@
 ---
+// Акции и бесплатные услуги по ОСМС/ГОБМП — перенесены со старого сайта (scripts/migrate-kids-promo.mjs → promos.json, free.json)
 import Base from '../layouts/Base.astro';
 import PageHero from '../components/PageHero.astro';
 import Cta from '../components/Cta.astro';
+import Body from '../components/Body.astro';
 import promos from '../data/promos.json';
+import free from '../data/free.json';
 import { SITE } from '../lib/site.js';
 ---
-<Base title="Акции и специальные цены — Interna Clinic" description="Комплексы дешевле отдельных услуг и сезонные предложения клиники. Цена фиксируется при записи.">
-  <PageHero crumbs={[['Главная', '/'], ['Акции']]} title="Акции и специальные цены" sub="Комплексы дешевле отдельных услуг и сезонные предложения. Цена фиксируется в момент записи." chips={['выгода до 25%', 'цена фиксируется при записи']} />
-  <section class="sec"><div class="shell"><div class="grid3">
-    {promos.map((p, i) => <div class={`card bcard promo${p.hot ? ' fill' : ''} rv d${i + 1}`}><div style="display:flex;justify-content:space-between;align-items:center"><span class="off">{p.off}</span><span style={`font-size:12px;font-weight:700;color:${p.hot ? '#9FCFEA' : 'var(--faint)'}`}>{p.till}</span></div><h3 style="font-size:20px;margin:16px 0 8px">{p.t}</h3><p>{p.d}</p><div style="display:flex;gap:10px;align-items:baseline;margin:18px 0 14px"><b style={`font-size:24px;color:${p.hot ? 'var(--sky)' : 'var(--blue-700)'}`}>{p.p}</b><span style={`font-size:12.5px;font-weight:600;color:${p.hot ? '#9FCFEA' : 'var(--faint)'}`}>{p.old}</span></div><button class={`btn ${p.hot ? 'btn-sky' : 'btn-line'}`} data-book style="width:100%">Записаться по акции</button></div>)}
-  </div>
-  <p style="margin:20px 0 0;font-size:12.5px;color:var(--faint);font-weight:600">Скидки не суммируются. Подробные условия — по телефону {SITE.phone}. Имеются противопоказания, необходима консультация специалиста.</p></div></section>
+<Base title="Акции и бесплатные услуги по ОСМС — Interna Clinic" description="Специальные цены клиники и бесплатные услуги в рамках ОСМС и ГОБМП: фиброскан печени, процедурный кабинет, госпитализация в стационар." active="promo">
+  <PageHero crumbs={[['Главная', '/'], ['Акции']]} title="Акции и <em>бесплатные</em> услуги" sub="Специальные цены клиники и то, что можно получить бесплатно по государственным программам ОСМС и ГОБМП." chips={[`${promos.length} акция`, `${free.items.length} услуги по ОСМС`]} />
+  <section class="sec"><div class="shell">
+    <div class="sec-head rv"><div><p class="kicker">Специальная цена</p><h2 class="h">Сейчас <em>действует</em></h2></div></div>
+    <div class="grid3">
+      {promos.map((p, i) => <div class={`card bcard promo${p.hot ? ' fill' : ''} rv d${i + 1}`}>
+        <div style="display:flex;justify-content:space-between;align-items:center"><span class="off">{p.off}</span><span class="tag" style={p.hot ? 'background:var(--sky);color:var(--navy)' : ''}>специальная цена</span></div>
+        <h3 style="font-size:20px;margin:14px 0 8px">{p.t}</h3><p>{p.d}</p>
+        <div style="display:flex;align-items:baseline;gap:10px;margin-top:16px"><b style={`font-size:22px;color:${p.hot ? '#fff' : 'var(--blue-700)'}`}>{p.p}</b><s style="opacity:.6;font-weight:600">{p.old}</s></div>
+        <div style="display:flex;gap:10px;margin-top:16px;flex-wrap:wrap"><button class={`btn ${p.hot ? 'btn-sky' : 'btn-primary'} sm`} data-book data-svc={p.t}>Записаться</button><a class="btn btn-line sm" href={p.link} style={p.hot ? 'background:transparent;color:#fff;border-color:rgba(255,255,255,.4)' : ''}>Об услуге →</a></div>
+      </div>)}
+      <div class="card bcard rv d2" style="background:var(--ice-50);border-color:transparent"><div class="ic">📣</div><h3 style="font-size:18px">Скидки и новые акции</h3><p>Анонсируем в Instagram и WhatsApp-рассылке клиники. Спросите администратора о действующих предложениях при записи.</p><a class="btn btn-line sm" href={SITE.whatsapp} rel="noopener" style="margin-top:14px">Спросить в WhatsApp</a></div>
+    </div>
+    <p style="margin:20px 0 0;font-size:12.5px;color:var(--faint);font-weight:600">Скидки не суммируются. Подробные условия — по телефону {SITE.phone}. Имеются противопоказания, необходима консультация специалиста.</p>
+  </div></section>
+
+  <section class="sec osms" id="osms" style="background:var(--ice-50)"><div class="shell">
+    <div class="sec-head rv"><div><p class="kicker">Бесплатно по ОСМС и ГОБМП</p><h2 class="h">Что можно получить <em>по госпрограммам</em></h2></div></div>
+    <div class="article rv d2" style="align-items:start">
+      <div>
+        <div class="card" style="padding:28px 32px;margin-bottom:16px">{free.intro.slice(1).map((p) => <p style="font-weight:500;line-height:1.7;margin:0 0 12px;font-size:15px">{p}</p>)}<p class="small" style="margin:0;color:var(--faint);font-weight:600">Проверить прикрепление и статус страховки можно в приложении Damumed или у администратора.</p></div>
+        {free.items.map((it, i) => <details class="acc card" id={`osms-${it.id}`} open={i === 0}><summary><b>{it.t}</b><span class="cnt">бесплатно</span></summary><div class="body" style="padding:0 22px 20px"><p style="font-weight:600;color:var(--blue-700)">{it.lead}</p><Body body={it.body.filter((b) => b[0] !== 'h')} /><a class="btn btn-line sm" href={it.link}>Страница услуги →</a></div></details>)}
+      </div>
+      <aside class="side"><div class="card" style="padding:22px;background:var(--navy);border-color:transparent;color:#fff"><b style="font-size:15px;display:block;margin-bottom:6px">Как получить услугу по ОСМС</b><ol class="alist light" style="margin:0 0 14px;padding-left:20px;font-size:13.5px"><li>Направление от врача поликлиники по месту прикрепления</li><li>Действующая страховка ОСМС (проверьте в Damumed)</li><li>Запись в Interna Clinic по телефону или через форму</li></ol><button class="btn btn-sky sm" data-book data-svc="Услуга по ОСМС" style="width:100%">Записаться</button></div></aside>
+    </div>
+  </div></section>
   <Cta />
 </Base>

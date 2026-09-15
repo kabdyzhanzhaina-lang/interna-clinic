@@ -104,7 +104,8 @@ export function buildBody(frs, { isBoiler = () => false, h1 = '' } = {}) {
       if (x.kind === 'file') { body.push(['file', x.text, x.href.startsWith('http') ? x.href : `https://internaclinic.kz${x.href}`]); continue; }
       const w = x.text.split(' ').length;
       const caps = x.text === x.text.toUpperCase() && w <= 8 && /[А-ЯЁ]{4}/.test(x.text);
-      const headingLike = x.kind === 'h' || caps || /^\d+-й этап$/i.test(x.text) || /^[А-ЯЁ]{3,}\s*\(/.test(x.text)
+      const question = /\?$/.test(x.text) && w <= 10;
+      const headingLike = x.kind === 'h' || caps || question || /^\d+-й этап$/i.test(x.text) || /^[А-ЯЁ]{3,}\s*\(/.test(x.text)
         || (x.text.length <= 80 && /^[А-ЯЁA-Z«"]/.test(x.text) && !/^\(/.test(x.text) && (/:$/.test(x.text) ? w <= 12 : (w <= 6 && !/[.!?…;,]$/.test(x.text))));
       if (/_{4,}/.test(x.text)) continue;
       body.push([headingLike ? (x.kind === 'h' || caps ? 'h' : 'h3') : 'p', caps ? x.text.charAt(0) + x.text.slice(1).toLowerCase() : x.text]);
@@ -119,3 +120,37 @@ export function buildBody(frs, { isBoiler = () => false, h1 = '' } = {}) {
 }
 export const words = (body) => body.reduce((n, b) => n + (Array.isArray(b[1]) ? b[1].join(' ') : String(b[1])).split(/\s+/).length, 0);
 export { norm };
+
+/** Текст карточки каталога Tilda (поле text: строки через <br>, <strong>Заголовок:</strong>, «•» списки) → body */
+export function textToBody(html) {
+  const dec = (s) => s.replace(/&nbsp;|&#160;/g, ' ').replace(/&amp;/g, '&').replace(/&quot;/g, '"').replace(/&#39;/g, "'").replace(/&lt;/g, '<').replace(/&gt;/g, '>');
+  const paras = dec(html).split(/(?:<br\s*\/?>\s*){2,}/i).map((p) => p.trim()).filter(Boolean);
+  const body = [];
+  for (const raw of paras) {
+    const lines = raw.split(/<br\s*\/?>/i).map((l) => l.replace(/<[^>]+>/g, '').replace(/\s+/g, ' ').trim()).filter(Boolean);
+    if (!lines.length) continue;
+    // после строки с двоеточием несколько строк через <br> — это перечень, даже если строки длинные
+    const prev = body[body.length - 1];
+    if (lines.length >= 3 && prev && prev[0] === 'p' && /:$/.test(prev[1])) { body.push(['ul', lines.map((l) => l.replace(/^[•\-–—]\s*/, ''))]); continue; }
+    const onlyStrong = /^<strong>[^<]*<\/strong>\s*$/i.test(raw.trim());
+    if (onlyStrong || (lines.length === 1 && /^[^.!?]{3,70}:$/.test(lines[0]))) { body.push(['h3', lines[0].replace(/:$/, '')]); continue; }
+    const bullets = lines.filter((l) => /^[•\-–—]\s*/.test(l));
+    if (bullets.length && bullets.length >= lines.length - 1) {
+      const head = lines.find((l) => !/^[•\-–—]\s*/.test(l)); if (head) body.push([/:$/.test(head) ? 'h3' : 'p', head.replace(/:$/, '')]);
+      body.push(['ul', bullets.map((l) => l.replace(/^[•\-–—]\s*/, ''))]); continue;
+    }
+    // строки одного абзаца без маркеров — если коротких много, это список (образование, курсы); первая строка с «:»/«?» — заголовок
+    if (lines.length >= 3 && lines.slice(1).every((l) => l.length < 110)) {
+      const [first, ...rest] = lines;
+      if (/[:?]$/.test(first) || first.length > 110) { body.push([/\?$/.test(first) ? 'h3' : 'p', first]); body.push(['ul', rest]); } else body.push(['ul', lines]);
+      continue;
+    }
+    const joined = lines.join(' ');
+    // перечисление через «;» внутри одного абзаца — список
+    const parts = joined.split(/;\s*/).map((x) => x.trim()).filter(Boolean);
+    if (parts.length >= 3 && parts.every((x) => x.length < 160)) { body.push(['ul', parts.map((x) => x.replace(/\.$/, ''))]); continue; }
+    if (joined.split(' ').length <= 9 && /\?$/.test(joined)) { body.push(['h3', joined]); continue; }   // короткий вопрос — подзаголовок
+    body.push(['p', joined]);
+  }
+  return body;
+}

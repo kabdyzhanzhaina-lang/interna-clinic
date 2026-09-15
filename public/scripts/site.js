@@ -103,7 +103,7 @@
     const b = e.target.closest("[data-cat]"); if (!b) return;
     $$(".chip", df).forEach((c) => c.classList.toggle("on", c === b));
     const cat = b.dataset.cat;
-    $$("#docgrid [data-doc-cat]").forEach((card) => { card.hidden = !(cat === "all" || card.dataset.docCat === cat); });
+    $$("#docgrid [data-doc-cat]").forEach((card) => { card.hidden = !(cat === "all" || card.dataset.docCat.split(" ").includes(cat)); });
   });
 
   /* ── цены: табы + поиск ── */
