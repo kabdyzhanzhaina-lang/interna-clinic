@@ -124,10 +124,12 @@ export { norm };
 /** Текст карточки каталога Tilda (поле text: строки через <br>, <strong>Заголовок:</strong>, «•» списки) → body */
 export function textToBody(html) {
   const dec = (s) => s.replace(/&nbsp;|&#160;/g, ' ').replace(/&amp;/g, '&').replace(/&quot;/g, '"').replace(/&#39;/g, "'").replace(/&lt;/g, '<').replace(/&gt;/g, '>');
-  const paras = dec(html).split(/(?:<br\s*\/?>\s*){2,}/i).map((p) => p.trim()).filter(Boolean);
+  // блочные теги каталога (<p>, <div>, <li>) — тоже границы абзацев/строк
+  const prepared = dec(html).replace(/<\/(p|div|h\d)>/gi, '<br><br>').replace(/<\/li>/gi, '<br>').replace(/<li[^>]*>/gi, '• ');
+  const paras = prepared.split(/(?:<br\s*\/?>\s*){2,}/i).map((p) => p.trim()).filter(Boolean);
   const body = [];
   for (const raw of paras) {
-    const lines = raw.split(/<br\s*\/?>/i).map((l) => l.replace(/<[^>]+>/g, '').replace(/\s+/g, ' ').trim()).filter(Boolean);
+    const lines = raw.split(/<br\s*\/?>/i).map((l) => l.replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim()).filter(Boolean);
     if (!lines.length) continue;
     // после строки с двоеточием несколько строк через <br> — это перечень, даже если строки длинные
     const prev = body[body.length - 1];
@@ -139,6 +141,8 @@ export function textToBody(html) {
       const head = lines.find((l) => !/^[•\-–—]\s*/.test(l)); if (head) body.push([/:$/.test(head) ? 'h3' : 'p', head.replace(/:$/, '')]);
       body.push(['ul', bullets.map((l) => l.replace(/^[•\-–—]\s*/, ''))]); continue;
     }
+    // строки вида «Название — описание» подряд — список
+    if (lines.length >= 3 && lines.filter((l) => /^[^—–]{3,60}\s[—–]\s/.test(l)).length >= lines.length - 1) { const head = lines.find((l) => !/^[^—–]{3,60}\s[—–]\s/.test(l)); if (head) body.push([/:$/.test(head) ? 'p' : 'p', head]); body.push(['ul', lines.filter((l) => /^[^—–]{3,60}\s[—–]\s/.test(l))]); continue; }
     // строки одного абзаца без маркеров — если коротких много, это список (образование, курсы); первая строка с «:»/«?» — заголовок
     if (lines.length >= 3 && lines.slice(1).every((l) => l.length < 110)) {
       const [first, ...rest] = lines;

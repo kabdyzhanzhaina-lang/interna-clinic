@@ -5,7 +5,7 @@ interface Props { crumbs: [string, string?][]; title: string; sub?: string; imag
 const { crumbs, title, sub, image, chips, theme = '' } = Astro.props;
 const hasRight = !!image || Astro.slots.has('right');
 ---
-<section class={`phero ${theme}`}>
+<section class={`phero ${theme}${hasRight ? ' has-right' : ''}`}>
   <span class="blob b1" style="opacity:.35"></span>
   <span class="ring" style="width:320px;height:320px;right:8%;top:-120px"></span>
   {chips && <><div class="chip-float a">{chips[0]}</div><div class="chip-float b">{chips[1]}</div></>}
