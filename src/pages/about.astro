@@ -5,19 +5,29 @@ import Cta from '../components/Cta.astro';
 import doctors from '../data/doctors.json';
 import { SITE, img } from '../lib/site.js';
 import equipment from '../data/equipment.json';
+import about from '../data/about.json';
+const ICONS = ['🎓', '🔬', '🩺', '📋'];
+const mm = (sec) => `${Math.floor(sec / 60)}:${String(sec % 60).padStart(2, '0')}`;
 ---
 <Base title="О клинике — Interna Clinic, институт гастроэнтерологии, гепатологии и метаболизма" description="Первая клиника доказательной медицины внутренних болезней в Центральной Азии. Оборудование экспертного класса, профессура, лицензия." active="about">
   <PageHero crumbs={[['Главная', '/'], ['О клинике']]} title="Первая клиника доказательной медицины в Центральной Азии" sub="Interna Clinic — институт гастроэнтерологии, гепатологии и метаболизма. Мы лечим по международным протоколам: только те назначения, эффективность которых доказана исследованиями." image="team" />
-  <section class="sec"><div class="shell"><div class="grid3">
-    <div class="card bcard rv d1"><div class="ic">📋</div><h3>Протоколы, а не мнения</h3><p>Схемы лечения соответствуют рекомендациям EASL, ACG и ВОЗ — и мы готовы показать источник каждого назначения.</p></div>
-    <div class="card bcard rv d2"><div class="ic">🚫</div><h3>Без лишних назначений</h3><p>Не назначаем анализы и процедуры «на всякий случай». Каждое обследование отвечает на конкретный клинический вопрос.</p></div>
-    <div class="card bcard rv d3"><div class="ic">🎓</div><h3>Врачи, которые учат других</h3><p>Наши доктора преподают, публикуются и ведут школы для пациентов — от школы диабета до школы инсулиновой помпы.</p></div>
-  </div></div></section>
+  <section class="sec"><div class="shell">
+    <p class="lede rv" style="max-width:70ch;font-size:18px;margin:0 0 30px">{about.intro}</p>
+    <div class="grid4">{about.blocks[0].items.map((f, i) => <div class={`card bcard rv d${i + 1}`}><div class="ic">{ICONS[i]}</div><h3 style="font-size:17px">{f.t}</h3><p>{f.d || 'Соответствие международным протоколам и стандартам'}</p></div>)}</div>
+  </div></section>
+  <section class="sec" style="padding-top:0"><div class="shell">
+    <div class="sec-head rv"><div><p class="kicker">Видео</p><h2 class="h">Клиника <em>изнутри</em></h2></div><a class="btn btn-line" href="https://youtube.com/@InternaClinic" target="_blank" rel="noopener">YouTube-канал ↗</a></div>
+    <div class="vgrid rv d2">{about.videos.map((v) => <button type="button" class="vcard" data-yt={v.id} aria-label={`Смотреть: ${v.title}`}><img src={`https://i.ytimg.com/vi/${v.id}/hqdefault.jpg`} alt="" loading="lazy" /><span class="vplay"><span class="material-symbols-rounded">play_arrow</span></span><span class="vmeta"><b>{v.title}</b><small>{mm(v.sec)}</small></span></button>)}</div>
+  </div></section>
   <section class="sec" style="padding-top:0"><div class="shell"><div class="why">
     <div class="about-img rv"><img src={img('building')} alt="Здание Interna Clinic" loading="lazy" /></div>
     <div class="rv d2"><p class="kicker">Клиника</p><h2 class="h">Богенбай батыра, 248 — <em>всё под одной крышей</em></h2><p class="lede">Приём врачей, эндоскопия, УЗИ, лаборатория, дневной и круглосуточный стационар — в одном здании. Парковка для пациентов бесплатная.</p>
       <div class="hero-meta" style="border-color:var(--line);margin-top:28px"><div><b style="color:var(--blue-700)" data-count={doctors.length}>{doctors.length}</b><span style="color:var(--faint)">врачей</span></div><div><b style="color:var(--blue-700)">7/7</b><span style="color:var(--faint)">дней в неделю</span></div><div><b style="color:var(--blue-700)">2</b><span style="color:var(--faint)">языка приёма</span></div></div></div>
   </div></div></section>
+  <section class="sec" style="padding-top:0"><div class="shell">
+    <div class="sec-head rv"><div><p class="kicker">{about.blocks[2].title}</p><h2 class="h">Врачи, которым <em>доверяют</em></h2></div><p class="lede" style="max-width:52ch;margin:0">{about.blocks[2].lead}</p></div>
+    <div class="grid4">{about.blocks[2].items.map((f, i) => <div class={`card rv d${i + 1}`} style="padding:22px"><h3 style="font-size:15.5px;margin:0 0 8px">{f.t}</h3><p style="font-size:13.5px;line-height:1.6;color:var(--muted);font-weight:500;margin:0">{f.d}</p></div>)}</div>
+  </div></section>
   <section class="sec" id="equip" style="padding-top:0"><div class="shell">
     <div class="sec-head rv"><div><p class="kicker">Оборудование</p><h2 class="h">Техника уровня <em>университетских клиник</em></h2></div><p class="lede" style="max-width:52ch;margin:0">{equipment.intro[0]}</p></div>
     <div class="grid4 eqgrid">{equipment.items.map((e, i) => <div class={`card svc eq rv d${(i % 4) + 1}`}><div class="img" style="background:#fff;aspect-ratio:1.25"><img src={e.img} alt={e.name} style="object-fit:contain;padding:18px" loading="lazy" /></div><div class="bd"><span class="kicker" style="margin-bottom:6px;font-size:10px">{e.cat} · {e.kind}</span><h3 style="font-size:17px">{e.name}</h3><p class="eqdesc">{e.desc}</p></div></div>)}</div>

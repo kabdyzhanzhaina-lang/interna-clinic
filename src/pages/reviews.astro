@@ -5,6 +5,8 @@ import PageHero from '../components/PageHero.astro';
 import Cta from '../components/Cta.astro';
 import reviews from '../data/reviews.json';
 import { SITE, img } from '../lib/site.js';
+import about from '../data/about.json';
+const mm = (sec) => `${Math.floor(sec / 60)}:${String(sec % 60).padStart(2, '0')}`;
 const srcIcon = (s) => (/google/i.test(s) ? 'G' : /idoctor/i.test(s) ? 'iD' : '2ГИС');
 const initials = (n) => n.split(/\s+/).slice(0, 2).map((w) => w[0]).join('').toUpperCase();
 const jsonld = { '@context': 'https://schema.org', '@type': 'MedicalClinic', name: 'Interna Clinic', review: reviews.map((r) => ({ '@type': 'Review', author: { '@type': 'Person', name: r.name }, reviewBody: r.text, reviewRating: { '@type': 'Rating', ratingValue: 5 } })) };
@@ -12,6 +14,9 @@ const jsonld = { '@context': 'https://schema.org', '@type': 'MedicalClinic', nam
 <Base title="Отзывы пациентов — Interna Clinic" description="Отзывы пациентов Interna Clinic с 2ГИС, Google и iDoctor: врачи, оборудование, сервис, стационар." jsonld={jsonld} active="about">
   <PageHero crumbs={[['Главная', '/'], ['О клинике', '/about'], ['Отзывы']]} title="Отзывы <em>пациентов</em>" sub="Публикуем отзывы с внешних площадок как есть — с именами авторов и источником. Оставить свой можно на 2ГИС или в Google." chips={[`${reviews.length} отзывов`, '2ГИС · Google · iDoctor']} image="coats" />
   <section class="sec"><div class="shell">
+    <div class="sec-head rv"><div><p class="kicker">Видеоотзывы</p><h2 class="h">Пациенты <em>рассказывают</em></h2></div></div>
+    <div class="vgrid rv d2" style="margin-bottom:44px">{about.reviewVideos.map((v) => <button type="button" class="vcard" data-yt={v.id} aria-label={`Смотреть: ${v.title}`}><img src={`https://i.ytimg.com/vi/${v.id}/hqdefault.jpg`} alt="" loading="lazy" /><span class="vplay"><span class="material-symbols-rounded">play_arrow</span></span><span class="vmeta"><b>{v.title}</b><small>{mm(v.sec)}</small></span></button>)}</div>
+    <div class="sec-head rv"><div><p class="kicker">Отзывы на площадках</p><h2 class="h">Что <em>пишут</em></h2></div></div>
     <div class="revgrid">
       {reviews.map((r, i) => <article class={`card rev rv d${(i % 3) + 1}`}>
         <div class="stars">★★★★★</div>

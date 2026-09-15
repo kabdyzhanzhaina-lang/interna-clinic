@@ -183,6 +183,12 @@
     fr.src = `https://www.youtube-nocookie.com/embed/${fr.dataset.video}?start=${b.dataset.seek}&autoplay=1`;
     fr.closest(".acover").scrollIntoView({ behavior: "smooth", block: "center" });
   });
+  /* ── видео: превью → iframe по клику ── */
+  document.addEventListener("click", (e) => {
+    const v = e.target.closest("[data-yt]"); if (!v) return;
+    const fr = document.createElement("iframe"); fr.src = `https://www.youtube-nocookie.com/embed/${v.dataset.yt}?autoplay=1&rel=0`; fr.allow = "autoplay; encrypted-media; picture-in-picture"; fr.allowFullscreen = true; fr.title = v.getAttribute("aria-label") || "Видео";
+    const box = document.createElement("div"); box.className = "vcard playing"; box.appendChild(fr); v.replaceWith(box);
+  });
   /* ── прогресс чтения статьи ── */
   const prog = $("#readprog");
   if (prog) addEventListener("scroll", () => { const a = $(".article .body"); if (!a) return; const r = a.getBoundingClientRect(); const total = r.height - innerHeight * 0.6; const p = Math.min(1, Math.max(0, -r.top / (total <= 0 ? 1 : total))); prog.style.width = (p * 100).toFixed(1) + "%"; }, { passive: true });
