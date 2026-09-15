@@ -7,7 +7,8 @@ interface Props { title: string; description?: string; lang?: string; theme?: st
 const { title, description = 'Institut гастроэнтерологии, гепатологии и метаболизма в Алматы. Диагноз на первом приёме.', lang = 'ru', theme = '', active = '', jsonld } = Astro.props;
 const canonical = new URL(Astro.url.pathname, Astro.site).href;
 const isKk = Astro.currentLocale === 'kk';
-const ruPath = Astro.url.pathname.replace(/^\/kk(?=\/|$)/, '') || '/';
+const basePath = import.meta.env.BASE_URL.replace(/\/$/, '');   // на GitHub Pages pathname содержит /interna-clinic
+const ruPath = (basePath && Astro.url.pathname.startsWith(basePath) ? Astro.url.pathname.slice(basePath.length) : Astro.url.pathname).replace(/^\/kk(?=\/|$)/, '') || '/';
 const org = {
   '@context': 'https://schema.org', '@type': 'MedicalClinic', name: SITE.name, url: Astro.site?.href,
   telephone: SITE.phone, email: SITE.email,
