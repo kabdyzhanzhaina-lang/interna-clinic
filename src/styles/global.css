@@ -135,7 +135,7 @@ body.kids .marq span{color:#FF6B4A}
 @keyframes pageIn{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}}
 
 /* ── hero (главная) ── */
-.hero{position:relative;background:var(--navy);color:#fff;overflow:hidden;margin-top:-84px;padding-top:84px}
+.hero{position:relative;background:var(--navy);color:#fff;overflow:hidden;margin-top:calc(-1 * var(--hdr-h,97px));padding-top:var(--hdr-h,97px)}
 .hero::before{content:"";position:absolute;inset:0;opacity:.09;background-image:radial-gradient(rgba(255,255,255,.9) 1px,transparent 1.4px);background-size:26px 26px;pointer-events:none}
 .blob{position:absolute;border-radius:50%;filter:blur(70px);pointer-events:none;will-change:transform}
 .blob.b1{width:520px;height:520px;background:#0C86CE;left:-160px;top:10%;opacity:.55;animation:drift1 18s ease-in-out infinite}
@@ -185,7 +185,7 @@ body.kids .marq span{color:#FF6B4A}
 @media(prefers-reduced-motion:no-preference){.rise{animation:rise .8s var(--ease) both}.d1{animation-delay:.05s}.d2{animation-delay:.15s}.d3{animation-delay:.25s}.d4{animation-delay:.35s}}
 
 /* ── страничный хиро (внутренние) ── */
-.phero{position:relative;background:var(--navy);color:#fff;overflow:hidden;margin-top:-84px;padding:130px 0 70px}
+.phero{position:relative;background:var(--navy);color:#fff;overflow:hidden;margin-top:calc(-1 * var(--hdr-h,97px));padding:130px 0 70px}
 .phero::before{content:"";position:absolute;inset:0;opacity:.09;background-image:radial-gradient(rgba(255,255,255,.9) 1px,transparent 1.4px);background-size:26px 26px;pointer-events:none}
 .phero .shell{position:relative;z-index:2}
 .crumbs{display:flex;flex-wrap:wrap;gap:8px;font-size:12px;font-weight:700;color:#9FCFEA;margin-bottom:16px}
@@ -499,7 +499,7 @@ body.scrolled .fab{opacity:1;transform:none;pointer-events:auto}
 
 /* ── Статья: редакционный лонгрид (референс — theblueprint.ru) ── */
 .readprog{position:fixed;top:0;left:0;height:3px;width:0;background:linear-gradient(90deg,var(--blue),var(--sky));z-index:400;transition:width .15s linear}
-.ahero{position:relative;background:var(--navy);color:#fff;overflow:hidden;margin-top:-84px;padding:130px 0 0}
+.ahero{position:relative;background:var(--navy);color:#fff;overflow:hidden;margin-top:calc(-1 * var(--hdr-h,97px));padding:130px 0 0}
 .ahero::before{content:"";position:absolute;inset:0;opacity:.09;background-image:radial-gradient(rgba(255,255,255,.9) 1px,transparent 1.4px);background-size:26px 26px;pointer-events:none}
 .ahero .shell{position:relative;z-index:2}
 .ahero h1{font-family:"Lora",serif;font-weight:600;color:#fff;font-size:clamp(32px,4.8vw,58px);line-height:1.08;max-width:22ch}
@@ -643,3 +643,13 @@ body.kids .kidsvc .ks .kp{color:#E8632B}
 .acc{max-width:100%}.acc summary{flex-wrap:wrap}.acc .alist li,.body p,.body li{overflow-wrap:anywhere}
 footer .shell *{overflow-wrap:anywhere}
 .grid3 a.bcard,.grid4 a.bcard,.grid3 a.bcard p{text-align:left}
+
+/* ── иконки Material Symbols вместо эмодзи и текстовых стрелок ── */
+.ic .msr{font-size:26px;color:var(--blue-700);font-variation-settings:'wght' 500}
+.bcard.fill .ic .msr,.cu.fill .ic .msr{color:#fff}
+body.kids .ic .msr{color:#E8632B}
+.msr.ai{font-size:18px;vertical-align:-4px;line-height:1;font-variation-settings:'wght' 600}
+.more .msr.ai,.btn .msr.ai{font-size:18px;vertical-align:middle}
+.msr.ti{font-size:15px;vertical-align:-3px;margin-right:2px;opacity:.9}
+.cta em{color:var(--sky)}
+.tbtn .msr{font-size:20px}

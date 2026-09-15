@@ -9,6 +9,6 @@ let n = 0;
   if (b[0] === 'q') return <div class="pull">{b[1]}</div>;
   if (b[0] === 'ul') return <ul class="alist">{b[1].map((x) => <li>{x}</li>)}</ul>;
   if (b[0] === 'ol') return <ol class="alist">{b[1].map((x) => <li>{x}</li>)}</ol>;
-  if (b[0] === 'file') return <p><a class="btn btn-line sm" href={b[2]} target="_blank" rel="noopener">{b[1]} · PDF ↗</a></p>;
+  if (b[0] === 'file') return <p><a class="btn btn-line sm" href={b[2]} target="_blank" rel="noopener">{b[1]} · PDF <span class="msr ai">open_in_new</span></a></p>;
   return <p>{b[1]}</p>;
 })}

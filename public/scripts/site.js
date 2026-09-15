@@ -147,6 +147,9 @@
   }
 
   /* ── подготовка: вкладки ── */
+  /* ── высота шапки → CSS-переменная, чтобы хиро точно стыковался с топбаром ── */
+  const setHdr = () => { const h = $(".hdr"); if (h) document.documentElement.style.setProperty("--hdr-h", h.offsetHeight + "px"); }; setHdr(); addEventListener("resize", setHdr);
+
   /* ── вкладки-чипы: любая группа [data-prep] переключает свои [data-prep-set]; [data-prep-go] — ссылка на вкладку ── */
   const switchPrep = (id) => {
     const btn = $(`[data-prep="${id}"]`); if (!btn) return;

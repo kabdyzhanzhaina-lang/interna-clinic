@@ -65,26 +65,26 @@ const story = [
   </section>
 
   <section class="sec"><div class="shell"><div class="why">
-    <div class="rv"><p class="kicker">Почему мы</p><h2 class="h">Почему пациенты выбирают <em>Interna Clinic</em></h2><p class="lede">Первая клиника доказательной медицины в области внутренних заболеваний в Центральной Азии. Мы не назначаем лишнего — только то, что подтверждено международными протоколами.</p><div style="margin-top:28px"><a class="btn btn-line" href="/about">О клинике →</a></div></div>
+    <div class="rv"><p class="kicker">Почему мы</p><h2 class="h">Почему пациенты выбирают <em>Interna Clinic</em></h2><p class="lede">Первая клиника доказательной медицины в области внутренних заболеваний в Центральной Азии. Мы не назначаем лишнего — только то, что подтверждено международными протоколами.</p><div style="margin-top:28px"><a class="btn btn-line" href="/about">О клинике <span class="msr ai">arrow_forward</span></a></div></div>
     <div class="bento">
-      <div class="card bcard rv d1"><div class="ic">🩺</div><h3>Диагноз на первом приёме</h3><p>Приём врача и обследования — в один визит. Комплекс «приём + диагностика» экономит недели.</p></div>
-      <div class="card bcard fill rv d2"><div class="ic">👨‍⚕️</div><h3>Опытные врачи</h3><p>Команда под руководством профессора Нерсесова: кандидаты и доктора медицинских наук.</p></div>
-      <div class="card bcard fill rv d3"><div class="ic">🔬</div><h3>Экспертное оборудование</h3><p>Olympus EVIS X1, GE Logiq E10s, FibroScan — техника уровня университетских клиник.</p></div>
-      <div class="card bcard rv d4"><div class="ic">🛡️</div><h3>Безопасность</h3><p>Автоматическая дезинфекция эндоскопов и контроль стерильности на каждом этапе.</p></div>
+      <div class="card bcard rv d1"><div class="ic"><span class="msr">stethoscope</span></div><h3>Диагноз на первом приёме</h3><p>Приём врача и обследования — в один визит. Комплекс «приём + диагностика» экономит недели.</p></div>
+      <div class="card bcard fill rv d2"><div class="ic"><span class="msr">medical_services</span></div><h3>Опытные врачи</h3><p>Команда под руководством профессора Нерсесова: кандидаты и доктора медицинских наук.</p></div>
+      <div class="card bcard fill rv d3"><div class="ic"><span class="msr">biotech</span></div><h3>Экспертное оборудование</h3><p>Olympus EVIS X1, GE Logiq E10s, FibroScan — техника уровня университетских клиник.</p></div>
+      <div class="card bcard rv d4"><div class="ic"><span class="msr">verified_user</span></div><h3>Безопасность</h3><p>Автоматическая дезинфекция эндоскопов и контроль стерильности на каждом этапе.</p></div>
     </div>
   </div></div></section>
 
   <section class="sec" style="padding-top:0"><div class="shell"><div class="band">
     <div class="center rv"><p class="kicker">Услуги</p><h2 class="h">Чем мы можем <em>помочь</em></h2><p class="lede">Диагностика и лечение заболеваний ЖКТ, печени и эндокринной системы — от консультации до эндоскопии с седацией.</p></div>
     <div class="grid3" style="margin-top:44px">{Object.entries(services).map(([k, s], i) => <ServiceCard slug={k} s={s} delay={(i % 3) + 1} />)}</div>
-    <div class="center" style="margin-top:34px"><a class="btn btn-line" href="/services">Все услуги и цены →</a></div>
+    <div class="center" style="margin-top:34px"><a class="btn btn-line" href="/services">Все услуги и цены <span class="msr ai">arrow_forward</span></a></div>
   </div></div></section>
 
   <section class="sec" style="padding-top:0"><div class="shell">
-    <div class="sec-head rv"><div><p class="kicker">Команда</p><h2 class="h">Врачи <em>Interna Clinic</em></h2></div><a class="btn btn-line" href="/doctors">Все специалисты →</a></div>
+    <div class="sec-head rv"><div><p class="kicker">Команда</p><h2 class="h">Врачи <em>Interna Clinic</em></h2></div><a class="btn btn-line" href="/doctors">Все специалисты <span class="msr ai">arrow_forward</span></a></div>
     <div class="team">
       <div class="grid3">{doctors.slice(0, 3).map((d, i) => <DoctorCard d={d} delay={i + 1} />)}</div>
-      <aside class="hours rv d4"><h3>🕐 Часы работы</h3><p style="font-size:13px;color:#9CC4DB;margin:0 0 16px">Планируйте визит — принимаем и по выходным.</p>
+      <aside class="hours rv d4"><h3><span class="msr ti">schedule</span> Часы работы</h3><p style="font-size:13px;color:#9CC4DB;margin:0 0 16px">Планируйте визит — принимаем и по выходным.</p>
         {SITE.hours.map((h) => <div class="hrow"><span>{h[0]}</span><span>{h[1]}</span></div>)}
         <button class="btn btn-sky" data-book style="margin-top:auto;width:100%">Записаться на приём</button></aside>
     </div>
@@ -101,9 +101,9 @@ const story = [
 
   <section class="sec" style="padding-top:0"><div class="shell"><div class="testi rv">
     <div class="ph"><img src={img('coats')} alt="Interna Clinic" loading="lazy" /></div>
-    <div><p class="kicker">Отзывы</p><h2 class="h">Что говорят наши <em>пациенты</em></h2><p class="lede" style="margin:8px 0 0"><a href="/reviews" style="color:var(--blue-600);font-weight:700">Все отзывы с 2ГИС, Google и iDoctor →</a></p>
+    <div><p class="kicker">Отзывы</p><h2 class="h">Что говорят наши <em>пациенты</em></h2><p class="lede" style="margin:8px 0 0"><a href="/reviews" style="color:var(--blue-600);font-weight:700">Все отзывы с 2ГИС, Google и iDoctor <span class="msr ai">arrow_forward</span></a></p>
       <div class="ttrack" id="ttrack">{reviews.map((r) => <div class="tslide"><div class="stars">★★★★★</div><p class="quote">«{r.text}»</p><p class="q-name">{r.name}</p><p class="q-role">пациент клиники · отзыв на {r.src}</p></div>)}</div>
-      <div class="tnav"><button class="tbtn" data-tprev aria-label="Назад">←</button><button class="tbtn" data-tnext aria-label="Вперёд">→</button><span class="tdots" id="tdots">{reviews.map((_, i) => <i class={i === 0 ? 'on' : ''}></i>)}</span></div>
+      <div class="tnav"><button class="tbtn" data-tprev aria-label="Назад"><span class="msr">arrow_back</span></button><button class="tbtn" data-tnext aria-label="Вперёд"> <span class="msr ai">arrow_forward</span></button><span class="tdots" id="tdots">{reviews.map((_, i) => <i class={i === 0 ? 'on' : ''}></i>)}</span></div>
     </div>
   </div></div></section>
 

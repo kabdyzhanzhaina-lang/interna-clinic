@@ -33,7 +33,7 @@ const body = raw.length === 1 && raw[0][0] === 'p' && (s.lead || '').startsWith(
         if (b[0] === 'h3') return <h4 class="asub">{b[1]}</h4>;
         if (b[0] === 'ul') return <ul class="alist">{b[1].map((x) => <li>{x}</li>)}</ul>;
         if (b[0] === 'ol') return <ol class="alist">{b[1].map((x) => <li>{x}</li>)}</ol>;
-        if (b[0] === 'file') return <p><a class="btn btn-line sm" href={b[2]} target="_blank" rel="noopener">{b[1]} · PDF ↗</a></p>;
+        if (b[0] === 'file') return <p><a class="btn btn-line sm" href={b[2]} target="_blank" rel="noopener">{b[1]} · PDF <span class="msr ai">open_in_new</span></a></p>;
         return <p>{b[1]}</p>;
       }) : paras.length > 0 ? paras.map((p) => <p>{p}</p>) : <div class="pull">Подробное описание уточняйте у администратора — на старом сайте у этой услуги был только краткий анонс. Записаться можно по телефону или через форму, ответим в течение 10 минут.</div>}
     </article>
@@ -45,6 +45,6 @@ const body = raw.length === 1 && raw[0][0] === 'p' && (s.lead || '').startsWith(
       <div class="toc"><b style="font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--faint);display:block;margin-bottom:10px">Смежные разделы</b><a href="/prepare">Подготовка к процедурам</a><a href="/checkup">Check-up программы</a><a href="/doctors">Все врачи</a><a href="/faq">Вопросы и ответы</a></div>
     </aside>
   </div></div></section>
-  {rel.length > 0 && <section class="sec" style="padding-top:0"><div class="shell"><div class="sec-head rv"><div><p class="kicker">Врачи</p><h2 class="h">Кто <em>принимает</em></h2></div><a class="btn btn-line" href="/doctors">Все врачи →</a></div><div class="grid4">{rel.map((d, i) => <DoctorCard d={d} delay={i + 1} />)}</div></div></section>}
+  {rel.length > 0 && <section class="sec" style="padding-top:0"><div class="shell"><div class="sec-head rv"><div><p class="kicker">Врачи</p><h2 class="h">Кто <em>принимает</em></h2></div><a class="btn btn-line" href="/doctors">Все врачи <span class="msr ai">arrow_forward</span></a></div><div class="grid4">{rel.map((d, i) => <DoctorCard d={d} delay={i + 1} />)}</div></div></section>}
   <Cta />
 </Base>

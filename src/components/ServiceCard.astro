@@ -7,6 +7,6 @@ const { slug, s, delay = 1 } = Astro.props;
   <div class="bd">
     <div style="display:flex;align-items:center;gap:12px;margin-bottom:8px"><span class="itile"><span class="msr">{s.icon}</span></span><h3 style="margin:0">{s.t}</h3></div>
     <p>{s.short}</p>
-    <div class="ft"><span class="price-chip">{s.price}</span><span class="more">Подробнее →</span></div>
+    <div class="ft"><span class="price-chip">{s.price}</span><span class="more">Подробнее <span class="msr ai">arrow_forward</span></span></div>
   </div>
 </a>

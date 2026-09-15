@@ -20,14 +20,14 @@ const total = Object.keys(services).length + Object.keys(extra).length;
     <section class="sec" style="padding-top:0"><div class="shell">
       <div class="sec-head rv" style="margin-bottom:22px"><div><p class="kicker">{cat}</p><h2 class="h" style="font-size:clamp(22px,3vw,30px)">{cat}</h2></div><span class="tag">{groups[cat].length}</span></div>
       <div class="grid3">{groups[cat].map(([slug, s], i) => (
-        <a class={`card bcard rv d${(i % 3) + 1}`} href={`/uslugi/${slug}`} style="padding:22px 22px 20px"><div style="display:flex;gap:12px;align-items:center"><span class="itile"><span class="msr">{s.icon}</span></span><h3 style="font-size:16.5px;margin:0">{s.t}</h3></div><p style="margin-top:10px;font-size:13.5px">{(s.description || s.lead || '').slice(0, 110)}{(s.description || s.lead || '').length > 110 ? '…' : ''}</p><span class="more" style="margin-top:12px;display:inline-flex">Подробнее →</span></a>
+        <a class={`card bcard rv d${(i % 3) + 1}`} href={`/uslugi/${slug}`} style="padding:22px 22px 20px"><div style="display:flex;gap:12px;align-items:center"><span class="itile"><span class="msr">{s.icon}</span></span><h3 style="font-size:16.5px;margin:0">{s.t}</h3></div><p style="margin-top:10px;font-size:13.5px">{(s.description || s.lead || '').slice(0, 110)}{(s.description || s.lead || '').length > 110 ? '…' : ''}</p><span class="more" style="margin-top:12px;display:inline-flex">Подробнее <span class="msr ai">arrow_forward</span></span></a>
       ))}</div>
     </div></section>
   ))}
   <section class="sec" style="padding-top:0"><div class="shell"><div class="grid3">
-    <a class="card bcard rv d1" href="/checkup"><div class="ic">⭐</div><h3>Check-up программы</h3><p>Женский, мужской, гастро, кардио, эндокринный — готовые комплексы обследования за один день.</p></a>
-    <a class="card bcard rv d2" href="/kids"><div class="ic">🧸</div><h3>Interna KIDS</h3><p>Детское отделение: гастроэнтеролог, эндокринолог, педиатрические check-up.</p></a>
-    <a class="card bcard rv d3" href="/prices"><div class="ic">💳</div><h3>Полный прайс</h3><p>Все позиции с ценами и живым поиском.</p></a>
+    <a class="card bcard rv d1" href="/checkup"><div class="ic"><span class="msr">star</span></div><h3>Check-up программы</h3><p>Женский, мужской, гастро, кардио, эндокринный — готовые комплексы обследования за один день.</p></a>
+    <a class="card bcard rv d2" href="/kids"><div class="ic"><span class="msr">child_care</span></div><h3>Interna KIDS</h3><p>Детское отделение: гастроэнтеролог, эндокринолог, педиатрические check-up.</p></a>
+    <a class="card bcard rv d3" href="/prices"><div class="ic"><span class="msr">payments</span></div><h3>Полный прайс</h3><p>Все позиции с ценами и живым поиском.</p></a>
   </div></div></section>
   <Cta />
 </Base>

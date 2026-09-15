@@ -52,7 +52,7 @@ const toSec = (t) => t.split(':').reduce((acc, x) => acc * 60 + +x, 0);
         const cls = firstP ? 'lead-p' : ''; firstP = false;
         return <p class={cls}>{b[1]}</p>;
       })}
-      {a.video && <p class="small" style="margin-top:28px;font-weight:700"><a class="btn btn-line sm" href={`https://www.youtube.com/watch?v=${a.video}`} target="_blank" rel="noopener">Смотреть на YouTube-канале клиники ↗</a></p>}
+      {a.video && <p class="small" style="margin-top:28px;font-weight:700"><a class="btn btn-line sm" href={`https://www.youtube.com/watch?v=${a.video}`} target="_blank" rel="noopener">Смотреть на YouTube-канале клиники <span class="msr ai">open_in_new</span></a></p>}
     </article>
     <aside class="side rv d2">
       {d && <div class="card" style="padding:22px"><div style="display:flex;gap:14px;align-items:center"><div style="width:64px;height:64px;border-radius:50%;overflow:hidden;flex:none"><img src={img(d.img)} alt="" style="width:100%;height:100%;object-fit:cover;object-position:top" /></div><div><b style="color:var(--ink);font-size:15px;display:block;line-height:1.3">{d.n}</b><span style="font-size:12.5px;color:var(--faint);font-weight:600">{d.r}</span></div></div><button class="btn btn-primary" data-book style="width:100%;margin-top:16px">Записаться на приём</button></div>}
@@ -64,7 +64,7 @@ const toSec = (t) => t.split(':').reduce((acc, x) => acc * 60 + +x, 0);
   <section class="sec" style="padding-top:0;position:relative;overflow:hidden"><div class="shell" style="position:relative;isolation:isolate">
     <Sticker class="navy more" text="ЕЩЁ ПО ТЕМЕ · ЧИТАЙТЕ · СМОТРИТЕ · " icon="menu_book" speed="-0.09" size={104} style="left:460px;top:0" />
     <span class="spin ice" style="left:-40px;bottom:-30px;width:120px;height:120px;z-index:-1" data-rotate="0.05" set:html={FLOWER}></span>
-    <div class="sec-head rv"><div><p class="kicker">Медиацентр</p><h2 class="h">Ещё <em>по теме</em></h2></div><a class="btn btn-line" href="/media">Все материалы →</a></div>
+    <div class="sec-head rv"><div><p class="kicker">Медиацентр</p><h2 class="h">Ещё <em>по теме</em></h2></div><a class="btn btn-line" href="/media">Все материалы <span class="msr ai">arrow_forward</span></a></div>
     <div class="grid4">{others.map((x, i) => <a class={`card svc rv d${i + 1}`} href={`/article/${x.id}`}><div class="img"><img src={img(x.img)} alt="" loading="lazy" data-parallax="0.05" /></div><div class="bd"><span class="kicker" style="margin-bottom:8px;font-size:10px">{x.tag.split(' · ')[0]}</span><h3 style="font-size:15.5px;line-height:1.35">{x.t}</h3></div></a>)}</div>
   </div></section>
   <Cta />

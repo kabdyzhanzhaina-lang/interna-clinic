@@ -24,7 +24,7 @@ const lead = first.split(/(?<=\.)\s+/).reduce((acc, sent) => (acc.length + sent.
   </PageHero>
   <section class="sec"><div class="shell"><div class="article">
     <article class="body rv">
-      {s.note && <div class="knote" style="margin-bottom:22px"><span>ℹ️</span><span>{s.note}</span></div>}
+      {s.note && <div class="knote" style="margin-bottom:22px"><span class="msr" style="font-size:20px">info</span><span>{s.note}</span></div>}
       <Body body={s.body.slice(1)} />
     </article>
     <aside class="side rv d2">
@@ -35,6 +35,6 @@ const lead = first.split(/(?<=\.)\s+/).reduce((acc, sent) => (acc.length + sent.
       <div class="toc"><b style="font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--faint);display:block;margin-bottom:10px">Другие направления KIDS</b>{others.map((x) => <a href={`/kids/${x.id}`}>{x.t}</a>)}</div>
     </aside>
   </div></div></section>
-  {rel.length > 0 && <section class="sec" style="padding-top:0"><div class="shell"><div class="sec-head rv"><div><p class="kicker">Врачи</p><h2 class="h">Кто <em>принимает</em></h2></div><a class="btn btn-line" href="/kids#kservices">Все направления →</a></div><div class="grid4">{rel.map((d, i) => <DoctorCard d={{ ...d, r: d.kidsRole || d.r }} delay={i + 1} />)}</div></div></section>}
+  {rel.length > 0 && <section class="sec" style="padding-top:0"><div class="shell"><div class="sec-head rv"><div><p class="kicker">Врачи</p><h2 class="h">Кто <em>принимает</em></h2></div><a class="btn btn-line" href="/kids#kservices">Все направления <span class="msr ai">arrow_forward</span></a></div><div class="grid4">{rel.map((d, i) => <DoctorCard d={{ ...d, r: d.kidsRole || d.r }} delay={i + 1} />)}</div></div></section>}
   <Cta title="Запишите <em>ребёнка</em>" text="Подберём врача и удобное время — утром или после школы." />
 </Base>
