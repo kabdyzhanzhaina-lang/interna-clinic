@@ -8,7 +8,7 @@
 
   /* ── появление при прокрутке ── */
   if (!reduce && "IntersectionObserver" in window) {
-    const reveal = (e) => { e.classList.add("in"); setTimeout(() => e.classList.add("done"), 1300); };   // после анимации — обычные transition карточки
+    const reveal = (e) => { e.classList.add("in"); setTimeout(() => e.classList.add("rv-done"), 1300); };   // после анимации — обычные transition карточки
     const io = new IntersectionObserver((en) => en.forEach((x) => { if (x.isIntersecting) { reveal(x.target); io.unobserve(x.target); } }), { rootMargin: "-40px 0px" });
     $$(".rv").forEach((e) => { if (e.getBoundingClientRect().top < innerHeight * 0.9) reveal(e); else io.observe(e); });
   } else $$(".rv").forEach((e) => e.classList.add("in"));
