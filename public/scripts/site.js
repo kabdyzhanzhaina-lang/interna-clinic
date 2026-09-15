@@ -4,7 +4,11 @@
   const $ = (s, r) => (r || document).querySelector(s);
   const $$ = (s, r) => Array.from((r || document).querySelectorAll(s));
   const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
-  const SLOTS = [["Утро", "08:00–12:00"], ["День", "12:00–17:00"], ["Вечер", "17:00–22:00"], ["Любое", "как удобно"]];   // точное время подтверждает администратор
+  const KK = window.LANG === "kk";
+  // строки, которые скрипт пишет сам (остальной текст переводится при сборке)
+  const T = KK ? { slots: [["Таң", "08:00–12:00"], ["Күндіз", "12:00–17:00"], ["Кеш", "17:00–22:00"], ["Кез келген", "ыңғайлы уақыт"]], book: "Жазылу: ", any: "кез келген уақыт", stac: "Стационарлық формат: палата, дәрігер бақылауы, тамақтану және емшаралар кіреді. Бағдарлама бағасына стационарда болу қосылады.", amb: "Амбулаторлық формат: ыңғайлы, икемді жоспарлау, оңтайлы баға.", plusStac: " + стационар", yours: "Сіздің бағдарламаңыз: ", bookBtn: "Жазылу", confirm: "Растауды мына нөмірге жібереміз: " }
+    : { slots: [["Утро", "08:00–12:00"], ["День", "12:00–17:00"], ["Вечер", "17:00–22:00"], ["Любое", "как удобно"]], book: "Записаться: ", any: "любое время", stac: "", amb: "", plusStac: " + стационар", yours: "Ваша программа: ", bookBtn: "Записаться", confirm: "Подтверждение отправим на " };
+  const SLOTS = T.slots;   // точное время подтверждает администратор
 
   /* ── появление при прокрутке ── */
   if (!reduce && "IntersectionObserver" in window) {
@@ -57,7 +61,7 @@
   function renderSlots(cont, btn, count) {
     if (!cont) return;
     cont.innerHTML = SLOTS.slice(0, count || 3).map((s, i) => `<button type="button" class="slot" aria-pressed="${i === 0}">${s[0]}<small>${s[1]}</small></button>`).join("");
-    cont.addEventListener("click", (e) => { const b = e.target.closest(".slot"); if (!b) return; $$(".slot", cont).forEach((x) => x.setAttribute("aria-pressed", "false")); b.setAttribute("aria-pressed", "true"); if (btn) btn.textContent = "Записаться: " + b.firstChild.nodeValue.trim().toLowerCase(); });
+    cont.addEventListener("click", (e) => { const b = e.target.closest(".slot"); if (!b) return; $$(".slot", cont).forEach((x) => x.setAttribute("aria-pressed", "false")); b.setAttribute("aria-pressed", "true"); if (btn) btn.textContent = T.book + b.firstChild.nodeValue.trim().toLowerCase(); });
   }
   renderSlots($("[data-slots]"), $("[data-slotbtn]"));
 
@@ -126,8 +130,8 @@
     const b = e.target.closest("[data-fmt]"); if (!b) return;
     $$("button", cuf).forEach((x) => x.classList.toggle("on", x === b));
     const stac = b.dataset.fmt === "stac";
-    $("#cuNote").textContent = stac ? "Стационарный формат: палата, наблюдение врача, питание и процедуры включены. К цене программы добавляется стационар — от 35 000 ₸ за сутки дневного или от 60 000 ₸ за сутки круглосуточного." : "Амбулаторный формат: приезжаете утром натощак, к вечеру — результаты и разбор с врачом.";
-    $$("[data-cu] .ft b").forEach((el) => { if (!el.dataset.base) el.dataset.base = el.textContent; el.textContent = stac ? el.dataset.base + " + стационар" : el.dataset.base; });
+    $("#cuNote").textContent = stac ? (T.stac || "Стационарный формат: палата, наблюдение врача, питание и процедуры включены. К цене программы добавляется стационар — от 35 000 ₸ за сутки дневного или от 60 000 ₸ за сутки круглосуточного.") : (T.amb || "Амбулаторный формат: приезжаете утром натощак, к вечеру — результаты и разбор с врачом.");
+    $$("[data-cu] .ft b").forEach((el) => { if (!el.dataset.base) el.dataset.base = el.textContent; el.textContent = stac ? el.dataset.base + T.plusStac : el.dataset.base; });
   });
   const quiz = $("#quiz");
   if (quiz) {
@@ -140,7 +144,7 @@
         const cards = $$("[data-cu]");
         const fits = (c, strict) => { const who = c.dataset.who.split(","), age = c.dataset.age.split(","), pain = c.dataset.pain.split(","); if (ans.who === "k") return who.includes("k"); return who.includes(ans.who) && (!strict || (pain.includes(ans.pain) && age.includes(ans.age))); };
         const best = cards.find((c) => fits(c, true)) || cards.find((c) => fits(c, false)) || cards[0];
-        $("#quizres").innerHTML = `Ваша программа: <b>${best.dataset.title}</b> — ${best.dataset.price}. <button type="button" class="btn btn-primary sm" data-book data-svc="Check-up" style="margin-left:8px">Записаться</button>`;
+        $("#quizres").innerHTML = `${T.yours}<b>${best.dataset.title}</b> — ${best.dataset.price}. <button type="button" class="btn btn-primary sm" data-book data-svc="Check-up" style="margin-left:8px">Записаться</button>`;
         cards.forEach((c) => { c.style.outline = c === best ? "3px solid var(--blue)" : ""; c.style.outlineOffset = "4px"; });
       }
     });
@@ -233,7 +237,7 @@
     const name = $("#mName").value.trim(), phone = $("#mPhone").value.trim();
     if (!$("#mAgree").checked) { $("#mAgree").focus(); $("#mAgree").parentElement.style.color = "#B4342C"; return; }
     if (!phone) { $("#mPhone").focus(); $("#mPhone").style.borderColor = "#B4342C"; return; }
-    const slot = $('#mslots .slot[aria-pressed="true"]'); const st = slot ? slot.firstChild.nodeValue.trim() + ", " + $("small", slot).textContent : "любое время";
+    const slot = $('#mslots .slot[aria-pressed="true"]'); const st = slot ? slot.firstChild.nodeValue.trim() + ", " + $("small", slot).textContent : T.any;
     const fmt = $("#mFormatWrap").hidden ? "" : " (" + $("#mFormat .on").dataset.fmt.toLowerCase() + ")";
     const utm = Object.fromEntries([...new URLSearchParams(location.search)].filter(([k]) => k.startsWith("utm_")));
     const payload = { name, phone, service: $("#mSvc").value, format: fmt.replace(/[() ]/g, ""), slot: st, agree: true, page: location.pathname, ...utm };
@@ -242,7 +246,7 @@
     $("#mSubmit").disabled = true;
     if (api) { try { await fetch(api, { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify(payload) }); } catch (_) { /* заявка покажется в журнале API, даже если CRM не ответила */ } }
     $("#mSubmit").disabled = false;
-    $("#mdoneTxt").textContent = `${name ? name + ", " : ""}${$("#mSvc").value}${fmt} — ${st}. Подтверждение отправим на ${phone}.`;
+    $("#mdoneTxt").textContent = `${name ? name + ", " : ""}${$("#mSvc").value}${fmt} — ${st}. ${T.confirm}${phone}.`;
     $("#mform").hidden = true; $("#mdone").hidden = false;
   });
 })();

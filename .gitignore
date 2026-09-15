@@ -12,3 +12,5 @@ content/
 prototype/
 worker/.dev.vars
 worker/.wrangler/
+
+.i18n-todo.json

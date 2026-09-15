@@ -4,8 +4,8 @@
   "version": "0.1.0",
   "type": "module",
   "scripts": {
-    "dev": "astro dev",
-    "build": "astro build && node scripts/apply-base.mjs",
+    "dev": "node scripts/make-kk-pages.mjs && astro dev",
+    "build": "node scripts/make-kk-pages.mjs && astro build && node scripts/apply-kk.mjs && node scripts/apply-base.mjs",
     "preview": "astro preview",
     "check": "astro check"
   },

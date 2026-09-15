@@ -9,7 +9,7 @@ const base = (process.env.BASE_PATH || '/').replace(/\/+$/, '') || '/';
 
 export default defineConfig({
   // sitemap без заглушек-редиректов и без служебных страниц
-  integrations: [sitemap({ filter: (page) => !REDIRECT_PATHS.some((r) => page.replace(/\/$/, '').endsWith('/' + r)) && !/\/404|\/admin/.test(page) })],
+  integrations: [sitemap({ i18n: { defaultLocale: 'ru', locales: { ru: 'ru-KZ', kk: 'kk-KZ' } }, filter: (page) => !REDIRECT_PATHS.some((r) => page.replace(/\/$/, '').endsWith('/' + r)) && !/\/404|\/admin/.test(page) })],
   site,
   base,
   trailingSlash: 'ignore',

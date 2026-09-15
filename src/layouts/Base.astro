@@ -6,6 +6,8 @@ import { SITE, NAV, img } from '../lib/site.js';
 interface Props { title: string; description?: string; lang?: string; theme?: string; active?: string; jsonld?: object; }
 const { title, description = 'Institut гастроэнтерологии, гепатологии и метаболизма в Алматы. Диагноз на первом приёме.', lang = 'ru', theme = '', active = '', jsonld } = Astro.props;
 const canonical = new URL(Astro.url.pathname, Astro.site).href;
+const isKk = Astro.currentLocale === 'kk';
+const ruPath = Astro.url.pathname.replace(/^\/kk(?=\/|$)/, '') || '/';
 const org = {
   '@context': 'https://schema.org', '@type': 'MedicalClinic', name: SITE.name, url: Astro.site?.href,
   telephone: SITE.phone, email: SITE.email,
@@ -14,15 +16,16 @@ const org = {
 };
 ---
 <!doctype html>
-<html lang={lang}>
+<html lang={Astro.currentLocale || lang}>
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{title}</title>
     <meta name="description" content={description} />
     <link rel="canonical" href={canonical} />
-    <link rel="alternate" hreflang="ru-KZ" href={canonical} />
-    <link rel="alternate" hreflang="kk-KZ" href={new URL('/kk' + Astro.url.pathname, Astro.site).href} />
+    <link rel="alternate" hreflang="ru-KZ" href={new URL(ruPath, Astro.site).href} />
+    <link rel="alternate" hreflang="kk-KZ" href={new URL('/kk' + (ruPath === '/' ? '/' : ruPath), Astro.site).href} />
+    <link rel="alternate" hreflang="x-default" href={new URL(ruPath, Astro.site).href} />
     <link rel="icon" href="/favicon.png" type="image/png" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
     <meta name="theme-color" content="#0A2E45" />
@@ -49,7 +52,7 @@ const org = {
         <span class="hide-m"><span class="msr ti">schedule</span> {SITE.hoursShort}</span>
         <span class="sp"></span>
         <a href="/kids" class="hide-m">Interna KIDS</a>
-        <a href="/kk/">Қаз</a>
+        {isKk ? <a href={ruPath} hreflang="ru" data-lang-switch>Рус</a> : <a href={`/kk${ruPath === '/' ? '/' : ruPath}`} hreflang="kk" data-lang-switch>Қаз</a>}
       </div>
     </div>
 
@@ -150,7 +153,7 @@ const org = {
       </div>
     </div>
 
-    <script set:html={`window.SITE_API=${JSON.stringify(import.meta.env.PUBLIC_API_URL || "")};`} />
+    <script set:html={`window.SITE_API=${JSON.stringify(import.meta.env.PUBLIC_API_URL || "")};window.LANG=${JSON.stringify(Astro.currentLocale || 'ru')};`} />
     <script defer src="/scripts/site.js"></script>
   </body>
 </html>
