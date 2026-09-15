@@ -15,11 +15,12 @@ const KEY = [[/эндокринолог|диабет/i, /эндокриноло�
 const rule = KEY.find(([k]) => k.test(s.t));
 const rel = doctors.filter((d) => d.kids && rule && rule[1].test(d.kidsRole || d.r)).slice(0, 4);
 const others = kids.services.filter((x) => x.id !== s.id).slice(0, 8);
-const lead = (s.body.find((b) => b[0] === 'p') || ['', ''])[1];
+const first = (s.body.find((b) => b[0] === 'p') || ['', ''])[1];
+// подзаголовок — целыми предложениями, до ~220 символов
+const lead = first.split(/(?<=\.)\s+/).reduce((acc, sent) => (acc.length + sent.length <= 220 || !acc ? (acc ? acc + ' ' + sent : sent) : acc), '');
 ---
-<Base title={`${s.full} — детская клиника Interna KIDS, Алматы`} description={lead.slice(0, 160)} theme="kids" active="kids">
-  <PageHero crumbs={[['Главная', '/'], ['Interna KIDS', '/kids'], [s.t]]} title={s.t} sub={lead.slice(0, 200)} chips={['Interna KIDS', s.price || 'цена по запросу']} theme="kidshero">
-    <div slot="deco">{s.icon && <img src={s.icon} alt="" style="position:absolute;right:8%;top:140px;width:140px;height:140px;opacity:.9" data-parallax="0.15" data-rotate="0.04" />}</div>
+<Base title={`${s.full} — детская клиника Interna KIDS, Алматы`} description={first.slice(0, 160)} theme="kids" active="kids">
+  <PageHero crumbs={[['Главная', '/'], ['Interna KIDS', '/kids'], [s.t]]} title={s.t} sub={lead} chips={['Interna KIDS', s.price || 'цена по запросу']} theme="kidshero">
   </PageHero>
   <section class="sec"><div class="shell"><div class="article">
     <article class="body rv">
