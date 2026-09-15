@@ -1,0 +1,29 @@
+---
+// Отзывы пациентов — перенесены со старого сайта /feedback (scripts/migrate-extras.mjs → src/data/reviews.json)
+import Base from '../layouts/Base.astro';
+import PageHero from '../components/PageHero.astro';
+import Cta from '../components/Cta.astro';
+import reviews from '../data/reviews.json';
+import { SITE, img } from '../lib/site.js';
+const srcIcon = (s) => (/google/i.test(s) ? 'G' : /idoctor/i.test(s) ? 'iD' : '2ГИС');
+const initials = (n) => n.split(/\s+/).slice(0, 2).map((w) => w[0]).join('').toUpperCase();
+const jsonld = { '@context': 'https://schema.org', '@type': 'MedicalClinic', name: 'Interna Clinic', review: reviews.map((r) => ({ '@type': 'Review', author: { '@type': 'Person', name: r.name }, reviewBody: r.text, reviewRating: { '@type': 'Rating', ratingValue: 5 } })) };
+---
+<Base title="Отзывы пациентов — Interna Clinic" description="Отзывы пациентов Interna Clinic с 2ГИС, Google и iDoctor: врачи, оборудование, сервис, стационар." jsonld={jsonld} active="about">
+  <PageHero crumbs={[['Главная', '/'], ['О клинике', '/about'], ['Отзывы']]} title="Отзывы <em>пациентов</em>" sub="Публикуем отзывы с внешних площадок как есть — с именами авторов и источником. Оставить свой можно на 2ГИС или в Google." chips={[`${reviews.length} отзывов`, '2ГИС · Google · iDoctor']} image="coats" />
+  <section class="sec"><div class="shell">
+    <div class="revgrid">
+      {reviews.map((r, i) => <article class={`card rev rv d${(i % 3) + 1}`}>
+        <div class="stars">★★★★★</div>
+        <p class="quote">«{r.text}»</p>
+        <div class="meta"><span class="ava">{initials(r.name)}</span><div><b>{r.name}</b><small>{r.src}</small></div><span class="srcb">{srcIcon(r.src)}</span></div>
+      </article>)}
+    </div>
+    <div class="card rv" style="display:flex;gap:20px;align-items:center;padding:26px 28px;margin-top:28px;background:var(--ice-50);border-color:transparent;flex-wrap:wrap">
+      <div style="width:54px;height:54px;border-radius:16px;background:#fff;display:grid;place-items:center;font-size:24px">💬</div>
+      <div style="flex:1;min-width:240px"><b style="font-size:16px;display:block">Были у нас на приёме?</b><p style="margin:4px 0 0;font-weight:500;color:var(--muted)">Ваш отзыв помогает другим пациентам выбрать врача, а нам — становиться лучше.</p></div>
+      <div style="display:flex;gap:10px;flex-wrap:wrap"><a class="btn btn-primary sm" href={SITE.map2gis || '/contacts'} target="_blank" rel="noopener">Оставить отзыв на 2ГИС</a><a class="btn btn-line sm" href={SITE.mapGoogle || '/contacts'} target="_blank" rel="noopener">В Google</a></div>
+    </div>
+  </div></section>
+  <Cta />
+</Base>

@@ -8,7 +8,8 @@ import Faq from '../components/Faq.astro';
 import ContactsStrip from '../components/ContactsStrip.astro';
 import services from '../data/services.json';
 import doctors from '../data/doctors.json';
-import reviews from '../data/reviews.json';
+import allReviews from '../data/reviews.json';
+const reviews = allReviews.filter((r) => r.text.length <= 280 && /[А-Яа-я]{3}/.test(r.text) && !/қ|ң|ғ|ү|ұ/.test(r.text)).slice(0, 6);
 import { SITE, img } from '../lib/site.js';
 
 const faq = [
@@ -100,8 +101,8 @@ const story = [
 
   <section class="sec" style="padding-top:0"><div class="shell"><div class="testi rv">
     <div class="ph"><img src={img('coats')} alt="Interna Clinic" loading="lazy" /></div>
-    <div><p class="kicker">Отзывы</p><h2 class="h">Что говорят наши <em>пациенты</em></h2>
-      <div class="ttrack" id="ttrack">{reviews.map((r) => <div class="tslide"><div class="stars">★★★★★</div><p class="quote">«{r[0]}»</p><p class="q-name">{r[1]}</p><p class="q-role">пациент клиники · отзыв с сайта</p></div>)}</div>
+    <div><p class="kicker">Отзывы</p><h2 class="h">Что говорят наши <em>пациенты</em></h2><p class="lede" style="margin:8px 0 0"><a href="/reviews" style="color:var(--blue-600);font-weight:700">Все отзывы с 2ГИС, Google и iDoctor →</a></p>
+      <div class="ttrack" id="ttrack">{reviews.map((r) => <div class="tslide"><div class="stars">★★★★★</div><p class="quote">«{r.text}»</p><p class="q-name">{r.name}</p><p class="q-role">пациент клиники · отзыв на {r.src}</p></div>)}</div>
       <div class="tnav"><button class="tbtn" data-tprev aria-label="Назад">←</button><button class="tbtn" data-tnext aria-label="Вперёд">→</button><span class="tdots" id="tdots">{reviews.map((_, i) => <i class={i === 0 ? 'on' : ''}></i>)}</span></div>
     </div>
   </div></div></section>
