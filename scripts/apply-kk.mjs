@@ -17,6 +17,9 @@ const walk = (d) => fs.readdirSync(d).flatMap((f) => { const p = path.join(d, f)
 const files = walk(ROOT).filter((f) => f.endsWith('.html'));
 
 const ASSET = /^\/(kk\/|images\/|scripts\/|_astro\/|favicon|apple-touch|admin|api\/|sitemap|robots|#)/;
+// на GitHub Pages Astro уже пишет ассеты с базовым префиксом (/interna-clinic/_astro/…) — их не трогаем
+const BASE = (process.env.BASE_PATH || '/').replace(/\/+$/, '');
+const isBased = (v) => BASE && (v === BASE || v.startsWith(BASE + '/'));
 const TEXT_ATTRS = new Set(['alt', 'placeholder', 'aria-label', 'title', 'data-words', 'data-title', 'data-text', 'data-svc', 'data-fmt', 'label']);
 const SKIP = new Set(['script', 'style', 'noscript']);
 const todo = new Map();
@@ -43,7 +46,7 @@ for (const f of files) {
     if (SKIP.has(n.nodeName)) { return; }
     if (n.nodeName === 'html') { const l = n.attrs.find((a) => a.name === 'lang'); if (l) l.value = 'kk'; }
     for (const a of n.attrs || []) {
-      if ((a.name === 'href' || a.name === 'action') && a.value.startsWith('/') && !ASSET.test(a.value) && !n.attrs.some((x) => x.name === 'data-lang-switch')) { a.value = '/kk' + (a.value === '/' ? '/' : a.value); links++; }
+      if ((a.name === 'href' || a.name === 'action') && a.value.startsWith('/') && !ASSET.test(a.value) && !isBased(a.value) && !n.attrs.some((x) => x.name === 'data-lang-switch')) { a.value = '/kk' + (a.value === '/' ? '/' : a.value); links++; }
       if (TEXT_ATTRS.has(a.name) || (a.name === 'content' && n.nodeName === 'meta' && n.attrs.some((x) => x.name === 'name' && x.value === 'description' || x.name === 'property' && /^og:(title|description)$/.test(x.value)))) { const v = tr(a.value, page); if (v !== a.value) translated++; a.value = v; }
     }
     (n.childNodes || []).forEach(w);
