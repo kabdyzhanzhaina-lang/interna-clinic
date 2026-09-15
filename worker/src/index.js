@@ -185,6 +185,25 @@ export default {
       return json({ demo: true, slots }, 200, C);
     }
 
+
+    /* ── OAuth для Decap CMS (GitHub): /auth → GitHub → /callback → токен в окно админки ── */
+    if (path === '/auth') {
+      if (!env.GITHUB_CLIENT_ID) return json({ error: 'GITHUB_CLIENT_ID не задан' }, 500);
+      const u = new URL('https://github.com/login/oauth/authorize');
+      u.searchParams.set('client_id', env.GITHUB_CLIENT_ID); u.searchParams.set('scope', 'repo,user'); u.searchParams.set('state', crypto.randomUUID());
+      return Response.redirect(u.toString(), 302);
+    }
+    if (path === '/callback') {
+      const code = url.searchParams.get('code');
+      const r = await fetch('https://github.com/login/oauth/access_token', { method: 'POST', headers: { 'content-type': 'application/json', accept: 'application/json' }, body: JSON.stringify({ client_id: env.GITHUB_CLIENT_ID, client_secret: env.GITHUB_CLIENT_SECRET, code }) });
+      const d = await r.json().catch(() => ({ error: 'bad_response' }));
+      const msg = d.error ? `error:${JSON.stringify(d)}` : `success:${JSON.stringify({ token: d.access_token, provider: 'github' })}`;
+      const html = `<!doctype html><meta charset="utf-8"><title>Вход…</title><p style="font:600 15px system-ui;padding:24px">Входим в админку…</p><script>
+        (function(){ function send(e){ window.opener.postMessage('authorization:github:${msg.replace(/'/g, "\\'")}', e.origin); window.removeEventListener('message', send); window.close(); }
+        window.addEventListener('message', send, false); window.opener.postMessage('authorizing:github', '*'); })();</script>`;
+      return new Response(html, { headers: { 'content-type': 'text/html; charset=utf-8' } });
+    }
+
     if (path.startsWith('/admin')) {
       if (!authed(req, env)) return needAuth();
       if (path === '/admin' && req.method === 'GET') {

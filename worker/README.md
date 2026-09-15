@@ -43,3 +43,18 @@ npx wrangler deploy                         # адрес вида https://intern
 ```
 
 Ответ — любой 2xx. Для слотов записи (этап 2) CRM должна отдавать `GET /slots?doctor=&date=` → `[{ time, iso, doctorId }]`.
+
+## Вход в админку сайта (Decap CMS, `/admin/` на сайте)
+
+Админка редактирует JSON-файлы в GitHub и коммитит их; воркер выступает OAuth-провайдером GitHub.
+
+1. GitHub → Settings → Developer settings → OAuth Apps → New: Homepage — адрес сайта, **Authorization callback URL** — `https://<адрес воркера>/callback`.
+2. Секреты воркера:
+   ```bash
+   npx wrangler secret put GITHUB_CLIENT_ID
+   npx wrangler secret put GITHUB_CLIENT_SECRET
+   ```
+3. В `public/admin/config.yml` заменить `base_url` на адрес воркера. Пересобрать сайт.
+4. Открыть `https://<сайт>/admin/`, войти через GitHub (аккаунт должен иметь права на репозиторий).
+
+Что редактируется: врачи, прайс, акции, отзывы, вопросы-ответы, медиацентр, оборудование. Услуги и check-up — пока только через файлы в `src/data`.

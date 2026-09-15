@@ -60,7 +60,7 @@ function bioToBody(html, name) {
 
 /* ───────── 2. Врачи: биография, стаж, регалии ───────── */
 {
-  const docs = JSON.parse(fs.readFileSync('src/data/doctors.json', 'utf8'));
+  const docs = JSON.parse(fs.readFileSync('src/data/doctors.json', 'utf8')).items;
   const raw = JSON.parse(fs.readFileSync('content/migrated/prices-raw.json', 'utf8')).products;
   const prices = JSON.parse(fs.readFileSync('src/data/prices.json', 'utf8'));
   const inPart = (p, id) => { try { return JSON.parse(p.partuids || '[]').map(String).includes(id); } catch { return false; } };
@@ -102,6 +102,6 @@ function bioToBody(html, name) {
     if (/профессор/i.test(plain) && !/ассистент профессора/i.test(plain)) tags.add('профессор');
     d.tags = [...tags].slice(0, 4);
   }
-  fs.writeFileSync('src/data/doctors.json', JSON.stringify(docs, null, 1) + '\n');
+  fs.writeFileSync('src/data/doctors.json', JSON.stringify({ items: docs }, null, 1) + '\n');
   console.log(`врачи: биографии у ${withAbout}/${docs.length}, стаж заполнен ещё у ${withExp} (оценка по году выпуска — ${est}); без стажа: ${docs.filter((d) => !d.exp).map((d) => d.n).join(', ') || 'нет'}`);
 }

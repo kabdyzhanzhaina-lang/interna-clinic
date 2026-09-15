@@ -5,6 +5,12 @@ import { readdirSync, readFileSync, writeFileSync, statSync } from 'node:fs';
 import { join } from 'node:path';
 
 const base = (process.env.BASE_PATH || '/').replace(/\/+$/, '');
+import { writeFileSync as wf } from 'node:fs';
+// robots.txt с актуальным адресом sitemap (SITE_URL + BASE_PATH)
+const siteUrl = (process.env.SITE_URL || 'https://internaclinic.kz').replace(/\/$/, '');
+wf('dist/robots.txt', `User-agent: *\nAllow: /\nDisallow: /admin/\n\nSitemap: ${siteUrl}${base === '/' ? '' : base}/sitemap-index.xml\n`);
+console.log('[robots] sitemap →', siteUrl + (base === '/' ? '' : base) + '/sitemap-index.xml');
+
 if (!base) { console.log('[apply-base] BASE_PATH пуст — пропускаем'); process.exit(0); }
 
 const walk = (dir) => readdirSync(dir).flatMap((f) => { const p = join(dir, f); return statSync(p).isDirectory() ? walk(p) : [p]; });

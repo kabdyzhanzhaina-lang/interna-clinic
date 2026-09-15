@@ -5,7 +5,8 @@ import PageHero from '../../components/PageHero.astro';
 import DoctorCard from '../../components/DoctorCard.astro';
 import Cta from '../../components/Cta.astro';
 import extra from '../../data/services_extra.json';
-import doctors from '../../data/doctors.json';
+import doctorsFile from '../../data/doctors.json';
+const doctors = doctorsFile.items;
 import prices from '../../data/prices.json';
 
 export function getStaticPaths() { return Object.keys(extra).map((slug) => ({ params: { slug } })); }

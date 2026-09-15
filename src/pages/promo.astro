@@ -4,7 +4,8 @@ import Base from '../layouts/Base.astro';
 import PageHero from '../components/PageHero.astro';
 import Cta from '../components/Cta.astro';
 import Body from '../components/Body.astro';
-import promos from '../data/promos.json';
+import promosFile from '../data/promos.json';
+const promos = promosFile.items;
 import free from '../data/free.json';
 import { SITE } from '../lib/site.js';
 ---

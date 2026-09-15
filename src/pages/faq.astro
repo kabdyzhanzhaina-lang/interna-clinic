@@ -3,7 +3,8 @@
 import Base from '../layouts/Base.astro';
 import PageHero from '../components/PageHero.astro';
 import Cta from '../components/Cta.astro';
-import faq from '../data/faq.json';
+import faqFile from '../data/faq.json';
+const faq = faqFile.items;
 import { SITE } from '../lib/site.js';
 const plain = (q) => [...q.a, ...(q.list || [])].join(' ');
 const faqld = { '@context': 'https://schema.org', '@type': 'FAQPage', mainEntity: faq.map((q) => ({ '@type': 'Question', name: q.q, acceptedAnswer: { '@type': 'Answer', text: plain(q) } })) };

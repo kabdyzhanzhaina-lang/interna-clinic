@@ -1,5 +1,6 @@
 // Медиацентр: 13 материалов старого сайта, перенесённых полностью (scripts/migrate-articles.mjs)
-import media from '../data/media.json';
+import mediaFile from '../data/media.json';
+const media = mediaFile.items;
 
 export const ALL_MEDIA = [...media].sort((a, b) => (b.date || '').localeCompare(a.date || ''));
 

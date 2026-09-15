@@ -70,9 +70,9 @@ try {
   writeFileSync('src/data/prices.json', JSON.stringify(ordered, null, 2));
   console.log(`prices: ${Object.values(ordered).reduce((a, v) => a + v.length, 0)} позиций в ${Object.keys(ordered).length} разделах: ${Object.keys(ordered).join(', ')}`);
   // цены приёмов врачей — в карточки врачей
-  const docs = JSON.parse(readFileSync('src/data/doctors.json', 'utf8'));
+  const docs = JSON.parse(readFileSync('src/data/doctors.json', 'utf8')).items;
   let upd = 0;
   for (const d of docs) { const k = Object.keys(docPrice).find((n) => n.toLowerCase().startsWith(d.n.toLowerCase().split(' ').slice(0, 2).join(' '))); if (k) { d.price = docPrice[k]; upd++; } }
-  writeFileSync('src/data/doctors.json', JSON.stringify(docs, null, 2));
+  writeFileSync('src/data/doctors.json', JSON.stringify({ items: docs }, null, 2));
   console.log(`цены приёма проставлены ${upd} врачам из каталога`);
 } catch (e) { console.log('prices: пропущено —', e.message); }

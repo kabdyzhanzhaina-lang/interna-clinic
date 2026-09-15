@@ -6,7 +6,8 @@ import DoctorCard from '../../components/DoctorCard.astro';
 import Body from '../../components/Body.astro';
 import Cta from '../../components/Cta.astro';
 import kids from '../../data/kids.json';
-import doctors from '../../data/doctors.json';
+import doctorsFile from '../../data/doctors.json';
+const doctors = doctorsFile.items;
 
 export function getStaticPaths() { return kids.services.map((s) => ({ params: { id: s.id } })); }
 const s = kids.services.find((x) => x.id === Astro.params.id);

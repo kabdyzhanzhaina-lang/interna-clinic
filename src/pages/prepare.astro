@@ -6,7 +6,8 @@ import Cta from '../components/Cta.astro';
 import Faq from '../components/Faq.astro';
 import Body from '../components/Body.astro';
 import prep from '../data/prepare.json';
-import doctors from '../data/doctors.json';
+import doctorsFile from '../data/doctors.json';
+const doctors = doctorsFile.items;
 import { img } from '../lib/site.js';
 const prof = doctors.find((d) => d.id === prep.professor.doc);
 const faq = [

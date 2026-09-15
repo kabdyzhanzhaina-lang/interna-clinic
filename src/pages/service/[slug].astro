@@ -5,7 +5,8 @@ import Cta from '../../components/Cta.astro';
 import Marquee from '../../components/Marquee.astro';
 import Faq from '../../components/Faq.astro';
 import services from '../../data/services.json';
-import doctors from '../../data/doctors.json';
+import doctorsFile from '../../data/doctors.json';
+const doctors = doctorsFile.items;
 import { img } from '../../lib/site.js';
 
 export function getStaticPaths() { return Object.keys(services).map((slug) => ({ params: { slug } })); }

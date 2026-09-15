@@ -28,7 +28,7 @@ const dec = (s) => s.replace(/&nbsp;|&#160;/g, ' ').replace(/&amp;/g, '&').repla
       if (x[1].length > 2 && x[1].every((t) => /\s[-–—]\s/.test(t))) cur.list = x[1]; else cur.a.push(...x[1]);
     }
   }
-  fs.writeFileSync('src/data/faq.json', JSON.stringify(faq, null, 1) + '\n');
+  fs.writeFileSync('src/data/faq.json', JSON.stringify({ items: faq }, null, 1) + '\n');
   console.log(`faq: ${faq.length} вопросов`);
 }
 
@@ -73,6 +73,6 @@ const dec = (s) => s.replace(/&nbsp;|&#160;/g, ' ').replace(/&amp;/g, '&').repla
     cur = { name: t, src: '', text: '' }; reviews.push(cur);
   }
   const clean = reviews.filter((r) => r.text && r.text.length > 20);
-  fs.writeFileSync('src/data/reviews.json', JSON.stringify(clean, null, 1) + '\n');
+  fs.writeFileSync('src/data/reviews.json', JSON.stringify({ items: clean }, null, 1) + '\n');
   console.log(`reviews: ${clean.length} отзывов — ${clean.map((r) => r.name + ' (' + r.src + ')').join('; ')}`);
 }

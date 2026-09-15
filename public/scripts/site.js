@@ -4,7 +4,7 @@
   const $ = (s, r) => (r || document).querySelector(s);
   const $$ = (s, r) => Array.from((r || document).querySelectorAll(s));
   const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
-  const SLOTS = [["14:30", "сегодня"], ["16:00", "сегодня"], ["09:15", "завтра"], ["11:00", "завтра"], ["13:45", "завтра"], ["18:20", "завтра"]];
+  const SLOTS = [["Утро", "08:00–12:00"], ["День", "12:00–17:00"], ["Вечер", "17:00–22:00"], ["Любое", "как удобно"]];   // точное время подтверждает администратор
 
   /* ── появление при прокрутке ── */
   if (!reduce && "IntersectionObserver" in window) {
@@ -57,7 +57,7 @@
   function renderSlots(cont, btn, count) {
     if (!cont) return;
     cont.innerHTML = SLOTS.slice(0, count || 3).map((s, i) => `<button type="button" class="slot" aria-pressed="${i === 0}">${s[0]}<small>${s[1]}</small></button>`).join("");
-    cont.addEventListener("click", (e) => { const b = e.target.closest(".slot"); if (!b) return; $$(".slot", cont).forEach((x) => x.setAttribute("aria-pressed", "false")); b.setAttribute("aria-pressed", "true"); if (btn) btn.textContent = "Забронировать " + b.firstChild.nodeValue.trim(); });
+    cont.addEventListener("click", (e) => { const b = e.target.closest(".slot"); if (!b) return; $$(".slot", cont).forEach((x) => x.setAttribute("aria-pressed", "false")); b.setAttribute("aria-pressed", "true"); if (btn) btn.textContent = "Записаться: " + b.firstChild.nodeValue.trim().toLowerCase(); });
   }
   renderSlots($("[data-slots]"), $("[data-slotbtn]"));
 
@@ -218,7 +218,7 @@
   const modal = $("#modal");
   const syncFormat = () => { $("#mFormatWrap").hidden = !/check-up/i.test($("#mSvc").value); };
   function openModal(svc) {
-    modal.classList.add("open"); $("#mform").hidden = false; $("#mdone").hidden = true; renderSlots($("#mslots"), null, 6);
+    modal.classList.add("open"); $("#mform").hidden = false; $("#mdone").hidden = true; renderSlots($("#mslots"), null, 4);
     if (svc) { const o = [...$("#mSvc").options].find((o) => o.text === svc); if (o) $("#mSvc").value = o.text; }
     syncFormat(); document.body.style.overflow = "hidden";
   }
@@ -233,7 +233,7 @@
     const name = $("#mName").value.trim(), phone = $("#mPhone").value.trim();
     if (!$("#mAgree").checked) { $("#mAgree").focus(); $("#mAgree").parentElement.style.color = "#B4342C"; return; }
     if (!phone) { $("#mPhone").focus(); $("#mPhone").style.borderColor = "#B4342C"; return; }
-    const slot = $('#mslots .slot[aria-pressed="true"]'); const st = slot ? slot.firstChild.nodeValue.trim() + ", " + $("small", slot).textContent : "ближайшее время";
+    const slot = $('#mslots .slot[aria-pressed="true"]'); const st = slot ? slot.firstChild.nodeValue.trim() + ", " + $("small", slot).textContent : "любое время";
     const fmt = $("#mFormatWrap").hidden ? "" : " (" + $("#mFormat .on").dataset.fmt.toLowerCase() + ")";
     const utm = Object.fromEntries([...new URLSearchParams(location.search)].filter(([k]) => k.startsWith("utm_")));
     const payload = { name, phone, service: $("#mSvc").value, format: fmt.replace(/[() ]/g, ""), slot: st, agree: true, page: location.pathname, ...utm };

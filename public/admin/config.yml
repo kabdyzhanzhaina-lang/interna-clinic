@@ -1,0 +1,179 @@
+# Decap CMS — админка сайта Interna Clinic.
+# Правки сохраняются коммитами в GitHub → GitHub Actions пересобирает сайт (1–2 минуты).
+# Вход: GitHub-аккаунт с доступом к репозиторию. OAuth-провайдер — Cloudflare Worker из папки worker/
+# (нужны секреты GITHUB_CLIENT_ID / GITHUB_CLIENT_SECRET, см. worker/README.md). base_url — адрес воркера.
+backend:
+  name: github
+  repo: kabdyzhanzhaina-lang/interna-clinic
+  branch: main
+  base_url: https://interna-api.REPLACE.workers.dev
+  auth_endpoint: auth
+  commit_messages:
+    update: "Админка: {{collection}} — {{slug}}"
+    create: "Админка: добавлено — {{collection}}"
+    delete: "Админка: удалено — {{collection}}"
+
+locale: ru
+site_url: https://internaclinic.kz
+display_url: https://internaclinic.kz
+logo_url: /images/logo.png
+media_folder: public/images/uploads
+public_folder: /images/uploads
+
+collections:
+  - name: doctors
+    label: Врачи
+    files:
+      - name: list
+        label: Список врачей
+        file: src/data/doctors.json
+        format: json
+        fields:
+          - name: items
+            label: Врачи
+            widget: list
+            summary: "{{fields.n}} — {{fields.r}}"
+            fields:
+              - { name: id, label: "ID (латиницей, для адреса страницы)", widget: string }
+              - { name: n, label: ФИО, widget: string }
+              - { name: r, label: Должность, widget: string }
+              - { name: cat, label: Направление, widget: select, options: [{ label: Гастроэнтерология, value: gastro }, { label: Эндокринология, value: endo }, { label: Эндоскопия, value: endoscopy }, { label: Кардиология, value: cardio }, { label: Interna KIDS, value: kids }, { label: Другое, value: other }] }
+              - { name: img, label: "Фото (ключ, например doctors/ivanov)", widget: string, required: false }
+              - { name: exp, label: Стаж, widget: string, required: false, hint: "например «12 лет»" }
+              - { name: price, label: Цена приёма, widget: string, required: false }
+              - { name: tags, label: Теги, widget: list, required: false, field: { name: tag, label: Тег, widget: string } }
+              - { name: bio, label: Коротко о враче, widget: text, required: false }
+              - { name: kids, label: Принимает детей, widget: boolean, required: false, default: false }
+              - { name: kidsRole, label: Детская должность, widget: string, required: false }
+              - name: about
+                label: Биография (блоки)
+                widget: list
+                required: false
+                hint: "Каждый блок: тип (h3 — подзаголовок, p — абзац, ul — список) и содержимое"
+                field: { name: block, label: Блок, widget: list, field: { name: v, label: Значение, widget: string } }
+
+  - name: prices
+    label: Прайс
+    files:
+      - name: sections
+        label: Разделы прайса
+        file: src/data/prices.json
+        format: json
+        editor: { preview: false }
+        fields:
+          - { name: "Приёмы врачей", label: Приёмы врачей, widget: list, field: { name: row, label: "Позиция [название, подпись, цена, старая цена]", widget: list, field: { name: v, widget: string } } }
+          - { name: "Комплексы «Приём + обследование»", label: Комплексы, widget: list, field: { name: row, label: Позиция, widget: list, field: { name: v, widget: string } } }
+          - { name: "Эндоскопия", label: Эндоскопия, widget: list, field: { name: row, label: Позиция, widget: list, field: { name: v, widget: string } } }
+          - { name: "УЗИ и УЗДГ", label: УЗИ и УЗДГ, widget: list, field: { name: row, label: Позиция, widget: list, field: { name: v, widget: string } } }
+          - { name: "Функциональная диагностика", label: Функциональная диагностика, widget: list, field: { name: row, label: Позиция, widget: list, field: { name: v, widget: string } } }
+          - { name: "Анализы", label: Анализы, widget: list, field: { name: row, label: Позиция, widget: list, field: { name: v, widget: string } } }
+          - { name: "Стационар", label: Стационар, widget: list, field: { name: row, label: Позиция, widget: list, field: { name: v, widget: string } } }
+          - { name: "Процедурный кабинет", label: Процедурный кабинет, widget: list, field: { name: row, label: Позиция, widget: list, field: { name: v, widget: string } } }
+          - { name: "Хирургия и проктология", label: Хирургия и проктология, widget: list, field: { name: row, label: Позиция, widget: list, field: { name: v, widget: string } } }
+          - { name: "Interna KIDS", label: Interna KIDS, widget: list, field: { name: row, label: Позиция, widget: list, field: { name: v, widget: string } } }
+          - { name: "ОСМС и бесплатные программы", label: ОСМС и бесплатные программы, widget: list, field: { name: row, label: Позиция, widget: list, field: { name: v, widget: string } } }
+
+  - name: promos
+    label: Акции
+    files:
+      - name: list
+        label: Акции
+        file: src/data/promos.json
+        format: json
+        fields:
+          - name: items
+            label: Акции
+            widget: list
+            summary: "{{fields.t}} — {{fields.p}}"
+            fields:
+              - { name: id, label: ID, widget: string }
+              - { name: t, label: Название, widget: string }
+              - { name: d, label: Описание, widget: text }
+              - { name: p, label: Цена, widget: string }
+              - { name: old, label: Старая цена, widget: string, required: false }
+              - { name: off, label: Скидка (например −13%), widget: string, required: false }
+              - { name: link, label: Ссылка на услугу, widget: string, required: false }
+              - { name: hot, label: Выделить, widget: boolean, default: false, required: false }
+
+  - name: reviews
+    label: Отзывы
+    files:
+      - name: list
+        label: Отзывы
+        file: src/data/reviews.json
+        format: json
+        fields:
+          - name: items
+            label: Отзывы
+            widget: list
+            summary: "{{fields.name}} ({{fields.src}})"
+            fields:
+              - { name: name, label: Автор, widget: string }
+              - { name: src, label: Источник, widget: string, hint: "2ГИС, Google, iDoctor" }
+              - { name: text, label: Текст, widget: text }
+
+  - name: faq
+    label: Вопросы и ответы
+    files:
+      - name: list
+        label: Вопросы
+        file: src/data/faq.json
+        format: json
+        fields:
+          - name: items
+            label: Вопросы
+            widget: list
+            summary: "{{fields.q}}"
+            fields:
+              - { name: q, label: Вопрос, widget: string }
+              - { name: a, label: Ответ (абзацы), widget: list, field: { name: p, label: Абзац, widget: text } }
+              - { name: list, label: Список (если нужен), widget: list, required: false, field: { name: li, label: Пункт, widget: string } }
+
+  - name: media
+    label: Медиацентр
+    files:
+      - name: list
+        label: Статьи и видео
+        file: src/data/media.json
+        format: json
+        fields:
+          - name: items
+            label: Материалы
+            widget: list
+            summary: "{{fields.date}} — {{fields.t}}"
+            fields:
+              - { name: id, label: "ID (латиницей, адрес страницы)", widget: string }
+              - { name: t, label: Заголовок, widget: string }
+              - { name: tag, label: Рубрика, widget: string, hint: "например «СТАТЬЯ · ГАСТРОЭНТЕРОЛОГИЯ»" }
+              - { name: img, label: "Обложка (ключ, например media/my-article)", widget: string }
+              - { name: by, label: Автор, widget: string }
+              - { name: date, label: Дата (ГГГГ-ММ-ДД), widget: string }
+              - { name: min, label: "Время чтения / длительность", widget: string, required: false }
+              - { name: doc, label: "ID врача (для карточки в статье)", widget: string, required: false }
+              - { name: video, label: "YouTube ID (для видео)", widget: string, required: false }
+              - name: body
+                label: Текст (блоки)
+                widget: list
+                hint: "Блок = [тип, содержимое]. Типы: p абзац · h заголовок · h3 подзаголовок · q цитата · ul/ol списки · tc тайм-коды"
+                field: { name: block, label: Блок, widget: list, field: { name: v, widget: string } }
+
+  - name: equipment
+    label: Оборудование
+    files:
+      - name: list
+        label: Аппараты
+        file: src/data/equipment.json
+        format: json
+        fields:
+          - { name: intro, label: Вводный текст, widget: list, field: { name: p, widget: text } }
+          - name: items
+            label: Аппараты
+            widget: list
+            summary: "{{fields.name}}"
+            fields:
+              - { name: id, label: ID, widget: string }
+              - { name: name, label: Название, widget: string }
+              - { name: kind, label: Тип, widget: string }
+              - { name: cat, label: Направление, widget: string }
+              - { name: desc, label: Описание, widget: text }
+              - { name: img, label: Фото, widget: image }

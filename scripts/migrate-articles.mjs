@@ -14,7 +14,7 @@ const R = (p) => JSON.parse(fs.readFileSync(p, 'utf8'));
 const src = R('content/migrated/media.json');          // id, url, title, description, image, video
 const feedA = R('content/migrated/feed-articles.json').posts;
 const feedV = R('content/migrated/feed-video.json').posts;
-const prev = R('src/data/media.json');                 // чтобы сохранить пути картинок
+const prev = R('src/data/media.json').items || R('src/data/media.json');                 // чтобы сохранить пути картинок
 
 const clean = (h) => h.replace(/<br\s*\/?>/gi, ' ').replace(/<[^>]+>/g, '').replace(/&nbsp;/g, ' ').replace(/&amp;/g, '&').replace(/&quot;/g, '"').replace(/&#39;/g, "'").replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/\s+/g, ' ').trim();
 const words = (body) => body.reduce((n, b) => n + (Array.isArray(b[1]) ? b[1].join(' ') : String(b[1])).split(/\s+/).length, 0);
@@ -88,5 +88,5 @@ const out = src.map((s) => {
 });
 
 out.sort((a, b) => b.date.localeCompare(a.date));
-fs.writeFileSync('src/data/media.json', JSON.stringify(out, null, 1) + '\n');
+fs.writeFileSync('src/data/media.json', JSON.stringify({ items: out }, null, 1) + '\n');
 for (const o of out) console.log(`${o.date}  ${o.min.padEnd(16)} ${String(words(o.body)).padStart(5)} слов  ${o.t.slice(0, 60)}`);

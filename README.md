@@ -73,3 +73,10 @@ npm install        # зависимости
 npm run dev        # http://localhost:4321
 npm run build      # сборка в dist/
 ```
+
+
+## SEO и переезд со старого сайта
+
+- **Редиректы**: `src/lib/redirects.js` собирает карту старых адресов Tilda (услуги, статьи `tpost`, карточки `kids/tproduct`, разделы), для каждого генерируется страница-заглушка с мгновенным переходом и `canonical` на новую страницу (`src/pages/[...old].astro`). GitHub Pages не умеет 301, поэтому так.
+- **Sitemap**: `@astrojs/sitemap`, заглушки и `/admin` исключены. `robots.txt` пишется при сборке с адресом sitemap под текущий домен.
+- **Админка**: `/admin/` — Decap CMS, см. `worker/README.md`.

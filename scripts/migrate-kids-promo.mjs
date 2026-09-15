@@ -46,7 +46,7 @@ fs.writeFileSync('src/data/kids.json', JSON.stringify({ welcome, features, servi
 console.log(`kids: ${services.length} услуг (${services.filter((s) => s.icon).length} с иконками, ${services.filter((s) => s.price).length} с ценой), ${features.length} преимуществ`);
 
 /* ───────── 2. Детские врачи ───────── */
-const docs = JSON.parse(fs.readFileSync('src/data/doctors.json', 'utf8'));
+const docs = JSON.parse(fs.readFileSync('src/data/doctors.json', 'utf8')).items;
 const norm = (s) => s.toLowerCase().replace(/ё/g, 'е').split(/\s+/).slice(0, 2).join(' ');
 const clean = (s) => { const t = s.replace(/&nbsp;/g, ' ').replace(/^Врач\s*-\s*/i, '').replace(/^Врач-/i, '').replace(/\s+/g, ' ').trim(); return t.charAt(0).toUpperCase() + t.slice(1); };
 let added = 0;
@@ -61,14 +61,14 @@ for (const p of raw.filter((x) => inPart(x, '371954388204'))) {
   }
   d.kids = true; d.kidsRole = clean(p.descr);
 }
-fs.writeFileSync('src/data/doctors.json', JSON.stringify(docs, null, 1) + '\n');
+fs.writeFileSync('src/data/doctors.json', JSON.stringify({ items: docs }, null, 1) + '\n');
 console.log(`врачи KIDS: ${docs.filter((d) => d.kids).length} отмечены, добавлено новых: ${added}`);
 
 /* ───────── 3. Акции и бесплатные услуги по ОСМС ───────── */
 const cap = raw.find((p) => inPart(p, '426683581141'));
 const capBody = textToBody(cap.text || '');
 const promos = [{ id: 'capsule', t: 'Видеокапсульная эндоскопия', d: (capBody.find((x) => x[0] === 'p') || ['', ''])[1].slice(0, 220), p: fmtPrice(cap.price), old: fmtPrice(String(cap.priceold).replace(',', '.')), off: `−${Math.round((1 - +cap.price / parseFloat(String(cap.priceold).replace(',', '.'))) * 100)}%`, link: '/uslugi/capsule', hot: true }];
-fs.writeFileSync('src/data/promos.json', JSON.stringify(promos, null, 1) + '\n');
+fs.writeFileSync('src/data/promos.json', JSON.stringify({ items: promos }, null, 1) + '\n');
 const fb = body(SNAP + 'other/free.html'); const intro = fb.filter((x) => x[0] === 'p').slice(0, 3).map((x) => x[1]);
 const fibro = body(SNAP + 'other/fibrofree.html'); const fEnd = fibro.findIndex((x) => /^Записаться на диагностику/i.test(x[1]));
 const fibroBody = fibro.slice(0, fEnd > 0 ? fEnd : undefined).filter((x) => !/^(Функциональная диагностика|Гепатолог Interna Clinic|Фиброскан Interna Clinic|ФиброСкан в Алматы|Эластография печени \/ фиброскан печени)/i.test(x[1]) && !/^(Гепатолог - это врач|Фиброскан - это медицинская процедура|В Interna Clinic мы стремимся)/i.test(x[1]));

@@ -1,0 +1,25 @@
+---
+// Заглушки для старых адресов Tilda: GitHub Pages не умеет 301, поэтому мгновенный клиентский редирект + canonical на новую страницу
+import { redirectMap } from '../lib/redirects.js';
+
+export function getStaticPaths() {
+  return [...redirectMap().entries()].map(([old, to]) => ({ params: { old }, props: { to } }));
+}
+const { to } = Astro.props;
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+const target = base + to;
+const abs = new URL(target, Astro.site).href;
+---
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="robots" content="noindex" />
+    <link rel="canonical" href={abs} />
+    <meta http-equiv="refresh" content={`0; url=${abs}`} />
+    <title>Страница переехала — Interna Clinic</title>
+    <script set:html={`location.replace(${JSON.stringify(target)} + location.hash)`} />
+    <style>body{font:600 16px/1.5 system-ui,sans-serif;color:#0A2E45;display:grid;place-items:center;min-height:100vh;margin:0;background:#F3FAFE}a{color:#0A6DB4}</style>
+  </head>
+  <body><p>Страница переехала. <a href={target}>Перейти на новую страницу</a></p></body>
+</html>

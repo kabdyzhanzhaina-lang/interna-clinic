@@ -7,8 +7,10 @@ import Marquee from '../components/Marquee.astro';
 import Faq from '../components/Faq.astro';
 import ContactsStrip from '../components/ContactsStrip.astro';
 import services from '../data/services.json';
-import doctors from '../data/doctors.json';
-import allReviews from '../data/reviews.json';
+import doctorsFile from '../data/doctors.json';
+const doctors = doctorsFile.items;
+import allReviewsFile from '../data/reviews.json';
+const allReviews = allReviewsFile.items;
 const reviews = allReviews.filter((r) => r.text.length <= 280 && /[А-Яа-я]{3}/.test(r.text) && !/қ|ң|ғ|ү|ұ/.test(r.text)).slice(0, 6);
 import { SITE, img } from '../lib/site.js';
 
@@ -46,9 +48,9 @@ const story = [
         <div class="hero-photo"><img src={img('hero')} alt="Врач Interna Clinic на консультации" /></div>
         <span class="badge-float" style="right:6%;top:26px"><i></i>Лицензия {SITE.license.split(' от')[0]}</span>
         <div class="book">
-          <div class="top"><b>Онлайн-запись</b><span class="live"><i></i>сейчас</span></div>
+          <div class="top"><b>Онлайн-запись</b><span class="live"><i></i>ответ за 10 минут</span></div>
           <div class="slots" data-slots></div>
-          <button class="btn btn-primary" data-book data-slotbtn>Забронировать 14:30</button>
+          <button class="btn btn-primary" data-book data-slotbtn>Записаться</button>
         </div>
       </div>
     </div></div>
