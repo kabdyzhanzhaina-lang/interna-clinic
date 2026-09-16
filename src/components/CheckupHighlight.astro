@@ -1,0 +1,33 @@
+---
+// Акцентный блок check-up: программы с ценами, как проходит, кнопка подробной заявки
+import data from '../data/checkups.json';
+const { programs } = data;
+const hot = 'gastrologicheskiy-standart';
+interface Props { compact?: boolean }
+const { compact = false } = Astro.props;
+---
+<section class="sec" style={compact ? 'padding-top:0' : ''}><div class="shell">
+  <div class="cuhl rv">
+    <div class="cuhl-main">
+      <p class="kicker on-dark">Check-up · 1–2 дня</p>
+      <h2 class="h">Полное обследование <em>с ответом врача</em>, а не папкой анализов</h2>
+      <p class="lede">Пять программ от базовой до премиум: лаборатория, УЗИ, эндоскопия и функциональная диагностика в одном здании. Личный координатор собирает маршрут под ваши жалобы и возраст, а профильный врач разбирает результаты на очной консультации.</p>
+      <ol class="cuhl-steps">
+        <li><b>Заявка</b><span>рассказываете о целях и жалобах — 2 минуты</span></li>
+        <li><b>Маршрут</b><span>координатор подбирает программу и день, присылает памятку</span></li>
+        <li><b>Обследование</b><span>амбулаторно за день или в стационаре с палатой</span></li>
+        <li><b>Заключение</b><span>врач объясняет результаты и даёт план</span></li>
+      </ol>
+      <div class="row"><a class="btn btn-sky" href="/checkup-request">Оставить заявку на check-up</a><a class="btn btn-ghost" href="/checkup">Сравнить программы</a></div>
+    </div>
+    <div class="cuhl-list">
+      {programs.map((p) => (
+        <a class={`cuhl-row${p.id === hot ? ' hot' : ''}`} href={`/checkup#cu-${p.id}`}>
+          <span><b>{p.title}</b><small>{p.sub || 'Программа'}{p.id === hot ? ' · выбирают чаще всего' : ''}</small></span>
+          <em>{p.price}</em>
+        </a>
+      ))}
+      <p class="cuhl-note">Цены указаны за амбулаторный формат. Корпоративным клиентам и семьям — индивидуальные условия.</p>
+    </div>
+  </div>
+</div></section>

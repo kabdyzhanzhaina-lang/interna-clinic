@@ -6,6 +6,9 @@ import Cta from '../components/Cta.astro';
 import Marquee from '../components/Marquee.astro';
 import Faq from '../components/Faq.astro';
 import ContactsStrip from '../components/ContactsStrip.astro';
+import SearchBar from '../components/SearchBar.astro';
+import QuickActions from '../components/QuickActions.astro';
+import CheckupHighlight from '../components/CheckupHighlight.astro';
 import services from '../data/services.json';
 import doctorsFile from '../data/doctors.json';
 const doctors = doctorsFile.items;
@@ -56,6 +59,14 @@ const story = [
     </div></div>
   </section>
 
+  <section class="findband"><div class="shell">
+    <div class="findband-in rv">
+      <div><p class="kicker on-dark">Поиск по клинике</p><h2>Найти врача, услугу <em>или цену</em></h2><p>43 врача, 39 направлений и 234 позиции прайса — начните вводить фамилию, специальность, диагноз или название исследования.</p></div>
+      <SearchBar big popular={['Колоноскопия', 'ЭГДС', 'Фиброскан', 'Гастроэнтеролог', 'Эндокринолог', 'Check-up', 'УЗИ']} />
+    </div>
+  </div></section>
+  <QuickActions />
+
   <section class="story" id="story">
     <div class="story-stage">
       {story.map((s, i) => (
@@ -75,6 +86,8 @@ const story = [
       <div class="card bcard rv d4"><div class="ic"><span class="msr">verified_user</span></div><h3>Безопасность</h3><p>Автоматическая дезинфекция эндоскопов и контроль стерильности на каждом этапе.</p></div>
     </div>
   </div></div></section>
+
+  <CheckupHighlight compact />
 
   <section class="sec" style="padding-top:0"><div class="shell"><div class="band">
     <div class="center rv"><p class="kicker">Услуги</p><h2 class="h">Чем мы можем <em>помочь</em></h2><p class="lede">Диагностика и лечение заболеваний ЖКТ, печени и эндокринной системы — от консультации до эндоскопии с седацией.</p></div>

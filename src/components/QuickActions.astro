@@ -1,0 +1,20 @@
+---
+// Ряд быстрых действий под первым экраном — как на Samsung Medical Center
+const items = [
+  ['event_available', 'Записаться на приём', 'выбрать врача и время', null, 'book'],
+  ['waving_hand', 'Первый визит', 'что взять с собой и как проходит', '/faq', null],
+  ['checklist', 'Подобрать check-up', 'за 30 секунд или подробной заявкой', '/checkup-request', null],
+  ['event_note', 'Подготовка к исследованию', 'памятки к колоноскопии, ЭГДС, УЗИ', '/prepare', null],
+  ['description', 'Результаты и выписки', 'запросить в WhatsApp', null, 'wa:Здравствуйте! Хочу получить результаты обследования или выписку.'],
+  ['pediatrics', 'Записать ребёнка', 'Interna KIDS — 17 детских направлений', '/kids', null],
+];
+---
+<section class="sec qa-sec"><div class="shell">
+  <div class="qa rv">
+    {items.map(([icon, t, s, href, act]) => act === 'book'
+      ? <button type="button" class="qa-item" data-book><span class="ic"><span class="msr">{icon}</span></span><b>{t}</b><small>{s}</small></button>
+      : act && act.startsWith('wa:')
+        ? <a class="qa-item" href="#" data-wa={act.slice(3)} rel="noopener"><span class="ic"><span class="msr">{icon}</span></span><b>{t}</b><small>{s}</small></a>
+        : <a class="qa-item" href={href}><span class="ic"><span class="msr">{icon}</span></span><b>{t}</b><small>{s}</small></a>)}
+  </div>
+</div></section>

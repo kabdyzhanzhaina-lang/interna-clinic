@@ -6,8 +6,8 @@
   const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
   const KK = window.LANG === "kk";
   // строки, которые скрипт пишет сам (остальной текст переводится при сборке)
-  const T = KK ? { slots: [["Таң", "08:00–12:00"], ["Күндіз", "12:00–17:00"], ["Кеш", "17:00–22:00"], ["Кез келген", "ыңғайлы уақыт"]], book: "Жазылу: ", any: "кез келген уақыт", stac: "Стационарлық формат: палата, дәрігер бақылауы, тамақтану және емшаралар кіреді. Бағдарлама бағасына стационарда болу қосылады.", amb: "Амбулаторлық формат: ыңғайлы, икемді жоспарлау, оңтайлы баға.", plusStac: " + стационар", yours: "Сіздің бағдарламаңыз: ", bookBtn: "Жазылу", confirm: "Растауды мына нөмірге жібереміз: " }
-    : { slots: [["Утро", "08:00–12:00"], ["День", "12:00–17:00"], ["Вечер", "17:00–22:00"], ["Любое", "как удобно"]], book: "Записаться: ", any: "любое время", stac: "", amb: "", plusStac: " + стационар", yours: "Ваша программа: ", bookBtn: "Записаться", confirm: "Подтверждение отправим на " };
+  const T = KK ? { slots: [["Таң", "08:00–12:00"], ["Күндіз", "12:00–17:00"], ["Кеш", "17:00–22:00"], ["Кез келген", "ыңғайлы уақыт"]], book: "Жазылу: ", any: "кез келген уақыт", stac: "Стационарлық формат: палата, дәрігер бақылауы, тамақтану және емшаралар кіреді. Бағдарлама бағасына стационарда болу қосылады.", amb: "Амбулаторлық формат: ыңғайлы, икемді жоспарлау, оңтайлы баға.", plusStac: " + стационар", yours: "Сіздің бағдарламаңыз: ", bookBtn: "Жазылу", confirm: "Растауды мына нөмірге жібереміз: ", none: "Ештеңе табылмады — телефон соғыңыз, көмектесеміз", date: "күні ", waCu: "Сәлеметсіз бе! Сайтта check-up-қа өтінім қалдырдым.", tel: "Телефон: " }
+    : { slots: [["Утро", "08:00–12:00"], ["День", "12:00–17:00"], ["Вечер", "17:00–22:00"], ["Любое", "как удобно"]], book: "Записаться: ", any: "любое время", stac: "", amb: "", plusStac: " + стационар", yours: "Ваша программа: ", bookBtn: "Записаться", confirm: "Подтверждение отправим на ", none: "Ничего не нашли — позвоните, подскажем", date: "дата ", waCu: "Здравствуйте! Оставил(а) заявку на check-up на сайте.", tel: "Телефон: " };
   const SLOTS = T.slots;   // точное время подтверждает администратор
 
   /* ── появление при прокрутке ── */
@@ -249,4 +249,78 @@
     $("#mdoneTxt").textContent = `${name ? name + ", " : ""}${$("#mSvc").value}${fmt} — ${st}. ${T.confirm}${phone}.`;
     $("#mform").hidden = true; $("#mdone").hidden = false;
   });
+
+  /* ── поиск по сайту: индекс /search.json, подсказки в [data-search] ── */
+  const esc = (x) => String(x).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+  const norm = (x) => String(x).toLowerCase().replace(/ё/g, "е").trim();
+  let IDX = null, idxP = null;
+  const loadIdx = () => idxP || (idxP = fetch((window.BASE || "") + "/search.json").then((r) => r.json()).then((d) => (IDX = d.map((x) => ({ ...x, n: norm(x.t + " " + x.s + " " + x.k) })))).catch(() => (IDX = [])));
+  const link = (u) => (window.BASE || "") + (KK && !/^\/kk/.test(u) ? "/kk" + u : u);
+  function search(q) {
+    q = norm(q); if (q.length < 2 || !IDX) return [];
+    const toks = q.split(/\s+/).filter(Boolean), res = [];
+    for (const it of IDX) {
+      if (!toks.every((t) => it.n.includes(t))) continue;
+      const tt = norm(it.t);
+      let score = tt.startsWith(q) ? 0 : tt.includes(q) ? 1 : toks.every((t) => tt.includes(t)) ? 2 : 3;
+      if (it.g === "Цены") score += 1;
+      res.push([score, it]);
+    }
+    return res.sort((a, b) => a[0] - b[0]).slice(0, 8).map((x) => x[1]);
+  }
+  $$("[data-search]").forEach((box) => {
+    const inp = $("input", box), res = $(".sres", box);
+    const render = (list) => {
+      res.innerHTML = list.length ? list.map((it) => `<a class="sitem" href="${link(it.u)}" role="option"><span class="sg">${esc(it.g)}</span><span><b>${esc(it.t)}</b><small>${esc(it.s)}</small></span></a>`).join("") : `<div class="snone">${T.none}</div>`;
+      res.hidden = false;
+    };
+    const run = async () => { if (norm(inp.value).length < 2) { res.hidden = true; return; } await loadIdx(); render(search(inp.value)); };
+    inp.addEventListener("focus", () => loadIdx(), { once: true });
+    inp.addEventListener("input", run);
+    inp.addEventListener("keydown", (e) => { if (e.key === "Enter") { e.preventDefault(); const a = $(".sitem", res); if (a) location.href = a.href; else run(); } if (e.key === "Escape") res.hidden = true; });
+    $("[data-search-go]", box).addEventListener("click", () => { const a = $(".sitem", res); if (a) location.href = a.href; else run(); });
+    $$("[data-search-q]", box).forEach((b) => b.addEventListener("click", () => { inp.value = b.dataset.searchQ; inp.focus(); run(); }));
+    document.addEventListener("click", (e) => { if (!box.contains(e.target)) res.hidden = true; });
+  });
+  const sp = $("#spanel");
+  if (sp) {
+    const openS = () => { sp.classList.add("open"); document.body.style.overflow = "hidden"; setTimeout(() => $("input", sp).focus(), 60); };
+    const closeS = () => { sp.classList.remove("open"); document.body.style.overflow = ""; };
+    $("#hsearch").addEventListener("click", openS); $("#spanelX").addEventListener("click", closeS);
+    sp.addEventListener("click", (e) => { if (e.target === sp) closeS(); });
+    addEventListener("keydown", (e) => { if (e.key === "Escape") closeS(); if (e.key === "/" && !/INPUT|TEXTAREA|SELECT/.test(document.activeElement.tagName)) { e.preventDefault(); openS(); } });
+  }
+  // прайс: /prices?q=… — подставляем запрос из поиска
+  if ($("#psearch")) { const q0 = new URLSearchParams(location.search).get("q"); if (q0) { $("#psearch").value = q0; $("#psearch").dispatchEvent(new Event("input")); setTimeout(() => $("#psearch").scrollIntoView({ block: "center", behavior: "smooth" }), 300); } }
+
+  /* ── WhatsApp: ссылки [data-wa] с заготовленным текстом и страницей ── */
+  const waHref = (txt) => (window.WA || "https://wa.me/77007110550") + "?text=" + encodeURIComponent(txt + "\n— " + document.title.split(" — ")[0] + "\n" + location.href.split("?")[0]);
+  $$("[data-wa]").forEach((a) => { a.href = waHref(a.dataset.wa); a.target = "_blank"; a.rel = "noopener"; });
+
+  /* ── подробная заявка на check-up ── */
+  const cr = $("#cuReq");
+  if (cr) {
+    cr.addEventListener("click", (e) => {
+      const b = e.target.closest(".pick button"); if (!b) return;
+      const pk = b.parentElement;
+      if (pk.hasAttribute("data-single")) $$("button", pk).forEach((x) => x.classList.toggle("on", x === b)); else b.classList.toggle("on");
+    });
+    const val = (k) => $$(`[data-pick="${k}"] button.on`, cr).map((b) => b.dataset.v);
+    cr.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const name = $("#cuName").value.trim(), phone = $("#cuPhone").value.trim();
+      if (!$("#cuAgree").checked) { $("#cuAgree").focus(); $("#cuAgree").parentElement.style.color = "#B4342C"; return; }
+      if (!phone) { $("#cuPhone").focus(); $("#cuPhone").style.borderColor = "#B4342C"; return; }
+      const utm = Object.fromEntries([...new URLSearchParams(location.search)].filter(([k]) => /^(utm_|gclid|ymclid|fbclid)/.test(k)));
+      const payload = { type: "checkup", name, phone, program: val("program")[0] || "", format: val("format")[0] || "", who: val("who")[0] || "", sex: val("sex")[0] || "", age: val("age")[0] || "", goals: val("goals"), comment: $("#cuComment").value.trim(), date: $("#cuDate").value, time: val("time")[0] || "", channel: val("channel")[0] || "", promo: $("#cuPromo").value.trim(), agree: true, page: location.pathname, referrer: document.referrer, ...utm };
+      const api = window.SITE_API ? window.SITE_API.replace(/\/$/, "") + "/lead" : null;
+      $("#cuSubmit").disabled = true;
+      if (api) { try { await fetch(api, { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify(payload) }); } catch (_) { /* заявка сохранится в журнале API */ } }
+      $("#cuSubmit").disabled = false;
+      const sum = [payload.program, payload.format, payload.who, payload.sex, payload.age, payload.goals.join(", "), payload.date && (T.date + payload.date), payload.time].filter(Boolean).join(" · ");
+      $("#cuDoneTxt").textContent = `${name ? name + ", " : ""}${sum}. ${T.confirm}${phone}.`;
+      const wa = $("#cuDoneWa"); wa.href = (window.WA || "https://wa.me/77007110550") + "?text=" + encodeURIComponent(`${T.waCu}\n${sum}\n${T.tel}${phone}`); wa.target = "_blank";
+      cr.hidden = true; $("#cuDone").hidden = false; $("#cuDone").scrollIntoView({ behavior: "smooth", block: "start" });
+    });
+  }
 })();

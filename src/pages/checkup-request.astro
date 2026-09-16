@@ -1,0 +1,106 @@
+---
+// Подробная заявка на check-up: программа, формат, для кого, цели, даты, контакты. Отправка — в API сайта (/lead), далее CRM.
+import Base from '../layouts/Base.astro';
+import PageHero from '../components/PageHero.astro';
+import Faq from '../components/Faq.astro';
+import data from '../data/checkups.json';
+import { SITE } from '../lib/site.js';
+const { programs } = data;
+const hot = 'gastrologicheskiy-standart';
+const goals = ['Профилактика, жалоб нет', 'ЖКТ: боли, вздутие, изжога', 'Печень: анализы, гепатит, жировая болезнь', 'Сердце и сосуды', 'Гормоны и щитовидная железа', 'Вес и обмен веществ', 'Наследственность: онкология у родных', 'Перед операцией или беременностью'];
+const faq = [
+  ['Что будет после отправки заявки?', 'В течение 10 минут в рабочее время координатор напишет в WhatsApp или позвонит: уточнит жалобы, предложит программу и день, пришлёт памятку по подготовке и точную стоимость.'],
+  ['Можно ли собрать программу под себя?', 'Да. Программы — отправная точка. Координатор убирает лишнее и добавляет нужные панели после разговора с вами и врачом.'],
+  ['Сколько это займёт времени?', 'Амбулаторно — один день с 08:00, обычно 4–6 часов. В стационаре — 1–2 дня с палатой. Заключение врача — на очной консультации после готовности анализов.'],
+  ['Нужно ли платить при заявке?', 'Нет. Оплата — в клинике в день обследования. Kaspi Red и рассрочка доступны для программ от 300 000 ₸.'],
+];
+---
+<Base title="Заявка на check-up — подобрать программу обследования | Interna Clinic" description="Подробная заявка на check-up в Interna Clinic: программа, формат, цели и удобные даты. Координатор ответит за 10 минут и соберёт маршрут обследования." active="checkup">
+  <PageHero crumbs={[['Главная', '/'], ['Check-up', '/checkup'], ['Заявка']]} title="Заявка <em>на check-up</em>" sub="Расскажите, что для вас важно — координатор соберёт программу, предложит день и пришлёт памятку. Ответ в течение 10 минут в рабочее время." />
+
+  <section class="sec" style="padding-top:36px"><div class="shell">
+    <div class="cureq">
+      <form class="cureq-form card rv" id="cuReq" novalidate>
+        <div class="cureq-step"><p class="kicker">Шаг 1</p><h3>Какая программа интересует</h3>
+          <div class="pick" data-pick="program" data-single>
+            {programs.map((p) => <button type="button" class={p.id === hot ? 'on' : ''} data-v={p.title}><b>{p.title}</b><small>{p.price}</small></button>)}
+            <button type="button" data-v="Не знаю — подобрать"><b>Не знаю</b><small>помогите подобрать</small></button>
+          </div>
+        </div>
+
+        <div class="cureq-step"><p class="kicker">Шаг 2</p><h3>Формат и для кого</h3>
+          <div class="grid2">
+            <div><label class="lbl">Формат</label>
+              <div class="pick" data-pick="format" data-single>
+                <button type="button" class="on" data-v="Амбулаторно"><b>Амбулаторно</b><small>один день, с 08:00</small></button>
+                <button type="button" data-v="В стационаре"><b>В стационаре</b><small>1–2 дня, палата</small></button>
+              </div></div>
+            <div><label class="lbl">Для кого</label>
+              <div class="pick" data-pick="who" data-single>
+                <button type="button" class="on" data-v="Для себя">Для себя</button>
+                <button type="button" data-v="Для близкого">Для близкого</button>
+                <button type="button" data-v="Для сотрудников">Для сотрудников</button>
+              </div></div>
+          </div>
+          <div class="grid2">
+            <div><label class="lbl">Пол</label>
+              <div class="pick" data-pick="sex" data-single><button type="button" data-v="Женщина">Женщина</button><button type="button" data-v="Мужчина">Мужчина</button></div></div>
+            <div><label class="lbl">Возраст</label>
+              <div class="pick" data-pick="age" data-single><button type="button" data-v="до 30">до 30</button><button type="button" data-v="30–45">30–45</button><button type="button" data-v="45–60">45–60</button><button type="button" data-v="60+">60+</button></div></div>
+          </div>
+        </div>
+
+        <div class="cureq-step"><p class="kicker">Шаг 3</p><h3>Что важно проверить</h3>
+          <p class="hint">Можно выбрать несколько. Это поможет координатору сразу предложить нужные панели.</p>
+          <div class="pick" data-pick="goals">{goals.map((g) => <button type="button" data-v={g}>{g}</button>)}</div>
+          <div class="field" style="margin-top:12px"><label for="cuComment">Жалобы, диагнозы, что уже обследовали</label><textarea id="cuComment" rows="3" placeholder="Например: год назад был гастрит, беспокоит вздутие; принимаю лекарства от давления"></textarea></div>
+        </div>
+
+        <div class="cureq-step"><p class="kicker">Шаг 4</p><h3>Когда удобно</h3>
+          <div class="grid2">
+            <div class="field"><label for="cuDate">Желаемая дата</label><input id="cuDate" type="date" /></div>
+            <div><label class="lbl">Время</label>
+              <div class="pick" data-pick="time" data-single><button type="button" class="on" data-v="Утро 08:00–12:00">Утро</button><button type="button" data-v="День 12:00–17:00">День</button><button type="button" data-v="Любое">Любое</button></div></div>
+          </div>
+        </div>
+
+        <div class="cureq-step"><p class="kicker">Шаг 5</p><h3>Контакты</h3>
+          <div class="grid2">
+            <div class="field"><label for="cuName">Имя</label><input id="cuName" placeholder="Как к вам обращаться" autocomplete="name" /></div>
+            <div class="field"><label for="cuPhone">Телефон</label><input id="cuPhone" placeholder="+7 ___ ___ __ __" inputmode="tel" autocomplete="tel" /></div>
+          </div>
+          <div class="grid2">
+            <div><label class="lbl">Как связаться</label>
+              <div class="pick" data-pick="channel" data-single><button type="button" class="on" data-v="WhatsApp">WhatsApp</button><button type="button" data-v="Звонок">Звонок</button><button type="button" data-v="Telegram">Telegram</button></div></div>
+            <div class="field"><label for="cuPromo">Промокод или компания</label><input id="cuPromo" placeholder="Если есть" /></div>
+          </div>
+          <label class="chk"><input type="checkbox" id="cuAgree" /> Согласен(на) с <a href="/legal" style="color:var(--blue-600)">политикой конфиденциальности</a> и обработкой персональных данных</label>
+          <div class="row" style="margin-top:14px"><button type="submit" class="btn btn-primary" id="cuSubmit">Отправить заявку</button><a class="btn btn-line" href="#" data-wa="Здравствуйте! Хочу пройти check-up, помогите подобрать программу.">Написать в WhatsApp</a></div>
+          <p class="hint" style="margin-top:10px">Оплата — в клинике в день обследования. Заявка ни к чему не обязывает.</p>
+        </div>
+      </form>
+
+      <div class="cureq-done card" id="cuDone" hidden>
+        <div class="ok">✓</div>
+        <h3>Заявка принята</h3>
+        <p class="sub" id="cuDoneTxt"></p>
+        <p style="font-size:13.5px;color:var(--faint);font-weight:600">Координатор check-up ответит в течение 10 минут в рабочее время: уточнит детали, назовёт точную стоимость и пришлёт памятку.</p>
+        <div class="row"><a class="btn btn-primary" href="#" id="cuDoneWa" rel="noopener">Продублировать в WhatsApp</a><a class="btn btn-line" href="/checkup">К программам</a></div>
+      </div>
+
+      <aside class="cureq-side">
+        <div class="card rv d1"><p class="kicker">Как это работает</p>
+          <ol class="cuhl-steps dark">
+            <li><b>10 минут</b><span>координатор связывается и уточняет запрос</span></li>
+            <li><b>Маршрут</b><span>программа, день, подготовка — в WhatsApp</span></li>
+            <li><b>Обследование</b><span>всё в одном здании, без очередей</span></li>
+            <li><b>Консультация</b><span>врач объясняет результаты и даёт план</span></li>
+          </ol></div>
+        <div class="card bcard fill rv d2"><p class="kicker on-dark">Личный координатор</p><h3 style="color:#fff">Один контакт на всё время обследования</h3><p>Записывает, напоминает о подготовке, встречает в клинике и собирает заключение врачей в одну папку.</p><a class="btn btn-white sm" href={SITE.phoneHref}>{SITE.phone}</a></div>
+        <div class="card rv d3"><p class="kicker">Корпоративным клиентам</p><p style="margin:0 0 12px">Обследование сотрудников по графику компании, единый договор и отчёт для HR. Укажите название компании в заявке.</p><a class="btn btn-line sm" href="#" data-wa="Здравствуйте! Интересует корпоративный check-up для сотрудников.">Обсудить в WhatsApp</a></div>
+      </aside>
+    </div>
+  </div></section>
+
+  <Faq items={faq} title="Вопросы <em>о заявке</em>" />
+</Base>

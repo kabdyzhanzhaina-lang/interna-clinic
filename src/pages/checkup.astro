@@ -4,6 +4,7 @@ import Base from '../layouts/Base.astro';
 import PageHero from '../components/PageHero.astro';
 import Cta from '../components/Cta.astro';
 import Faq from '../components/Faq.astro';
+import CheckupHighlight from '../components/CheckupHighlight.astro';
 import data from '../data/checkups.json';
 const { programs, directions } = data;
 // Единая матрица сравнения: строки — все исследования в порядке первой программы
@@ -80,6 +81,7 @@ const faq = [
       <div class="card bcard fill"><span class="tag" style="background:var(--sky);color:var(--navy)">Координатор</span><h3 style="font-size:19px;margin:12px 0 8px;color:#fff">С вами на каждом этапе</h3><ul class="alist light"><li>выясняем жалобы и цели</li><li>контроль тайминга и сбор результатов</li><li>финальный пакет рекомендаций</li></ul></div>
     </div>
   </div></section>
+  <CheckupHighlight compact />
   <Faq items={faq} />
   <Cta title="Один визит <em>вместо трёх</em>" text="Запишитесь — подберём обследования, которые действительно нужны, и проведём их за один-два дня." />
 </Base>

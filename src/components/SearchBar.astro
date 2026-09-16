@@ -1,0 +1,14 @@
+---
+// Строка поиска по сайту: врачи, услуги, цены, статьи. Логика — в public/scripts/site.js ([data-search]).
+interface Props { placeholder?: string; popular?: string[]; big?: boolean; autofocus?: boolean; }
+const { placeholder = 'Врач, услуга, диагноз или цена…', popular = [], big = false, autofocus = false } = Astro.props;
+---
+<div class={`sbar${big ? ' big' : ''}`} data-search>
+  <div class="sin">
+    <span class="msr" aria-hidden="true">search</span>
+    <input type="search" placeholder={placeholder} aria-label="Поиск по сайту" autocomplete="off" autofocus={autofocus} />
+    <button type="button" class="btn btn-primary sm" data-search-go>Найти</button>
+  </div>
+  <div class="sres" role="listbox" hidden></div>
+  {popular.length > 0 && <div class="spop">{popular.map((p) => <button type="button" data-search-q={p}>{p}</button>)}</div>}
+</div>
