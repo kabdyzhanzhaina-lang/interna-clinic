@@ -34,7 +34,7 @@ const mm = (sec) => `${Math.floor(sec / 60)}:${String(sec % 60).padStart(2, '0')
     <div class="grid4 eqgrid">{equipment.items.map((e, i) => <div class={`card svc eq rv d${(i % 4) + 1}`}><div class="img" style="background:#fff;aspect-ratio:1.25"><img src={e.img} alt={e.name} style="object-fit:contain;padding:18px" loading="lazy" /></div><div class="bd"><span class="kicker" style="margin-bottom:6px;font-size:10px">{e.cat} · {e.kind}</span><h3 style="font-size:17px">{e.name}</h3><p class="eqdesc">{e.desc}</p></div></div>)}</div>
   </div></section>
   <section class="sec" style="padding-top:0"><div class="shell"><div class="card rv" style="display:flex;gap:20px;align-items:center;padding:26px 28px;background:var(--ice-50);border-color:transparent;flex-wrap:wrap">
-    <div style="width:54px;height:54px;border-radius:16px;background:#fff;display:grid;place-items:center;font-size:24px">🛡️</div>
+    <div style="width:54px;height:54px;border-radius:4px;background:#fff;display:grid;place-items:center;font-size:24px">🛡️</div>
     <div style="flex:1;min-width:260px"><b style="font-size:16px;color:var(--ink)">Лицензия на медицинскую деятельность {SITE.license}</b><p style="margin:3px 0 0;font-size:13px;font-weight:600">{SITE.legalName} · БИН {SITE.bin}</p></div>
     <a class="btn btn-white sm" href="/legal">Документы</a>
   </div></div></section>
