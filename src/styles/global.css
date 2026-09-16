@@ -670,11 +670,18 @@ html[lang="kk"] .nav a,html[lang="kk"] .hdr-phone b{white-space:nowrap}
 @media (max-width:720px){.kid-shape{opacity:.35!important;filter:blur(2px)}}
 
 /* ── поиск по сайту ── */
-.findband{background:var(--navy);color:#fff;padding:56px 0;position:relative;z-index:1}
-.findband-in{display:grid;grid-template-columns:1fr 1.2fr;gap:40px;align-items:center}
-.findband h2{color:#fff;font-size:clamp(26px,3vw,36px);margin:8px 0 10px}
-.findband h2 em{color:var(--sky);font-style:normal}
-.findband p{color:#BFDCEF;margin:0;font-size:15px}
+.findband{position:relative;z-index:2;margin-top:-34px;padding:0}
+.findcard{background:#fff;border:1.5px solid var(--line);border-radius:4px;box-shadow:var(--sh);padding:18px 22px;display:grid;grid-template-columns:auto 1fr;gap:22px;align-items:center}
+.findcard-l{display:flex;align-items:center;gap:14px;padding-right:22px;border-right:1.5px solid var(--line)}
+.findcard-l .msr{font-size:34px;color:var(--blue-600)}
+.findcard-l b{display:block;font-size:16px;line-height:1.25}
+.findcard-l small{display:block;font-size:12.5px;color:var(--faint);font-weight:400;margin-top:2px}
+.findcard .sin{box-shadow:none;background:var(--paper);border-color:transparent}
+.findcard .sin:focus-within{background:#fff;border-color:var(--blue)}
+.findcard .spop{margin-top:10px;gap:6px 14px;align-items:center}
+.findcard .spop::before{content:"Часто ищут:";font-size:12.5px;color:var(--faint);font-weight:600}
+.findcard .spop button{border:0;background:none;padding:0;color:var(--blue-700);font-size:13px;font-weight:600;border-radius:0;border-bottom:1px solid transparent}
+.findcard .spop button:hover{background:none;color:var(--blue);border-bottom-color:var(--blue)}
 .sbar{position:relative}
 .sin{display:flex;align-items:center;gap:10px;background:#fff;border:1.5px solid var(--line);border-radius:4px;padding:6px 6px 6px 16px;box-shadow:var(--sh-s)}
 .sin .msr{color:var(--blue-600);font-size:22px}
@@ -703,7 +710,7 @@ html[lang="kk"] .nav a,html[lang="kk"] .hdr-phone b{white-space:nowrap}
 .spanel-hint{margin:12px 0 0;font-size:12.5px;color:var(--faint);font-weight:600}
 
 /* ── быстрые действия ── */
-.qa-sec{padding:0 0 10px;margin-top:-30px;position:relative;z-index:2}
+.qa-sec{padding:18px 0 10px;position:relative;z-index:2}
 .qa{display:grid;grid-template-columns:repeat(6,1fr);gap:10px}
 .qa-item{display:flex;flex-direction:column;gap:6px;background:#fff;border:1.5px solid var(--line);border-radius:4px;padding:18px 16px;text-align:left;color:var(--ink);text-decoration:none;font:inherit;cursor:pointer;transition:.25s var(--ease);box-shadow:var(--sh-s)}
 .qa-item:hover{transform:translateY(-3px);border-color:var(--blue)}
@@ -754,8 +761,22 @@ html[lang="kk"] .nav a,html[lang="kk"] .hdr-phone b{white-space:nowrap}
 .wafab:hover{background:#1EBE5A}
 .wafab .msr{font-size:22px}
 
-@media (max-width:1024px){.qa{grid-template-columns:repeat(3,1fr)}.cuhl{grid-template-columns:1fr;padding:40px 30px}.findband-in{grid-template-columns:1fr;gap:22px}.cureq{grid-template-columns:1fr}.cureq-side{position:static}}
-@media (max-width:720px){.qa{grid-template-columns:1fr 1fr;gap:8px}.qa-sec{margin-top:0;padding-top:16px}.qa-item{padding:14px}.cuhl{padding:28px 20px}.cuhl-steps{grid-template-columns:1fr}.cureq-form{padding:4px 18px 22px}.cureq .grid2{grid-template-columns:1fr;gap:0}.wafab{left:14px;bottom:88px;padding:10px}.wafab-t{display:none}.findband{padding:40px 0}.sin .btn{display:none}.sitem{grid-template-columns:1fr;gap:2px}.sitem .sg{display:none}.spanel{padding:70px 10px 10px}.spanel-in{padding:16px}}
+@media (max-width:1024px){.qa{grid-template-columns:repeat(3,1fr)}.cuhl{grid-template-columns:1fr;padding:40px 30px}.findcard{grid-template-columns:1fr;gap:12px}.findcard-l{border-right:0;padding-right:0}.cureq{grid-template-columns:1fr}.cureq-side{position:static}}
+@media (max-width:720px){.qa{grid-template-columns:1fr 1fr;gap:8px}.qa-sec{margin-top:0;padding-top:16px}.qa-item{padding:14px}.cuhl{padding:28px 20px}.cuhl-steps{grid-template-columns:1fr}.cureq-form{padding:4px 18px 22px}.cureq .grid2{grid-template-columns:1fr;gap:0}.wafab{left:14px;bottom:88px;padding:10px}.wafab-t{display:none}.findband{margin-top:0;padding-top:16px}.findcard{padding:14px}.findcard .spop::before{display:none}.sin .btn{display:none}.sitem{grid-template-columns:1fr;gap:2px}.sitem .sg{display:none}.spanel{padding:70px 10px 10px}.spanel-in{padding:16px}}
 h1 em,h2 em,h3 em{font-style:normal}
 .cuhl-steps li::before{grid-row:1/3;grid-column:1}
 .cuhl-steps li b,.cuhl-steps li span{grid-column:2}
+
+/* ── история: фото на фоне кадров ── */
+.sframe .sbg{position:absolute;inset:0;background:var(--bg) center/cover no-repeat;transform:scale(1.06);transition:transform 1.4s var(--ease)}
+.sframe .sbg::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(6,28,48,.55) 0%,rgba(6,28,48,.72) 100%)}
+.sframe.on .sbg{transform:none}
+.sframe .in{position:relative;z-index:1}
+.sframe h2,.sframe h2.h{color:#fff}
+.sframe h2 em{color:var(--sky)}
+.sframe .lede{color:#D6E8F5}
+.sframe .gnum{color:rgba(255,255,255,.12)}
+.sframe .chiprow span{background:rgba(255,255,255,.12);color:#fff;border:1px solid rgba(255,255,255,.2)}
+.story-stage{background:var(--navy)}
+.sdots i{background:rgba(255,255,255,.35)}.sdots i.on{background:var(--sky)}
+.sprog{background:var(--sky)}
