@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>Бриф на разработку сайта — Interna Clinic</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600&display=swap">
+<style>
+:root{--ink:#0F1F33;--mut:#5F7288;--line:#DDE5EE;--b:#1F62B8;--bd:#123E7A;--bb:#E8F0FB;--sky:#8FC6F2;--bg:#F3F6FA}
+*{box-sizing:border-box}
+html{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.55 "Manrope",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;font-weight:400}
+.wrap{max-width:820px;margin:0 auto;padding:24px 18px 130px}
+header{background:radial-gradient(circle at 85% 10%,#2E7BD6 0,#0E2A4F 62%);color:#fff;border-radius:20px;padding:32px 32px 28px;position:relative;overflow:hidden}
+header::after{content:"";position:absolute;right:-90px;top:-90px;width:260px;height:260px;border:1.5px solid rgba(255,255,255,.14);border-radius:50%}
+header .k{font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--sky);font-weight:600}
+header h1{margin:10px 0 8px;font-size:32px;line-height:1.12;font-weight:600;letter-spacing:-.02em}
+header .sub{color:#CFE2F6;font-size:15px;margin:0 0 14px}
+header p{margin:0 0 10px;color:#E3EEF9}
+header a{color:#fff}
+header .meta{display:flex;gap:8px;flex-wrap:wrap;margin-top:16px}
+header .meta span{background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.18);border-radius:999px;padding:6px 12px;font-size:13px}
+.bar{position:sticky;top:0;z-index:5;background:var(--bg);padding:12px 0 8px}
+.prog{height:8px;background:#DCE5EF;border-radius:9px;overflow:hidden}
+.prog i{display:block;height:100%;width:0;background:var(--b);transition:width .3s}
+.pt{font-size:13px;color:var(--mut);margin-top:5px;display:flex;justify-content:space-between}
+section{background:#fff;border:1px solid var(--line);border-radius:18px;padding:22px 24px;margin-top:14px}
+section h2{margin:0 0 4px;font-size:20px;font-weight:600;letter-spacing:-.01em}
+section h2 span{display:inline-block;background:var(--bb);color:var(--bd);border-radius:8px;font-size:13px;padding:2px 9px;margin-right:8px;vertical-align:3px}
+section .d{color:var(--mut);font-size:14px;margin:0 0 8px}
+.q{padding:14px 0;border-top:1px solid #EEF2F7}
+.q:first-of-type{border-top:0}
+.q label.t{display:block;font-weight:600;margin-bottom:4px}
+.q .h{font-size:13px;color:var(--mut);margin-bottom:8px}
+textarea,input[type=text]{width:100%;border:1px solid #CBD7E4;border-radius:10px;padding:10px 12px;font:inherit;resize:vertical;background:#FBFDFF;color:var(--ink)}
+textarea{min-height:64px}
+textarea:focus,input:focus{outline:2px solid var(--sky);border-color:var(--b);background:#fff}
+.opts{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:8px}
+.opts label{border:1px solid #CBD7E4;border-radius:999px;padding:6px 13px;font-size:14px;cursor:pointer;user-select:none;background:#fff}
+.opts input{display:none}
+.opts label:has(input:checked){background:var(--b);border-color:var(--b);color:#fff}
+.opts + textarea{min-height:44px}
+.check .opts label{border-radius:10px}
+.check .opts label::before{content:"☐ ";color:var(--mut)}
+.check .opts label:has(input:checked)::before{content:"☑ ";color:#fff}
+.next{margin-top:14px;background:var(--bb);border-radius:18px;padding:20px 24px;color:var(--bd);font-size:15px}
+.next b{font-weight:600}
+.actions{position:fixed;left:0;right:0;bottom:0;background:rgba(255,255,255,.96);backdrop-filter:blur(8px);border-top:1px solid var(--line);padding:12px;display:flex;gap:10px;justify-content:center;flex-wrap:wrap;z-index:9}
+.actions button{border:0;border-radius:999px;padding:11px 18px;font-weight:600;font-size:14px;cursor:pointer;background:var(--bb);color:var(--bd);font-family:inherit}
+.actions button.main{background:var(--b);color:#fff}
+.toast{position:fixed;left:50%;bottom:76px;transform:translateX(-50%);background:#0E2A4F;color:#fff;padding:9px 16px;border-radius:10px;font-size:14px;opacity:0;transition:.25s;pointer-events:none;z-index:10;max-width:90vw;text-align:center}
+.toast.on{opacity:1}
+@media (max-width:600px){header{padding:24px 20px}header h1{font-size:26px}section{padding:18px 16px}.wrap{padding-bottom:150px}}
+@media print{body{background:#fff}.bar,.actions,.toast{display:none}section{break-inside:avoid;border-color:#CBD7E4}.opts label{display:none}.opts label:has(input:checked){display:inline-block}header{-webkit-print-color-adjust:exact}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="k">Бриф · Interna Clinic · internaclinic.kz</div>
+    <h1>Бриф на разработку сайта</h1>
+    <p class="sub">Короткая версия — 18 вопросов и чек-лист материалов</p>
+    <p>Бриф нужен, чтобы зафиксировать ТЗ и стартовать 15 сентября. Отвечайте прямо под вопросом, коротко; файлы — ссылкой на папку (Google Drive / Яндекс.Диск). Можно заполнять в несколько подходов: ответы сохраняются в браузере.</p>
+    <p>Прототип нового сайта вы уже видели: <a href="https://kabdyzhanzhaina-lang.github.io/interna-clinic/" target="_blank" rel="noopener">kabdyzhanzhaina-lang.github.io/interna-clinic</a> — многие вопросы про него: что оставить, что поменять.</p>
+    <p>По договору предусмотрено 2 раунда правок (после дизайна и перед запуском), поэтому важно ответить на эти вопросы до старта — дальше будем править по списку.</p>
+    <div class="meta"><span>Срок возврата — 12 сентября 2026</span><span>Старт работ — 15 сентября</span><span>Вопросы — design@yume.business</span></div>
+    <p id="savedInfo" style="display:none;margin-top:14px;background:rgba(255,255,255,.14);border-radius:10px;padding:8px 12px"></p>
+  </header>
+  <div class="bar"><div class="prog"><i id="pg"></i></div><div class="pt"><span id="pc">Заполнено 0 из 0</span><span id="sv"></span></div></div>
+  <form id="f"></form>
+  <div class="next"><b>Что дальше.</b> Заполненный бриф и материалы из чек-листа отправьте на <b>design@yume.business</b> до <b>12 сентября 2026</b>: нажмите «Сохранить ответы» внизу и приложите скачанный файл к письму. После этого мы фиксируем финальный объём приложением к договору и запускаем первую неделю: дизайн всех страниц и настройка доступов. Чем полнее ответы — тем точнее сайт попадёт в ваши задачи с первого раунда правок.</div>
+</div>
+
+<div class="actions">
+  <button type="button" class="main" onclick="saveFile()">Сохранить ответы</button>
+  <button type="button" onclick="download()">Скачать текстом</button>
+  <button type="button" onclick="window.print()">Печать / PDF</button>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+/* Тип: t — строка, a — абзац, c — несколько вариантов (+ комментарий), r — один вариант (+ комментарий), k — чек-лист */
+const B=[
+ ["Чек-лист материалов к старту","Отметьте, что уже готово, и вставьте ссылку на папку",[
+  ["k","Материалы",["Ссылки на референсы","Прайс файлом (Excel)","Список врачей + фото","Логотип в векторе","Единый телефон и WhatsApp","Ответ: где ведётся расписание","Доступы: домен, Tilda, Битрикс24, Метрика","Контакт согласующего"],"Ссылка на папку с материалами и комментарий"]
+ ]],
+ ["Референсы и ожидания","Как должен выглядеть и ощущаться новый сайт",[
+  ["a","Есть ли сайты, которые вам нравятся? Дайте ссылки и одной фразой — что именно нравится (дизайн, анимации, структура).","Мы ориентируемся на Samsung Medical Center и, для блога, на статьи The Blueprint — подтвердите или поправьте."],
+  ["a","Что в текущем сайте internaclinic.kz нужно обязательно сохранить, а что убрать?","Тексты, разделы, элементы, цвет"],
+  ["r","Главная цель нового сайта одной фразой?",["Больше звонков и заявок","Онлайн-записи","Казахскоязычные пациенты","Имидж и доверие"]]
+ ]],
+ ["Структура сайта","Какие разделы нужны",[
+  ["c","Структуру сайта меняем или оставляем как в прототипе? Отметьте разделы, которые точно нужны, и напишите, что добавить или убрать.",["Главная","Услуги","Врачи","Цены","Check-up","О клинике","Контакты","Подготовка","Вопросы-ответы","Медиацентр","Акции","Interna KIDS","Документы"]],
+  ["c","Какие 5 услуг для вас главные? Их выносим на первый экран и в меню.",["Колоноскопия","ЭГДС","Фиброскан","УЗИ","Гастроэнтеролог","Эндокринолог","Check-up","Капсульная эндоскопия","Стационар"]],
+  ["c","Нужен ли раздел, которого в прототипе нет вообще?",["Стационар отдельной страницей","Отзывы","Вакансии","Партнёры","Ничего добавлять не нужно"]]
+ ]],
+ ["Контент","Тексты, прайс, врачи, фирменный стиль",[
+  ["r","Тексты берём с текущего сайта как есть — или что-то переписываем? Кто со стороны клиники проверит медицинскую корректность?",["Берём как есть","Переписать частично","Переписать всё"],"ФИО врача-куратора и что именно переписать"],
+  ["a","Актуальный прайс файлом (Excel). В каталоге у 37 комплексов «Приём + обследование» нет цены — какие ставить?","Ссылка на файл"],
+  ["r","Актуальный список врачей: кто уже не работает, кого добавить? Фото оставляем текущие или будут новые?",["Фото оставляем текущие","Будут новые фото"],"На сайте сейчас 42 врача — кого убрать, кого добавить"],
+  ["a","Логотип в векторе (SVG/AI/PDF) и брендбук, если есть.","Ссылка на файлы"],
+  ["r","Планируете фотосъёмку клиники? Если да — когда; мы дадим список кадров.",["Да, планируем","Нет","Пока не решили"],"Примерные даты"]
+ ]],
+ ["Запись пациентов и Битрикс24","Как заявки с сайта попадут к администраторам",[
+  ["r","Где ведётся расписание врачей и свободные окна?",["Битрикс24","Другая система","Бумага / Excel"],"От этого зависит, увидит ли пациент свободное время на сайте. Если другая система — какая"],
+  ["a","Единый телефон для сайта и номер WhatsApp для кнопки.","На сайте сейчас 6 разных номеров"],
+  ["a","Куда должны попадать заявки в Битрикс24: воронка, стадия, ответственный сотрудник?"]
+ ]],
+ ["Доступы и запуск","Кто, когда и что согласует",[
+  ["a","Кто передаст доступы к домену (DNS), Tilda, Битрикс24 и Яндекс.Метрике — и когда?","Нужны на первой неделе"],
+  ["a","Кто принимает финальное решение по дизайну и текстам (одно имя, контакт)? Кто согласует юридические тексты?"],
+  ["a","Есть ли дата, к которой сайт обязательно должен быть запущен, или ограничения по срокам (отпуска, мероприятия)?"],
+  ["r","Реквизиты и лицензия для подвала сайта — актуальны ли текущие (ТОО «ИГГМ», БИН 090340007797, лицензия № 22 016 017)?",["Актуальны","Есть изменения"],"Что поменялось"]
+ ]]
+];
+
+/* Сюда кнопка «Сохранить ответы» вписывает ответы в скачиваемой копии файла */
+const SAVED=null;
+const SAVED_AT="";
+const SRC="<!DOCTYPE html>\n"+document.documentElement.outerHTML;
+const KEY="interna-site-brief-v1",f=document.getElementById('f');let N=0,Q=0;
+const esc=s=>s.replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+B.forEach(([title,desc,qs],si)=>{
+  let h=`<section${qs[0][0]==="k"?' class="check"':''}><h2><span>${si+1}</span>${esc(title)}</h2><p class="d">${esc(desc)}</p>`;
+  qs.forEach(([type,text,x,hint])=>{
+    const id="q"+(++N); const num=type==="k"?"":`${++Q}. `;
+    h+=`<div class="q" data-q="${id}" data-text="${esc(text)}" data-sec="${esc(title)}"><label class="t" for="${id}">${num}${esc(text)}</label>`;
+    if((type==="a"||type==="t")&&x) h+=`<div class="h">${esc(x)}</div>`;
+    if((type==="c"||type==="r"||type==="k")&&hint) h+=`<div class="h">${esc(hint)}</div>`;
+    if(type==="c"||type==="r"||type==="k"){
+      h+=`<div class="opts">`+x.map(o=>`<label><input type="${type==="r"?"radio":"checkbox"}" name="${id}o" value="${esc(o)}">${esc(o)}</label>`).join("")+`</div>`;
+      h+=`<textarea id="${id}" rows="1" placeholder="${type==="k"?"Ссылка на папку / комментарий":"Комментарий или свой вариант"}"></textarea>`;
+    } else if(type==="t") h+=`<input type="text" id="${id}" placeholder="Ответ">`;
+    else h+=`<textarea id="${id}" placeholder="Ответ"></textarea>`;
+    h+=`</div>`;
+  });
+  f.insertAdjacentHTML("beforeend",h+"</section>");
+});
+
+function collect(){
+  return [...document.querySelectorAll('.q')].map(q=>{
+    const id=q.dataset.q, opts=[...q.querySelectorAll('input:checked')].map(i=>i.value);
+    return {id,sec:q.dataset.sec,q:q.dataset.text,opts,text:document.getElementById(id).value.trim()};
+  });
+}
+function save(){
+  const d=collect();try{localStorage.setItem(KEY,JSON.stringify(d))}catch(e){}
+  const done=d.filter(x=>x.opts.length||x.text).length;
+  document.getElementById('pg').style.width=(done/d.length*100)+"%";
+  document.getElementById('pc').textContent=`Заполнено ${done} из ${d.length}`;
+  document.getElementById('sv').textContent="Сохранено "+new Date().toLocaleTimeString("ru",{hour:"2-digit",minute:"2-digit"});
+}
+function load(){
+  if(SAVED){const i=document.getElementById('savedInfo');i.style.display="block";i.textContent="Ответы клиники сохранены "+SAVED_AT}
+  try{(SAVED||JSON.parse(localStorage.getItem(KEY))||[]).forEach(x=>{
+    const el=document.getElementById(x.id);if(!el)return;el.value=x.text||"";
+    document.querySelectorAll(`[name="${x.id}o"]`).forEach(i=>i.checked=(x.opts||[]).includes(i.value));
+  })}catch(e){}
+  save();document.getElementById('sv').textContent="";
+}
+f.addEventListener('input',save);f.addEventListener('change',save);
+function asText(){
+  let out="БРИФ INTERNA CLINIC — разработка сайта (короткая версия)\n"+new Date().toLocaleString("ru")+"\n",last="",n=0;
+  collect().forEach(x=>{
+    if(x.sec!==last){out+=`\n=== ${x.sec.toUpperCase()} ===\n`;last=x.sec}
+    const a=[x.opts.join(", "),x.text].filter(Boolean).join(" — ");
+    const num=x.sec.startsWith("Чек-лист")?"":`${++n}. `;
+    out+=`\n${num}${x.q}\n→ ${a||"—"}\n`;
+  });
+  return out;
+}
+function toast(m){const t=document.getElementById('toast');t.textContent=m;t.classList.add('on');setTimeout(()=>t.classList.remove('on'),2600)}
+function saveFile(){
+  const json=JSON.stringify(collect()).replace(/</g,"\\u003c");
+  const at=new Date().toLocaleString("ru");
+  const html=SRC.replace(/const SAVED=[^\n]*\n/,()=>"const SAVED="+json+";\n")
+                .replace(/const SAVED_AT=[^\n]*\n/,()=>"const SAVED_AT="+JSON.stringify(at)+";\n");
+  const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([html],{type:"text/html;charset=utf-8"}));
+  a.download="Бриф-сайт-Interna-Clinic-ответы.html";a.click();toast("Файл с ответами скачан — отправьте его на design@yume.business");
+}
+function download(){
+  const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([asText()],{type:"text/plain;charset=utf-8"}));
+  a.download="Бриф-сайт-Interna-Clinic.txt";a.click();toast("Файл скачан");
+}
+load();
+</script>
+</body>
+</html>
