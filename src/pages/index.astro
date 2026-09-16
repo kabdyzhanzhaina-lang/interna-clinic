@@ -103,7 +103,7 @@ const story = [
 
   <section class="sec" style="padding-top:0"><div class="shell"><div class="testi rv">
     <div class="ph"><img src={img('coats')} alt="Interna Clinic" loading="lazy" /></div>
-    <div><p class="kicker">Отзывы</p><h2 class="h">Что говорят наши <em>пациенты</em></h2><p class="lede" style="margin:8px 0 0"><a href="/reviews" style="color:var(--blue-600);font-weight:700">Все отзывы с 2ГИС, Google и iDoctor <span class="msr ai">arrow_forward</span></a></p>
+    <div><p class="kicker">Отзывы</p><h2 class="h">Что говорят наши <em>пациенты</em></h2><p class="lede" style="margin:8px 0 0"><a href="/reviews" style="color:var(--blue-600);font-weight:600">Все отзывы с 2ГИС, Google и iDoctor <span class="msr ai">arrow_forward</span></a></p>
       <div class="ttrack" id="ttrack">{reviews.map((r) => <div class="tslide"><div class="stars">★★★★★</div><p class="quote">«{r.text}»</p><p class="q-name">{r.name}</p><p class="q-role">пациент клиники · отзыв на {r.src}</p></div>)}</div>
       <div class="tnav"><button class="tbtn" data-tprev aria-label="Назад"><span class="msr">arrow_back</span></button><button class="tbtn" data-tnext aria-label="Вперёд"> <span class="msr ai">arrow_forward</span></button><span class="tdots" id="tdots">{reviews.map((_, i) => <i class={i === 0 ? 'on' : ''}></i>)}</span></div>
     </div>

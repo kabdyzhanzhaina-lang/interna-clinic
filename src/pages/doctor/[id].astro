@@ -27,7 +27,7 @@ const jsonld = { '@context': 'https://schema.org', '@type': 'Physician', name: d
     <div slot="right" class="phero-img rise d2" style="aspect-ratio:.85;max-width:380px;margin-left:auto"><img src={img(d.img)} alt={d.n} style="object-position:top" /></div>
   </PageHero>
   <section class="sec"><div class="shell"><div class="article">
-    <article class="body card rv" style="padding:34px 38px"><h3 class="serif" style="font-size:24px;margin:0 0 14px">О враче</h3><p style="margin:0 0 22px;font-size:16px;line-height:1.7;font-weight:500">{d.bio}</p>
+    <article class="body card rv" style="padding:34px 38px"><h3 class="serif" style="font-size:24px;margin:0 0 14px">О враче</h3><p style="margin:0 0 22px;font-size:16px;line-height:1.7;font-weight:400">{d.bio}</p>
       {d.about && d.about.length > 0 && <div class="dbio"><Body body={d.about} /></div>}
     </article>
     <aside class="side rv d2">
@@ -35,7 +35,7 @@ const jsonld = { '@context': 'https://schema.org', '@type': 'Physician', name: d
         {rows.length > 0 ? rows.slice(0, 5).map((r) => <div class="prow"><span><b>{r[0]}</b></span><span class="pv">{r[2]}</span></div>) : <div class="prow"><span><b>Первичный приём</b></span><span class="pv">{d.price || 'по запросу'}</span></div>}
         <button class="btn btn-primary" data-book data-svc={`Приём · ${d.n}`} style="width:100%;margin-top:18px">Записаться</button>
         <p style="margin:12px 0 0;font-size:12px;color:var(--faint);font-weight:600">Полный прайс — на странице <a href="/prices" style="color:var(--blue-600)">Цены</a>.</p></div>
-      {d.kids && <div class="card" style="padding:20px;background:#FFF4D6;border-color:transparent"><b style="font-size:14px">Принимает детей</b><p style="margin:6px 0 10px;font-size:13.5px;font-weight:500;color:#7A4B00">{d.kidsRole}</p><a class="btn btn-line sm" href="/kids">Interna KIDS <span class="msr ai">arrow_forward</span></a></div>}
+      {d.kids && <div class="card" style="padding:20px;background:#FFF4D6;border-color:transparent"><b style="font-size:14px">Принимает детей</b><p style="margin:6px 0 10px;font-size:13.5px;font-weight:400;color:#7A4B00">{d.kidsRole}</p><a class="btn btn-line sm" href="/kids">Interna KIDS <span class="msr ai">arrow_forward</span></a></div>}
     </aside>
   </div></div></section>
   {rel.length > 0 && <section class="sec" style="padding-top:0"><div class="shell"><div class="sec-head rv"><div><p class="kicker">Коллеги</p><h2 class="h">Врачи того же <em>направления</em></h2></div><a class="btn btn-line" href="/doctors">Все врачи <span class="msr ai">arrow_forward</span></a></div><div class="grid4">{rel.map((x, i) => <DoctorCard d={x} delay={i + 1} />)}</div></div></section>}

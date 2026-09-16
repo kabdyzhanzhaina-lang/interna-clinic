@@ -42,7 +42,7 @@ const jsonld = { '@context': 'https://schema.org', '@type': 'MedicalProcedure', 
 
   {d && <section class="sec" style="padding-top:0"><div class="shell"><div class="dcard rv">
     <div class="ph"><img src={img(d.img)} alt={d.n} loading="lazy" /></div>
-    <div><p class="kicker">Кто проводит</p><h3 class="serif" style="font-size:clamp(22px,3vw,30px);margin-bottom:10px">{d.n}</h3><p style="margin:0 0 6px;font-weight:700;color:var(--blue-600)">{d.r}</p><p style="margin:0 0 22px;font-size:15px;font-weight:500;max-width:60ch">{d.bio}</p><div style="display:flex;gap:10px;flex-wrap:wrap"><button class="btn btn-primary" data-book data-svc={s.t}>Записаться к врачу</button><a class="btn btn-line" href={`/doctor/${d.id}`}>Профиль врача</a></div></div>
+    <div><p class="kicker">Кто проводит</p><h3 class="serif" style="font-size:clamp(22px,3vw,30px);margin-bottom:10px">{d.n}</h3><p style="margin:0 0 6px;font-weight:600;color:var(--blue-600)">{d.r}</p><p style="margin:0 0 22px;font-size:15px;font-weight:400;max-width:60ch">{d.bio}</p><div style="display:flex;gap:10px;flex-wrap:wrap"><button class="btn btn-primary" data-book data-svc={s.t}>Записаться к врачу</button><a class="btn btn-line" href={`/doctor/${d.id}`}>Профиль врача</a></div></div>
   </div></div></section>}
 
   <Faq items={s.faq} />

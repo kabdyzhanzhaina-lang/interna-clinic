@@ -53,11 +53,11 @@ const toSec = (t) => t.split(':').reduce((acc, x) => acc * 60 + +x, 0);
         const cls = firstP ? 'lead-p' : ''; firstP = false;
         return <p class={cls}>{b[1]}</p>;
       })}
-      {a.video && <p class="small" style="margin-top:28px;font-weight:700"><a class="btn btn-line sm" href={`https://www.youtube.com/watch?v=${a.video}`} target="_blank" rel="noopener">Смотреть на YouTube-канале клиники <span class="msr ai">open_in_new</span></a></p>}
+      {a.video && <p class="small" style="margin-top:28px;font-weight:600"><a class="btn btn-line sm" href={`https://www.youtube.com/watch?v=${a.video}`} target="_blank" rel="noopener">Смотреть на YouTube-канале клиники <span class="msr ai">open_in_new</span></a></p>}
     </article>
     <aside class="side rv d2">
       {d && <div class="card" style="padding:22px"><div style="display:flex;gap:14px;align-items:center"><div style="width:64px;height:64px;border-radius:50%;overflow:hidden;flex:none"><img src={img(d.img)} alt="" style="width:100%;height:100%;object-fit:cover;object-position:top" /></div><div><b style="color:var(--ink);font-size:15px;display:block;line-height:1.3">{d.n}</b><span style="font-size:12.5px;color:var(--faint);font-weight:600">{d.r}</span></div></div><button class="btn btn-primary" data-book style="width:100%;margin-top:16px">Записаться на приём</button></div>}
-      <div class="card" style="padding:22px;background:var(--navy);border-color:transparent;color:#fff"><b style="font-size:15px;display:block;margin-bottom:6px">Есть вопрос по теме?</b><p style="margin:0 0 14px;font-size:13.5px;color:#9CC4DB;font-weight:500">Запишитесь на приём — врач ответит на всё за один визит и назначит только нужные обследования.</p><button class="btn btn-sky sm" data-book style="width:100%">Записаться</button></div>
+      <div class="card" style="padding:22px;background:var(--navy);border-color:transparent;color:#fff"><b style="font-size:15px;display:block;margin-bottom:6px">Есть вопрос по теме?</b><p style="margin:0 0 14px;font-size:13.5px;color:#9CC4DB;font-weight:400">Запишитесь на приём — врач ответит на всё за один визит и назначит только нужные обследования.</p><button class="btn btn-sky sm" data-book style="width:100%">Записаться</button></div>
       <div class="toc"><b style="font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--faint);display:block;margin-bottom:10px">Читайте также</b>{others.map((x) => <a href={`/article/${x.id}`}>{x.t}</a>)}</div>
     </aside>
   </div></div></section>

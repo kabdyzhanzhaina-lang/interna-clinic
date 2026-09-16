@@ -18,7 +18,7 @@ const half = Math.ceil(faq.length / 2);
         <div class="accordion" data-acc>{col.map((q, i) => <div class={`acc-item${i === 0 && c === 0 ? ' open' : ''}`}><button class="acc-q">{q.q}<span class="acc-ic"></span></button><div class="acc-a" style={i === 0 && c === 0 ? 'height:auto' : ''}>
           {q.a.map((p) => <p>{p}</p>)}
           {q.list && <ul class="alist" style="margin-top:6px">{q.list.map((x) => <li>{x}</li>)}</ul>}
-          {/обследования необходимы/i.test(q.q) && <p class="small" style="margin-top:10px"><a href="/prepare" style="color:var(--blue-600);font-weight:700">Памятки по подготовке <span class="msr ai">arrow_forward</span></a></p>}
+          {/обследования необходимы/i.test(q.q) && <p class="small" style="margin-top:10px"><a href="/prepare" style="color:var(--blue-600);font-weight:600">Памятки по подготовке <span class="msr ai">arrow_forward</span></a></p>}
         </div></div>)}</div>
       ))}
     </div>

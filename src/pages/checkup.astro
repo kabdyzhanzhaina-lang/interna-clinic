@@ -64,11 +64,11 @@ const faq = [
     <div class="chips rv" id="dirtabs">{directions.map((d, i) => <button class={`chip${i === 0 ? ' on' : ''}`} data-prep={`dir-${d.id}`}>{d.name}</button>)}</div>
     {directions.map((d, i) => <div class="article rv d2" data-prep-set={`dir-${d.id}`} hidden={i !== 0} style="margin-top:26px">
       <div>
-        <div class="card" style="padding:30px 34px;margin-bottom:16px">{d.intro.map((p) => <p style="font-weight:500;line-height:1.7;margin:0 0 12px">{p}</p>)}
+        <div class="card" style="padding:30px 34px;margin-bottom:16px">{d.intro.map((p) => <p style="font-weight:400;line-height:1.7;margin:0 0 12px">{p}</p>)}
           {d.indications.length > 0 && <><h4 class="asub" style="margin-top:18px">Кому рекомендуется</h4><ul class="alist">{d.indications.map((x) => <li>{x}</li>)}</ul></>}</div>
         {d.programs.map((p, k) => <details class="acc card" open={k === 0}><summary><b>{p.name}</b><span class="cnt">{p.items.length} позиций</span></summary><ol class="alist">{p.items.map((x) => <li>{x}</li>)}</ol>{p.note && <p class="small" style="color:var(--faint);font-weight:600">{p.note}</p>}</details>)}
       </div>
-      <aside class="side"><div class="card" style="padding:22px;background:var(--navy);border-color:transparent;color:#fff"><b style="font-size:15px;display:block;margin-bottom:6px">Стоимость — по составу программы</b><p style="margin:0 0 14px;font-size:13.5px;color:#9CC4DB;font-weight:500">Координатор рассчитает точную цену по выбранной программе и формату и пришлёт в WhatsApp.</p><button class="btn btn-sky sm" data-book data-svc={`Check-up · ${d.name}`} style="width:100%">Рассчитать и записаться</button></div></aside>
+      <aside class="side"><div class="card" style="padding:22px;background:var(--navy);border-color:transparent;color:#fff"><b style="font-size:15px;display:block;margin-bottom:6px">Стоимость — по составу программы</b><p style="margin:0 0 14px;font-size:13.5px;color:#9CC4DB;font-weight:400">Координатор рассчитает точную цену по выбранной программе и формату и пришлёт в WhatsApp.</p><button class="btn btn-sky sm" data-book data-svc={`Check-up · ${d.name}`} style="width:100%">Рассчитать и записаться</button></div></aside>
     </div>)}
   </div></section>
 

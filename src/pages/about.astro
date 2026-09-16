@@ -27,7 +27,7 @@ const mm = (sec) => `${Math.floor(sec / 60)}:${String(sec % 60).padStart(2, '0')
   </div></div></section>
   <section class="sec" style="padding-top:0"><div class="shell">
     <div class="sec-head rv"><div><p class="kicker">{about.blocks[2].title}</p><h2 class="h">Врачи, которым <em>доверяют</em></h2></div><p class="lede" style="max-width:52ch;margin:0">{about.blocks[2].lead}</p></div>
-    <div class="grid4">{about.blocks[2].items.map((f, i) => <div class={`card rv d${i + 1}`} style="padding:22px"><h3 style="font-size:15.5px;margin:0 0 8px">{f.t}</h3><p style="font-size:13.5px;line-height:1.6;color:var(--muted);font-weight:500;margin:0">{f.d}</p></div>)}</div>
+    <div class="grid4">{about.blocks[2].items.map((f, i) => <div class={`card rv d${i + 1}`} style="padding:22px"><h3 style="font-size:15.5px;margin:0 0 8px">{f.t}</h3><p style="font-size:13.5px;line-height:1.6;color:var(--muted);font-weight:400;margin:0">{f.d}</p></div>)}</div>
   </div></section>
   <section class="sec" id="equip" style="padding-top:0"><div class="shell">
     <div class="sec-head rv"><div><p class="kicker">Оборудование</p><h2 class="h">Техника уровня <em>университетских клиник</em></h2></div><p class="lede" style="max-width:52ch;margin:0">{equipment.intro[0]}</p></div>
