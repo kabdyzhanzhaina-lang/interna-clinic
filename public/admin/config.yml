@@ -177,3 +177,46 @@ collections:
               - { name: cat, label: Направление, widget: string }
               - { name: desc, label: Описание, widget: text }
               - { name: img, label: Фото, widget: image }
+
+  - name: news
+    label: Новости
+    files:
+      - name: list
+        label: Новости и объявления
+        file: src/data/news.json
+        format: json
+        fields:
+          - name: items
+            label: Новости
+            widget: list
+            summary: "{{fields.date}} — {{fields.title}}"
+            fields:
+              - { name: id, label: ID (латиницей), widget: string }
+              - { name: date, label: Дата, widget: datetime, format: "YYYY-MM-DD", date_format: "DD.MM.YYYY", time_format: false }
+              - { name: tag, label: Рубрика, widget: string, hint: "Акция, ОСМС, Стационар, Врачи…" }
+              - { name: title, label: Заголовок, widget: string }
+              - { name: text, label: Текст, widget: text }
+              - { name: link, label: Ссылка «Подробнее», widget: string, required: false }
+
+  - name: events
+    label: События
+    files:
+      - name: list
+        label: События и школы
+        file: src/data/events.json
+        format: json
+        fields:
+          - name: items
+            label: События
+            widget: list
+            summary: "{{fields.title}}"
+            fields:
+              - { name: id, label: ID (латиницей), widget: string }
+              - { name: type, label: Тип, widget: string, hint: "Школа, Приём, Стационар, Медиа" }
+              - { name: title, label: Название, widget: string }
+              - { name: when, label: Когда, widget: string, hint: "Дата или периодичность" }
+              - { name: where, label: Где, widget: string }
+              - { name: text, label: Описание, widget: text }
+              - { name: cta, label: Текст кнопки, widget: string }
+              - { name: link, label: Ссылка, widget: string, required: false }
+              - { name: svc, label: Направление для формы записи, widget: string, required: false, hint: "Если задано — кнопка открывает форму записи" }

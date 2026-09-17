@@ -1,0 +1,48 @@
+---
+// Новости, объявления и события клиники — полный список
+import Base from '../layouts/Base.astro';
+import PageHero from '../components/PageHero.astro';
+import Cta from '../components/Cta.astro';
+import newsFile from '../data/news.json';
+import eventsFile from '../data/events.json';
+const news = newsFile.items.slice().sort((a, b) => b.date.localeCompare(a.date));
+const events = eventsFile.items;
+const M = ['января', 'февраля', 'марта', 'апреля', 'мая', 'июня', 'июля', 'августа', 'сентября', 'октября', 'ноября', 'декабря'];
+const fmt = (d) => { const [y, m, day] = d.split('-').map(Number); return `${day} ${M[m - 1]} ${y}`; };
+---
+<Base title="Новости и события — Interna Clinic" description="Объявления клиники Interna Clinic: акции, услуги по ОСМС, изменения в работе, школы для пациентов и приёмы приглашённых специалистов." active="">
+  <PageHero crumbs={[['Главная', '/'], ['Новости и события']]} title="Новости <em>и события</em>" sub="Объявления клиники, акции и услуги по страховке, школы для пациентов и приёмы приглашённых специалистов." />
+
+  <section class="sec" style="padding-top:36px"><div class="shell">
+    <div class="newsev page">
+      <div class="news">
+        <p class="kicker rv">Новости и объявления</p>
+        <div class="news-list rv">
+          {news.map((n) => (
+            <article class="news-item full" id={n.id}>
+              <time datetime={n.date}>{fmt(n.date)}</time>
+              <span><span class="tag">{n.tag}</span><b>{n.title}</b><small>{n.text}</small>{n.link && <a class="more" href={n.link}>Подробнее <span class="msr ai">arrow_forward</span></a>}</span>
+            </article>
+          ))}
+        </div>
+      </div>
+      <div class="events">
+        <p class="kicker rv">События и школы</p>
+        <div class="ev-list rv d2">
+          {events.map((e) => (
+            <div class="ev-item" id={e.id}>
+              <span class="ev-type">{e.type}</span>
+              <b>{e.title}</b>
+              <p class="ev-when"><span class="msr">event</span>{e.when}</p>
+              <p class="ev-when"><span class="msr">location_on</span>{e.where}</p>
+              <p class="ev-text">{e.text}</p>
+              {e.svc ? <button type="button" class="btn btn-primary sm" data-book data-svc={e.svc}>{e.cta}</button> : <a class="btn btn-line sm" href={e.link}>{e.cta}</a>}
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  </div></section>
+
+  <Cta title="Хотите получать <em>объявления</em>?" text="Напишите в WhatsApp — будем присылать акции, услуги по ОСМС и даты школ для пациентов. Без спама, можно отписаться одним сообщением." />
+</Base>

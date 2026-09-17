@@ -1,0 +1,19 @@
+---
+// Блок «Пациенту»: практический гид — как добраться, первый визит, подготовка, стационар, ОСМС, документы
+const items = [
+  ['location_on', 'Как добраться', 'Богенбай батыра, 248 · 2ГИС и Google Maps', '/patient#route'],
+  ['badge', 'Первый визит', 'документы, за сколько прийти, как проходит приём', '/patient#first'],
+  ['event_note', 'Подготовка', 'памятки к колоноскопии, ЭГДС, УЗИ и анализам', '/prepare'],
+  ['local_hospital', 'Стационар', 'три вида госпитализации и что для них нужно', '/patient#stac'],
+  ['health_and_safety', 'ОСМС и ГОБМП', 'что можно пройти бесплатно и по направлению', '/patient#osms'],
+  ['description', 'Результаты и справки', 'заключения, выписки, документы для работы', '/patient#docs'],
+];
+---
+<section class="sec" style="padding-top:0"><div class="shell">
+  <div class="pguide rv">
+    <div class="pguide-l"><p class="kicker">Пациенту</p><h2 class="h">Всё, что нужно знать <em>до визита</em></h2><p class="lede">Коротко и по делу: как нас найти, что взять с собой, как подготовиться к исследованию и как лечь в стационар — платно или по страховке.</p><a class="btn btn-primary" href="/patient">Открыть гид пациента</a></div>
+    <div class="pguide-grid">
+      {items.map(([icon, t, s, href]) => <a class="pg-item" href={href}><span class="ic"><span class="msr">{icon}</span></span><b>{t}</b><small>{s}</small></a>)}
+    </div>
+  </div>
+</div></section>

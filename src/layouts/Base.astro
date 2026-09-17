@@ -1,5 +1,7 @@
 ---
 import SearchBar from '../components/SearchBar.astro';
+import extra from '../data/services_extra.json';
+const dirs = [...Object.entries(services).map(([k, v]) => [`/service/${k}`, v.t]), ...Object.entries(extra).map(([k, v]) => [`/uslugi/${k}`, v.t])].sort((a, b) => a[1].localeCompare(b[1], 'ru'));
 import '../styles/global.css';
 import services from '../data/services.json';
 import { SITE, NAV, img } from '../lib/site.js';
@@ -49,7 +51,8 @@ const org = {
   <body class={theme}>
     <div class="topbar">
       <div class="shell row">
-        <a href={SITE.phoneHref}><span class="msr ti">call</span> {SITE.phone}</a>
+        <a class="tel" href={SITE.phoneHref}><span class="msr ti">call</span> {SITE.phone}</a>
+        <span class="hide-m stac"><span class="msr ti">local_hospital</span> Круглосуточный стационар</span>
         <span class="hide-m"><span class="msr ti">location_on</span> {SITE.address}</span>
         <span class="hide-m"><span class="msr ti">schedule</span> {SITE.hoursShort}</span>
         <span class="sp"></span>
@@ -100,7 +103,7 @@ const org = {
         <a href="/checkup"><span class="msr">checklist</span>Check-up</a><a href="/kids"><span class="msr">pediatrics</span>Interna KIDS</a>
       </div>
       <a href="/doctors">Врачи</a><a href="/checkup">Check-up</a><a href="/prices">Цены</a>
-      <a href="/about">О клинике</a><a href="/prepare">Подготовка</a><a href="/faq">Вопросы</a><a href="/media">Медиацентр</a>
+      <a href="/about">О клинике</a><a href="/patient">Пациенту</a><a href="/prepare">Подготовка</a><a href="/faq">Вопросы</a><a href="/news">Новости</a><a href="/media">Медиацентр</a>
       <a href="/promo">Акции</a><a href="/kids">Interna KIDS</a><a href="/contacts">Контакты</a>
     </div>
 
@@ -115,9 +118,17 @@ const org = {
             <p style="color:#9CC4DB;max-width:36ch;line-height:1.7">Институт гастроэнтерологии, гепатологии и метаболизма. Первая клиника доказательной медицины внутренних болезней в Центральной Азии.</p>
           </div>
           <div><h5>Клиника</h5><a href="/about">О нас</a><a href="/doctors">Врачи</a><a href="/about#equip">Оборудование</a><a href="/reviews">Отзывы</a><a href="/media">Медиацентр</a><a href="/promo">Акции</a></div>
-          <div><h5>Пациентам</h5><a href="/prices">Цены</a><a href="/prepare">Подготовка</a><a href="/faq">Вопросы и ответы</a><a href="/checkup">Check-up</a><a href="/kids">Interna KIDS</a></div>
+          <div><h5>Пациентам</h5><a href="/patient">Гид пациента</a><a href="/prices">Цены</a><a href="/prepare">Подготовка</a><a href="/faq">Вопросы и ответы</a><a href="/checkup">Check-up</a><a href="/kids">Interna KIDS</a><a href="/news">Новости и события</a></div>
           <div><h5>Контакты</h5><p>{SITE.address}</p><a href={SITE.phoneHref}>{SITE.phone}</a><a href={SITE.whatsapp} rel="noopener">WhatsApp</a><a href="/contacts">2ГИС · Google Maps</a><a href="/legal">Оферта · Политика</a></div>
         </div>
+        <div class="fsub">
+          <div><h5>Будьте на связи</h5><p style="font-weight:400;color:#9CC4DB;max-width:52ch">Акции, услуги по ОСМС и даты школ для пациентов — в WhatsApp. Напишите «подписка», отписаться можно одним сообщением.</p></div>
+          <div class="fsub-r">
+            <a class="btn btn-sky sm" href="#" data-wa="Здравствуйте! Хочу получать новости и акции клиники в WhatsApp. Подписка.">Подписаться в WhatsApp</a>
+            <div class="social">{SITE.social.map(([n, u, ic]) => <a href={u} rel="noopener" target="_blank" aria-label={n}><span class="msr">{ic}</span>{n}</a>)}</div>
+          </div>
+        </div>
+        <div class="dirs"><h5>Все направления · {dirs.length}</h5><div class="dirs-grid">{dirs.map(([href, t]) => <a href={href}>{t}</a>)}</div></div>
         <p class="legal">{SITE.legalName} · БИН {SITE.bin} · Лицензия на медицинскую деятельность {SITE.license}<br />Имеются противопоказания, необходима консультация специалиста.</p>
       </div>
     </footer>

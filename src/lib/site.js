@@ -7,7 +7,8 @@ export const SITE = {
   phone: '+7 705 926 2300',
   phoneHref: 'tel:+77059262300',
   whatsapp: 'https://wa.me/77007110550',
-  map2gis: 'https://go.2gis.com/btirv',   // карточка клиники в 2ГИС (ссылка со старого сайта)
+  map2gis: 'https://go.2gis.com/btirv',
+  social: [['Instagram', 'https://www.instagram.com/interna.clinic/', 'photo_camera'], ['YouTube', 'https://youtube.com/@InternaClinic', 'play_circle'], ['TikTok', 'https://www.tiktok.com/@interna.clinic', 'music_note']],   // карточка клиники в 2ГИС (ссылка со старого сайта)
   email: 'info@internaclinic.kz',
   address: 'Алматы, ул. Богенбай батыра, 248',
   hours: [['Пн — Пт', '08:00 – 22:00'], ['Суббота', '09:00 – 17:00'], ['Воскресенье', '09:00 – 17:00']],

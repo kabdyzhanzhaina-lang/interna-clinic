@@ -9,6 +9,8 @@ import ContactsStrip from '../components/ContactsStrip.astro';
 import SearchBar from '../components/SearchBar.astro';
 import QuickActions from '../components/QuickActions.astro';
 import CheckupHighlight from '../components/CheckupHighlight.astro';
+import PatientGuide from '../components/PatientGuide.astro';
+import NewsEvents from '../components/NewsEvents.astro';
 import services from '../data/services.json';
 import doctorsFile from '../data/doctors.json';
 const doctors = doctorsFile.items;
@@ -121,6 +123,9 @@ const story = [
       <div class="tnav"><button class="tbtn" data-tprev aria-label="Назад"><span class="msr">arrow_back</span></button><button class="tbtn" data-tnext aria-label="Вперёд"> <span class="msr ai">arrow_forward</span></button><span class="tdots" id="tdots">{reviews.map((_, i) => <i class={i === 0 ? 'on' : ''}></i>)}</span></div>
     </div>
   </div></div></section>
+
+  <NewsEvents />
+  <PatientGuide />
 
   <Faq items={faq} kicker="Вопросы" title="Частые <em>вопросы</em>" lede="Не нашли ответ? Напишите в WhatsApp — ответим в течение 10 минут в рабочее время." />
   <Marquee items={['Записаться на приём', 'Interna Clinic', 'Гастроэнтерология', 'Эндоскопия', 'Check-up', 'Доказательная медицина']} />

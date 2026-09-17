@@ -782,3 +782,67 @@ h1 em,h2 em,h3 em{font-style:normal}
 .sprog{background:var(--sky)}
 @media (max-width:720px){.sdots{right:auto;left:50%;top:auto;bottom:22px;transform:translateX(-50%);flex-direction:row;gap:12px}.sframe .in{padding-bottom:36px}.sframe .lede{font-size:15.5px}.findcard .spop{gap:4px 12px}}
 @media (max-width:720px){.sdots{bottom:92px}.cureq{grid-template-columns:minmax(0,1fr)}.cureq-form,.cureq-side{min-width:0}.pick button{max-width:100%}.pick button b,.pick button small{overflow-wrap:anywhere}}
+
+/* ── топбар: горячая линия ── */
+.topbar a.tel{font-size:14px;color:#fff;display:inline-flex;align-items:center;gap:6px}
+.topbar .stac{color:var(--sky);display:inline-flex;align-items:center;gap:6px}
+
+/* ── новости и события ── */
+.newsev{display:grid;grid-template-columns:1.25fr .9fr;gap:28px;align-items:start}
+.newsev-head{display:flex;justify-content:space-between;align-items:flex-end;gap:16px;margin-bottom:18px}
+.newsev-head .h{font-size:clamp(24px,2.6vw,32px);margin:0}
+.news-list{background:#fff;border:1.5px solid var(--line);border-radius:4px}
+.news-item{display:grid;grid-template-columns:120px 1fr 24px;gap:18px;align-items:start;padding:18px 22px;border-top:1px solid var(--line);color:var(--ink);text-decoration:none;transition:.2s}
+.news-item:first-child{border-top:0}
+a.news-item:hover{background:var(--paper)}
+.news-item time{font-size:13px;color:var(--faint);font-weight:600;padding-top:3px;white-space:nowrap}
+.news-item .tag{display:inline-block;font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;font-weight:600;color:var(--blue-600);background:var(--ice);border-radius:4px;padding:3px 8px;margin-bottom:6px}
+.news-item b{display:block;font-size:16px;line-height:1.35}
+.news-item small{display:block;font-size:13.5px;color:var(--body);font-weight:400;line-height:1.55;margin-top:4px}
+.news-item .ai{color:var(--blue-600);padding-top:4px}
+.news-item.full{grid-template-columns:120px 1fr}
+.news-item .more{display:inline-flex;align-items:center;gap:6px;margin-top:10px;color:var(--blue-700);font-weight:600;font-size:13.5px;text-decoration:none}
+.ev-list{display:flex;flex-direction:column;gap:10px}
+.ev-item{background:var(--navy);color:#fff;border-radius:4px;padding:20px 22px;display:flex;flex-direction:column;gap:6px}
+.ev-item:nth-child(2){background:var(--navy-2)}
+.ev-item:nth-child(3){background:var(--blue-700)}
+.ev-type{align-self:flex-start;font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;font-weight:600;color:var(--sky);border:1px solid rgba(255,255,255,.25);border-radius:4px;padding:3px 8px}
+.ev-item b{font-size:16.5px;line-height:1.3}
+.ev-when{margin:0;font-size:13px;color:#CBE7F7;display:flex;align-items:center;gap:6px;font-weight:600}
+.ev-when .msr{font-size:18px;color:var(--sky)}
+.ev-text{margin:2px 0 8px;font-size:13.5px;color:#D6E8F5;line-height:1.55}
+.ev-item .btn{align-self:flex-start}
+.ev-item .btn-line{border-color:rgba(255,255,255,.4);color:#fff}
+.newsev.page .news-list{margin-top:14px}.newsev.page .ev-list{margin-top:14px}
+
+/* ── гид пациента ── */
+.pguide{display:grid;grid-template-columns:.9fr 1.4fr;gap:40px;align-items:center;background:var(--ice-50);border-radius:4px;padding:44px 48px}
+.pguide-l .lede{margin:12px 0 22px}
+.pguide-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.pg-item{display:flex;flex-direction:column;gap:6px;background:#fff;border:1.5px solid var(--line);border-radius:4px;padding:18px 16px;color:var(--ink);text-decoration:none;transition:.25s var(--ease)}
+.pg-item:hover{transform:translateY(-3px);border-color:var(--blue)}
+.pg-item .ic{width:38px;height:38px;border-radius:4px;background:var(--ice);display:grid;place-items:center;color:var(--blue-700);margin-bottom:2px}
+.pg-item b{font-size:14.5px;line-height:1.3}.pg-item small{font-size:12px;color:var(--faint);font-weight:400;line-height:1.4}
+.pgrid{display:grid;grid-template-columns:240px 1fr;gap:28px;align-items:start}
+.ptoc{position:sticky;top:calc(var(--hdr-h,97px) + 16px)}
+.ptoc a{display:block;padding:8px 0;border-bottom:1px solid var(--line);color:var(--ink);text-decoration:none;font-weight:600;font-size:14px}
+.ptoc a:hover{color:var(--blue-700)}
+.pbody{display:flex;flex-direction:column;gap:16px;min-width:0}
+.pbody .card{padding:30px 34px;scroll-margin-top:calc(var(--hdr-h,97px) + 16px)}
+.pbody .card .h{font-size:clamp(22px,2.4vw,28px);margin:6px 0 12px}
+.pbody .card .row{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}
+.pbody ul{padding-left:20px;margin:10px 0}.pbody li{margin:6px 0;line-height:1.6}
+
+/* ── подвал: подписка, соцсети, направления ── */
+.fsub{display:grid;grid-template-columns:1fr auto;gap:24px;align-items:center;border-top:1px solid rgba(255,255,255,.1);padding:28px 0;position:relative;z-index:1}
+.fsub-r{display:flex;flex-direction:column;gap:12px;align-items:flex-start}
+.social{display:flex;gap:16px;flex-wrap:wrap}
+.social a{display:inline-flex;align-items:center;gap:6px;font-size:13px}
+.social .msr{font-size:20px}
+.dirs{border-top:1px solid rgba(255,255,255,.1);padding:26px 0 10px;position:relative;z-index:1}
+.dirs-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:2px 24px}
+.dirs-grid a{font-size:13px;font-weight:400;line-height:1.8;color:#9CC4DB}
+.dirs-grid a:hover{color:#fff}
+
+@media (max-width:1024px){.newsev{grid-template-columns:1fr}.pguide{grid-template-columns:1fr;gap:22px;padding:30px}.pgrid{grid-template-columns:1fr}.ptoc{position:static;display:flex;flex-wrap:wrap;gap:6px 16px}.ptoc .kicker,.ptoc .card{display:none}.ptoc a{border:0;padding:4px 0}.dirs-grid{grid-template-columns:repeat(3,1fr)}.fsub{grid-template-columns:1fr}}
+@media (max-width:720px){.news-item,.news-item.full{grid-template-columns:1fr;gap:6px;padding:16px}.news-item .ai{display:none}.newsev-head{flex-direction:column;align-items:flex-start}.pguide-grid{grid-template-columns:1fr 1fr;gap:8px}.pg-item{padding:14px}.pbody .card{padding:22px 18px}.dirs-grid{grid-template-columns:1fr 1fr;gap:0 16px}.topbar .stac{display:none}}
