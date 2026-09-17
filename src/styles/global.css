@@ -780,3 +780,5 @@ h1 em,h2 em,h3 em{font-style:normal}
 .story-stage{background:var(--navy)}
 .sdots i{background:rgba(255,255,255,.35)}.sdots i.on{background:var(--sky)}
 .sprog{background:var(--sky)}
+@media (max-width:720px){.sdots{right:auto;left:50%;top:auto;bottom:22px;transform:translateX(-50%);flex-direction:row;gap:12px}.sframe .in{padding-bottom:36px}.sframe .lede{font-size:15.5px}.findcard .spop{gap:4px 12px}}
+@media (max-width:720px){.sdots{bottom:92px}.cureq{grid-template-columns:minmax(0,1fr)}.cureq-form,.cureq-side{min-width:0}.pick button{max-width:100%}.pick button b,.pick button small{overflow-wrap:anywhere}}
