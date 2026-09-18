@@ -9,7 +9,7 @@ const promos = promosFile.items;
 import free from '../data/free.json';
 import { SITE } from '../lib/site.js';
 ---
-<Base title="Акции и бесплатные услуги по ОСМС — Interna Clinic" description="Специальные цены клиники и бесплатные услуги в рамках ОСМС и ГОБМП: фиброскан печени, процедурный кабинет, госпитализация в стационар." active="promo">
+<Base og="news" title="Акции и бесплатные услуги по ОСМС — Interna Clinic" description="Специальные цены клиники и бесплатные услуги в рамках ОСМС и ГОБМП: фиброскан печени, процедурный кабинет, госпитализация в стационар." active="promo">
   <PageHero crumbs={[['Главная', '/'], ['Акции']]} title="Акции и <em>бесплатные</em> услуги" sub="Специальные цены клиники и то, что можно получить бесплатно по государственным программам ОСМС и ГОБМП." chips={[`${promos.length} акция`, `${free.items.length} услуги по ОСМС`]} />
   <section class="sec"><div class="shell">
     <div class="sec-head rv"><div><p class="kicker">Специальная цена</p><h2 class="h">Сейчас <em>действует</em></h2></div></div>

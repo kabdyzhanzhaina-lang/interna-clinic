@@ -7,7 +7,7 @@ import doctorsFile from '../data/doctors.json';
 const doctors = doctorsFile.items;
 import { CATS } from '../lib/site.js';
 ---
-<Base title="Врачи Interna Clinic — гастроэнтерологи, эндокринологи, эндоскописты в Алматы" description="Кандидаты и доктора наук, профессура. Приём на русском и казахском языках. Запись онлайн." active="doctors">
+<Base og="doctors" title="Врачи Interna Clinic — гастроэнтерологи, эндокринологи, эндоскописты в Алматы" description="Кандидаты и доктора наук, профессура. Приём на русском и казахском языках. Запись онлайн." active="doctors">
   <PageHero crumbs={[['Главная', '/'], ['Врачи']]} title="Врачи Interna Clinic" sub={`${doctors.length} специалистов: кандидаты и доктора наук, профессура. Приём на русском и казахском языках.`} chips={[`${doctors.length} специалистов`, 'доктора и кандидаты наук']} />
   <section class="sec"><div class="shell">
     <div class="chips rv" id="docfilter">{Object.entries(CATS).map(([k, v], i) => <button class={`chip${i === 0 ? ' on' : ''}`} data-cat={k}>{v}</button>)}</div>

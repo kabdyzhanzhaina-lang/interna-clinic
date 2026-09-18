@@ -11,7 +11,7 @@ const kidsDocs = doctors.filter((d) => d.kids).sort((a, b) => (/педиатр/i
 const ICONS = ['child_care', 'handshake', 'biotech', 'medical_services'];
 const jsonld = { '@context': 'https://schema.org', '@type': 'MedicalClinic', name: 'Interna KIDS', description: kids.welcome, medicalSpecialty: 'Pediatric', parentOrganization: { '@type': 'MedicalClinic', name: 'Interna Clinic' } };
 ---
-<Base title="Interna KIDS — детская клиника в Алматы" description={`Детское отделение Interna Clinic: ${kids.services.length} направлений — педиатр, детский гастроэнтеролог, эндокринолог, эндоскопия и фиброскан детям. ${kids.welcome}`} theme="kids" active="kids" jsonld={jsonld}>
+<Base og="kids" title="Interna KIDS — детская клиника в Алматы" description={`Детское отделение Interna Clinic: ${kids.services.length} направлений — педиатр, детский гастроэнтеролог, эндокринолог, эндоскопия и фиброскан детям. ${kids.welcome}`} theme="kids" active="kids" jsonld={jsonld}>
   <section class="phero kidshero">
     <span class="blob b2" style="opacity:.35;right:-100px"></span>
     <span class="kid-shape" style="width:120px;height:120px;background:#FFC845;left:6%;top:18%;opacity:.9" data-rotate="0.06"></span>

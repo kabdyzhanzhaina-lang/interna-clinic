@@ -20,7 +20,7 @@ const first = (s.body.find((b) => b[0] === 'p') || ['', ''])[1];
 // подзаголовок — целыми предложениями, до ~220 символов
 const lead = first.split(/(?<=\.)\s+/).reduce((acc, sent) => (acc.length + sent.length <= 220 || !acc ? (acc ? acc + ' ' + sent : sent) : acc), '');
 ---
-<Base title={`${s.full} — детская клиника Interna KIDS, Алматы`} description={first.slice(0, 160)} theme="kids" active="kids">
+<Base og="kids" title={`${s.full} — детская клиника Interna KIDS, Алматы`} description={first.slice(0, 160)} theme="kids" active="kids">
   <PageHero crumbs={[['Главная', '/'], ['Interna KIDS', '/kids'], [s.t]]} title={s.t} sub={lead} chips={['Interna KIDS', s.price || 'цена по запросу']} theme="kidshero">
   </PageHero>
   <section class="sec"><div class="shell"><div class="article">

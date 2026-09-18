@@ -10,7 +10,7 @@ import about from '../data/about.json';
 const ICONS = ['school', 'biotech', 'stethoscope', 'checklist'];
 const mm = (sec) => `${Math.floor(sec / 60)}:${String(sec % 60).padStart(2, '0')}`;
 ---
-<Base title="О клинике — Interna Clinic, институт гастроэнтерологии, гепатологии и метаболизма" description="Первая клиника доказательной медицины внутренних болезней в Центральной Азии. Оборудование экспертного класса, профессура, лицензия." active="about">
+<Base og="about" title="О клинике — Interna Clinic, институт гастроэнтерологии, гепатологии и метаболизма" description="Первая клиника доказательной медицины внутренних болезней в Центральной Азии. Оборудование экспертного класса, профессура, лицензия." active="about">
   <PageHero crumbs={[['Главная', '/'], ['О клинике']]} title="Первая клиника доказательной медицины в Центральной Азии" sub="Interna Clinic — институт гастроэнтерологии, гепатологии и метаболизма. Мы лечим по международным протоколам: только те назначения, эффективность которых доказана исследованиями." image="team" />
   <section class="sec"><div class="shell">
     <p class="lede rv" style="max-width:70ch;font-size:18px;margin:0 0 30px">{about.intro}</p>

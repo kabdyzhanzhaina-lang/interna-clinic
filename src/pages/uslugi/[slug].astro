@@ -24,7 +24,7 @@ const paras = s.paragraphs?.length ? s.paragraphs : [];
 const raw = s.body || [];
 const body = raw.length === 1 && raw[0][0] === 'p' && (s.lead || '').startsWith(raw[0][1].slice(0, 40)) ? [] : raw;
 ---
-<Base title={s.title || `${s.h1} — Interna Clinic`} description={s.description || s.lead} active="services">
+<Base og="services" title={s.title || `${s.h1} — Interna Clinic`} description={s.description || s.lead} active="services">
   <PageHero crumbs={[['Главная', '/'], ['Услуги', '/services'], [s.cat, '/services'], [s.t]]} title={s.h1} sub={s.lead} chips={[s.cat, 'приём и обследование в один визит']} />
   <section class="sec"><div class="shell"><div class="article">
     <article class="body rv">

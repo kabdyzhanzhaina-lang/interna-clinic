@@ -16,7 +16,7 @@ export const SITE = {
 };
 
 /** Ключ картинки из данных прототипа → путь в public/images */
-export const img = (key) => (key === 'logo' ? '/images/logo.png' : `/images/${key}.jpg`);
+export const img = (key) => (key === 'logo' ? '/images/logo.png' : key === 'og' || key.startsWith('og/') ? `/images/${key}.jpg` : `/images/${key}.webp`);
 
 export const SLOTS = [['14:30', 'сегодня'], ['16:00', 'сегодня'], ['09:15', 'завтра'], ['11:00', 'завтра'], ['13:45', 'завтра'], ['18:20', 'завтра']];
 

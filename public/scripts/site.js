@@ -1,6 +1,9 @@
 /* Interna Clinic — клиентские механики. Без библиотек. Уважает prefers-reduced-motion. */
 (function () {
   "use strict";
+  // иконки показываем после загрузки шрифта (или через 2.5 с, если шрифт не пришёл)
+  const fontsOk = () => document.documentElement.classList.add("fonts-ok");
+  (document.fonts ? document.fonts.ready : Promise.resolve()).then(fontsOk); setTimeout(fontsOk, 2500);
   const $ = (s, r) => (r || document).querySelector(s);
   const $$ = (s, r) => Array.from((r || document).querySelectorAll(s));
   const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -236,7 +239,7 @@
   $("#mSubmit").addEventListener("click", async () => {
     const name = $("#mName").value.trim(), phone = $("#mPhone").value.trim();
     if (!$("#mAgree").checked) { $("#mAgree").focus(); $("#mAgree").parentElement.style.color = "#B4342C"; return; }
-    if (!phone) { $("#mPhone").focus(); $("#mPhone").style.borderColor = "#B4342C"; return; }
+    if (!phone || !window.phoneOk(phone)) { $("#mPhone").focus(); $("#mPhone").style.borderColor = "#B4342C"; return; }
     const slot = $('#mslots .slot[aria-pressed="true"]'); const st = slot ? slot.firstChild.nodeValue.trim() + ", " + $("small", slot).textContent : T.any;
     const fmt = $("#mFormatWrap").hidden ? "" : " (" + $("#mFormat .on").dataset.fmt.toLowerCase() + ")";
     const utm = Object.fromEntries([...new URLSearchParams(location.search)].filter(([k]) => k.startsWith("utm_")));
@@ -254,7 +257,7 @@
   const esc = (x) => String(x).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
   const norm = (x) => String(x).toLowerCase().replace(/ё/g, "е").trim();
   let IDX = null, idxP = null;
-  const loadIdx = () => idxP || (idxP = fetch((window.BASE || "") + "/search.json").then((r) => r.json()).then((d) => (IDX = d.map((x) => ({ ...x, n: norm(x.t + " " + x.s + " " + x.k) })))).catch(() => (IDX = [])));
+  const loadIdx = () => idxP || (idxP = fetch((window.BASE || "") + (KK ? "/kk" : "") + "/search.json").then((r) => r.json()).then((d) => (IDX = d.map((x) => ({ ...x, n: norm(x.t + " " + x.s + " " + x.k) })))).catch(() => (IDX = [])));
   const link = (u) => (window.BASE || "") + (KK && !/^\/kk/.test(u) ? "/kk" + u : u);
   function search(q) {
     q = norm(q); if (q.length < 2 || !IDX) return [];
@@ -310,7 +313,7 @@
       e.preventDefault();
       const name = $("#cuName").value.trim(), phone = $("#cuPhone").value.trim();
       if (!$("#cuAgree").checked) { $("#cuAgree").focus(); $("#cuAgree").parentElement.style.color = "#B4342C"; return; }
-      if (!phone) { $("#cuPhone").focus(); $("#cuPhone").style.borderColor = "#B4342C"; return; }
+      if (!phone || !window.phoneOk(phone)) { $("#cuPhone").focus(); $("#cuPhone").style.borderColor = "#B4342C"; return; }
       const utm = Object.fromEntries([...new URLSearchParams(location.search)].filter(([k]) => /^(utm_|gclid|ymclid|fbclid)/.test(k)));
       const payload = { type: "checkup", name, phone, program: val("program")[0] || "", format: val("format")[0] || "", who: val("who")[0] || "", sex: val("sex")[0] || "", age: val("age")[0] || "", goals: val("goals"), comment: $("#cuComment").value.trim(), date: $("#cuDate").value, time: val("time")[0] || "", channel: val("channel")[0] || "", promo: $("#cuPromo").value.trim(), agree: true, page: location.pathname, referrer: document.referrer, ...utm };
       const api = window.SITE_API ? window.SITE_API.replace(/\/$/, "") + "/lead" : null;
@@ -323,4 +326,27 @@
       cr.hidden = true; $("#cuDone").hidden = false; $("#cuDone").scrollIntoView({ behavior: "smooth", block: "start" });
     });
   }
+
+  /* ── телефон: маска +7 (7xx) xxx-xx-xx и проверка перед отправкой ── */
+  const fmtPhone = (v) => {
+    let d = v.replace(/\D/g, "");
+    if (d.startsWith("8")) d = "7" + d.slice(1);
+    if (d && !d.startsWith("7")) d = "7" + d;
+    d = d.slice(0, 11);
+    if (!d) return "";
+    let out = "+7";
+    if (d.length > 1) out += " (" + d.slice(1, 4);
+    if (d.length >= 4) out += ") " + d.slice(4, 7);
+    if (d.length >= 7) out += "-" + d.slice(7, 9);
+    if (d.length >= 9) out += "-" + d.slice(9, 11);
+    return out;
+  };
+  window.phoneOk = (v) => /^\+7 \(7\d\d\) \d{3}-\d\d-\d\d$/.test(v.trim());
+  $$('input[inputmode="tel"]').forEach((inp) => {
+    inp.setAttribute("maxlength", "18"); inp.placeholder = "+7 (7__) ___-__-__";
+    inp.addEventListener("input", () => { const p = fmtPhone(inp.value); inp.value = p; inp.style.borderColor = ""; });
+    inp.addEventListener("focus", () => { if (!inp.value) inp.value = "+7 ("; });
+    inp.addEventListener("blur", () => { if (inp.value === "+7 (" || inp.value === "+7") inp.value = ""; if (inp.value && !window.phoneOk(inp.value)) inp.style.borderColor = "#B4342C"; });
+    inp.addEventListener("keydown", (e) => { if (e.key === "Backspace" && inp.value.replace(/\D/g, "").length <= 1) { e.preventDefault(); inp.value = ""; } });
+  });
 })();

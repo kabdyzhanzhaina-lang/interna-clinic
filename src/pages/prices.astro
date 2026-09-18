@@ -6,7 +6,7 @@ import prices from '../data/prices.json';
 const cats = Object.keys(prices);
 const total = Object.values(prices).reduce((a, v) => a + v.length, 0);
 ---
-<Base title="Цены на услуги — Interna Clinic, Алматы" description="Прайс клиники: эндоскопия, приёмы врачей, УЗИ, check-up, диагностика, стационар. Цены фиксированы." active="prices">
+<Base og="prices" title="Цены на услуги — Interna Clinic, Алматы" description="Прайс клиники: эндоскопия, приёмы врачей, УЗИ, check-up, диагностика, стационар. Цены фиксированы." active="prices">
   <PageHero crumbs={[['Главная', '/'], ['Цены']]} title="Цены на услуги" sub={`Прайс клиники: ${total} позиций по ${cats.length} направлениям. Цены фиксированы — доплат на месте не будет.`} chips={[`${total} позиций`, 'цены фиксированы']}>
     <div slot="extra" class="search rise d3" style="margin-top:26px"><span>🔍</span><input id="psearch" placeholder="Найти услугу, например «колоноскопия»" aria-label="Поиск по прайсу" /><button class="btn btn-primary sm" type="button">Найти</button></div>
   </PageHero>

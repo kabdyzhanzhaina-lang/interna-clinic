@@ -18,7 +18,7 @@ const rows = []; for (const k in prices) for (const r of prices[k]) if ((r[1] ||
 const expLabel = d.exp ? (/^практика/.test(d.exp) ? d.exp : `стаж ${d.exp}`) : '';
 const jsonld = { '@context': 'https://schema.org', '@type': 'Physician', name: d.n, jobTitle: d.r, description: d.bio, image: new URL(img(d.img), Astro.site).href, worksFor: { '@type': 'MedicalClinic', name: 'Interna Clinic' } };
 ---
-<Base title={`${d.n} — ${d.r} | Interna Clinic`} description={d.bio} active="doctors" jsonld={jsonld}>
+<Base og="doctors" title={`${d.n} — ${d.r} | Interna Clinic`} description={d.bio} active="doctors" jsonld={jsonld}>
   <PageHero crumbs={[['Главная', '/'], ['Врачи', '/doctors'], [d.n.split(' ')[0]]]} title={d.n} sub={d.r}>
     <div slot="extra">
       <div class="chips rise d3" style="margin-top:22px">{d.tags.map((t) => <span class="chip" style="background:rgba(255,255,255,.12);color:#fff">{t}</span>)}{expLabel && <span class="chip" style="background:rgba(255,255,255,.12);color:#fff">{expLabel}</span>}</div>

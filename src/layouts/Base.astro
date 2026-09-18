@@ -6,10 +6,12 @@ import '../styles/global.css';
 import services from '../data/services.json';
 import { SITE, NAV, img } from '../lib/site.js';
 
-interface Props { title: string; description?: string; lang?: string; theme?: string; active?: string; jsonld?: object; }
-const { title, description = 'Institut гастроэнтерологии, гепатологии и метаболизма в Алматы. Диагноз на первом приёме.', lang = 'ru', theme = '', active = '', jsonld } = Astro.props;
+interface Props { title: string; description?: string; lang?: string; theme?: string; active?: string; jsonld?: object; og?: string; }
+const { title, description = 'Institut гастроэнтерологии, гепатологии и метаболизма в Алматы. Диагноз на первом приёме.', lang = 'ru', theme = '', active = '', jsonld, og = 'home' } = Astro.props;
 const canonical = new URL(Astro.url.pathname, Astro.site).href;
 const isKk = Astro.currentLocale === 'kk';
+// Иконки Material Symbols — только используемые (параметр text=), иначе шрифт весит 3 МБ
+const ICONS_CSS = "https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,400,0..1,0&display=block&icon_names=arrow_back,arrow_downward,arrow_forward,badge,biotech,bubble_chart,call,campaign,chat,checklist,child_care,description,endocrinology,event,event_available,event_note,expand_more,gastroenterology,grid_view,handshake,health_and_safety,health_metrics,info,local_hospital,location_on,mail,medical_services,monitor_heart,music_note,open_in_new,payments,pediatrics,person_search,photo_camera,play_circle,radiology,schedule,school,search,star,stethoscope,verified_user,waving_hand";
 const basePath = import.meta.env.BASE_URL.replace(/\/$/, '');   // на GitHub Pages pathname содержит /interna-clinic
 const ruPath = (basePath && Astro.url.pathname.startsWith(basePath) ? Astro.url.pathname.slice(basePath.length) : Astro.url.pathname).replace(/^\/kk(?=\/|$)/, '').replace(/^\/404\/?$/, '') || '/';
 const org = {
@@ -39,12 +41,13 @@ const org = {
     <meta name="twitter:card" content="summary_large_image" />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
-    <meta property="og:image" content={new URL(img('og'), Astro.site).href} />
+    <meta property="og:image" content={new URL(img(`og/${og}`), Astro.site).href} />
     <meta property="og:image:width" content="1200" /><meta property="og:image:height" content="630" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600&display=swap" />
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,300..600,0..1,0&display=swap" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600&display=swap" media="print" onload="this.media='all'" />
+    <link rel="stylesheet" href={ICONS_CSS} media="print" onload="this.media='all'" />
+    <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600&display=swap" /><link rel="stylesheet" href={ICONS_CSS} /></noscript>
     <style set:html={`:root{--logo:url(${img('logo')})}`} />
     <script type="application/ld+json" set:html={JSON.stringify(jsonld || org)} />
   </head>
@@ -117,18 +120,18 @@ const org = {
             <a class="logo" href="/" style="color:#fff;margin-bottom:14px"><span class="logo-mark white"></span>Interna Clinic</a>
             <p style="color:#9CC4DB;max-width:36ch;line-height:1.7">Институт гастроэнтерологии, гепатологии и метаболизма. Первая клиника доказательной медицины внутренних болезней в Центральной Азии.</p>
           </div>
-          <div><h5>Клиника</h5><a href="/about">О нас</a><a href="/doctors">Врачи</a><a href="/about#equip">Оборудование</a><a href="/reviews">Отзывы</a><a href="/media">Медиацентр</a><a href="/promo">Акции</a></div>
-          <div><h5>Пациентам</h5><a href="/patient">Гид пациента</a><a href="/prices">Цены</a><a href="/prepare">Подготовка</a><a href="/faq">Вопросы и ответы</a><a href="/checkup">Check-up</a><a href="/kids">Interna KIDS</a><a href="/news">Новости и события</a></div>
-          <div><h5>Контакты</h5><p>{SITE.address}</p><a href={SITE.phoneHref}>{SITE.phone}</a><a href={SITE.whatsapp} rel="noopener">WhatsApp</a><a href="/contacts">2ГИС · Google Maps</a><a href="/legal">Оферта · Политика</a></div>
+          <div><p class="fh">Клиника</p><a href="/about">О нас</a><a href="/doctors">Врачи</a><a href="/about#equip">Оборудование</a><a href="/reviews">Отзывы</a><a href="/media">Медиацентр</a><a href="/promo">Акции</a></div>
+          <div><p class="fh">Пациентам</p><a href="/patient">Гид пациента</a><a href="/prices">Цены</a><a href="/prepare">Подготовка</a><a href="/faq">Вопросы и ответы</a><a href="/checkup">Check-up</a><a href="/kids">Interna KIDS</a><a href="/news">Новости и события</a></div>
+          <div><p class="fh">Контакты</p><p>{SITE.address}</p><a href={SITE.phoneHref}>{SITE.phone}</a><a href={SITE.whatsapp} rel="noopener">WhatsApp</a><a href="/contacts">2ГИС · Google Maps</a><a href="/legal">Оферта · Политика</a></div>
         </div>
         <div class="fsub">
-          <div><h5>Будьте на связи</h5><p style="font-weight:400;color:#9CC4DB;max-width:52ch">Акции, услуги по ОСМС и даты школ для пациентов — в WhatsApp. Напишите «подписка», отписаться можно одним сообщением.</p></div>
+          <div><p class="fh">Будьте на связи</p><p style="font-weight:400;color:#9CC4DB;max-width:52ch">Акции, услуги по ОСМС и даты школ для пациентов — в WhatsApp. Напишите «подписка», отписаться можно одним сообщением.</p></div>
           <div class="fsub-r">
             <a class="btn btn-sky sm" href="#" data-wa="Здравствуйте! Хочу получать новости и акции клиники в WhatsApp. Подписка.">Подписаться в WhatsApp</a>
             <div class="social">{SITE.social.map(([n, u, ic]) => <a href={u} rel="noopener" target="_blank" aria-label={n}><span class="msr">{ic}</span>{n}</a>)}</div>
           </div>
         </div>
-        <div class="dirs"><h5>Все направления · {dirs.length}</h5><div class="dirs-grid">{dirs.map(([href, t]) => <a href={href}>{t}</a>)}</div></div>
+        <div class="dirs"><p class="fh">Все направления · {dirs.length}</p><div class="dirs-grid">{dirs.map(([href, t]) => <a href={href}>{t}</a>)}</div></div>
         <p class="legal">{SITE.legalName} · БИН {SITE.bin} · Лицензия на медицинскую деятельность {SITE.license}<br />Имеются противопоказания, необходима консультация специалиста.</p>
       </div>
     </footer>

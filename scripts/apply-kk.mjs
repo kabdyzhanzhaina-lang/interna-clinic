@@ -146,6 +146,17 @@ for (const f of files) {
   w(doc);
   fs.writeFileSync(f, serialize(doc));
 }
+
+// Поисковый индекс для казахской версии: заголовки/подписи/группы по словарю (точное совпадение), ссылки — на /kk
+try {
+  const idx = JSON.parse(fs.readFileSync('dist/search.json', 'utf8'));
+  const t = (x) => dict[x] != null ? dict[x] : x;
+  const kkIdx = idx.map((it) => ({ ...it, g: t(it.g), t: t(it.t), s: t(it.s), k: it.k + ' ' + it.t + ' ' + it.s }));
+  fs.mkdirSync(ROOT, { recursive: true });
+  fs.writeFileSync(path.join(ROOT, 'search.json'), JSON.stringify(kkIdx));
+  console.log(`[kk] search.json: ${kkIdx.length} записей, переведено заголовков ${kkIdx.filter((x, i) => x.t !== idx[i].t).length}`);
+} catch (e) { console.warn('[kk] search.json пропущен:', e.message); }
+
 const todoArr = [...todo.entries()].sort((a, b) => b[1].n - a[1].n).map(([t, e]) => ({ t, n: e.n, pages: [...e.pages].slice(0, 3) }));
 fs.writeFileSync('.i18n-todo.json', JSON.stringify(todoArr, null, 1));
 console.log(`[kk] страниц ${files.length}, переведено узлов ${translated}, ссылок с префиксом ${links}, без перевода: ${todoArr.length} строк (см. .i18n-todo.json)`);

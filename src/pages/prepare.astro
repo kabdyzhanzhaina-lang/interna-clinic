@@ -18,7 +18,7 @@ const faq = [
 ];
 const TABS = [...prep.sections.map((s) => ({ id: s.id, t: s.title })), { id: 'nersesov', t: 'К приёму профессора Нерсесова' }];
 ---
-<Base title="Подготовка к процедурам — Interna Clinic" description="Полные памятки по подготовке: УЗИ, фиброскан, колоноскопия, ЭГДС, видеокапсульная эндоскопия, анестезия. Перечень обследований к приёму профессора Нерсесова." active="patients">
+<Base og="prepare" title="Подготовка к процедурам — Interna Clinic" description="Полные памятки по подготовке: УЗИ, фиброскан, колоноскопия, ЭГДС, видеокапсульная эндоскопия, анестезия. Перечень обследований к приёму профессора Нерсесова." active="patients">
   <PageHero crumbs={[['Главная', '/'], ['Пациентам', '/faq'], ['Подготовка']]} title="Подготовка к процедурам" sub="От качества подготовки зависит точность исследования. Выберите процедуру — памятка ниже. При записи мы дублируем её в WhatsApp." chips={[`${prep.sections.length} памяток`, 'как на приёме у врача']} />
   <section class="sec"><div class="shell">
     <div class="chips rv" id="preptabs" role="tablist">{TABS.map((t, i) => <button class={`chip${i === 0 ? ' on' : ''}`} data-prep={t.id} role="tab" aria-selected={i === 0 ? 'true' : 'false'}>{t.t}</button>)}</div>

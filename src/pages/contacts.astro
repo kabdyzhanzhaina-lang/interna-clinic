@@ -4,7 +4,7 @@ import PageHero from '../components/PageHero.astro';
 import ContactsStrip from '../components/ContactsStrip.astro';
 import { SITE, img } from '../lib/site.js';
 ---
-<Base title="Контакты — Interna Clinic, Алматы, Богенбай батыра 248" description="Адрес, телефон, WhatsApp и часы работы клиники Interna Clinic. Работаем без выходных." active="contacts">
+<Base og="contacts" title="Контакты — Interna Clinic, Алматы, Богенбай батыра 248" description="Адрес, телефон, WhatsApp и часы работы клиники Interna Clinic. Работаем без выходных." active="contacts">
   <PageHero crumbs={[['Главная', '/'], ['Контакты']]} title="Контакты" sub={`${SITE.address} · работаем без выходных`} chips={['Богенбай батыра, 248', 'работаем 7/7']} />
   <section class="sec"><div class="shell"><div class="why" style="grid-template-columns:minmax(0,1.3fr) minmax(0,.7fr);align-items:start">
     <div class="rv">

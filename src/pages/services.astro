@@ -10,7 +10,7 @@ for (const [slug, s] of Object.entries(extra)) (groups[s.cat] ||= []).push([slug
 const order = ['Приём врача', 'Эндоскопические процедуры', 'УЗИ', 'Функциональная диагностика', 'Стационар', 'Interna KIDS'];
 const total = Object.keys(services).length + Object.keys(extra).length;
 ---
-<Base title="Услуги и направления — Interna Clinic" description="Все услуги клиники: приёмы врачей, эндоскопия, УЗИ, функциональная диагностика, стационар, check-up. Приём и обследования в один визит в Алматы." active="services">
+<Base og="services" title="Услуги и направления — Interna Clinic" description="Все услуги клиники: приёмы врачей, эндоскопия, УЗИ, функциональная диагностика, стационар, check-up. Приём и обследования в один визит в Алматы." active="services">
   <PageHero crumbs={[['Главная', '/'], ['Услуги']]} title="Услуги и направления" sub="Диагностика и лечение заболеваний ЖКТ, печени и эндокринной системы. Приём и обследования — в один визит." chips={[`${total} услуг`, 'цены открыто']} />
   <section class="sec"><div class="shell">
     <div class="sec-head rv"><div><p class="kicker">Ключевые направления</p><h2 class="h">С чего <em>начать</em></h2></div></div>

@@ -15,7 +15,7 @@ const s = services[slug];
 const d = doctors.find((x) => x.id === s.doc);
 const jsonld = { '@context': 'https://schema.org', '@type': 'MedicalProcedure', name: s.t, description: s.sub, offers: s.prices.map((p) => ({ '@type': 'Offer', name: p[0], price: p[2].replace(/[^\d]/g, ''), priceCurrency: 'KZT' })) };
 ---
-<Base title={`${s.h1} — цена, запись | Interna Clinic`} description={s.sub} active="services" jsonld={jsonld}>
+<Base og="services" title={`${s.h1} — цена, запись | Interna Clinic`} description={s.sub} active="services" jsonld={jsonld}>
   <PageHero crumbs={[['Главная', '/'], ['Услуги', '/services'], [s.cat, '/services'], [s.t]]} title={s.h1} sub={s.sub}>
     <div slot="extra" class="facts rise d3">{s.facts.map((f) => <div class="fact"><b>{f[0]}</b><span>{f[1]}</span></div>)}</div>
     <aside slot="right" class="pricecard rise d2"><h3>Стоимость</h3><p class="dt">цены по прайсу клиники</p>

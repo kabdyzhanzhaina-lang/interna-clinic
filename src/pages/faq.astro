@@ -10,7 +10,7 @@ const plain = (q) => [...q.a, ...(q.list || [])].join(' ');
 const faqld = { '@context': 'https://schema.org', '@type': 'FAQPage', mainEntity: faq.map((q) => ({ '@type': 'Question', name: q.q, acceptedAnswer: { '@type': 'Answer', text: plain(q) } })) };
 const half = Math.ceil(faq.length / 2);
 ---
-<Base title="Вопросы и ответы — Interna Clinic" description="Услуги, запись, время работы, цены, обследования до приёма, стационар и детское отделение — ответы на частые вопросы пациентов клиники." jsonld={faqld} active="patients">
+<Base og="patient" title="Вопросы и ответы — Interna Clinic" description="Услуги, запись, время работы, цены, обследования до приёма, стационар и детское отделение — ответы на частые вопросы пациентов клиники." jsonld={faqld} active="patients">
   <PageHero crumbs={[['Главная', '/'], ['Вопросы и ответы']]} title="Вопросы и ответы" sub={`Собрали всё, что спрашивают чаще всего. Не нашли своё — напишите в WhatsApp или позвоните ${SITE.phone}, администратор ответит в течение 10 минут.`} chips={[`${faq.length} вопросов`, 'ответы врачей и администраторов']} />
   <section class="sec"><div class="shell">
     <div class="grid2 rv" style="gap:40px;align-items:start">

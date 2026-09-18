@@ -18,7 +18,7 @@ const jsonld = { '@context': 'https://schema.org', '@type': 'MedicalWebPage', he
 let n = 0, firstP = true;
 const toSec = (t) => t.split(':').reduce((acc, x) => acc * 60 + +x, 0);
 ---
-<Base title={`${a.t} — Медиацентр Interna Clinic`} description={excerpt(a, 160) || a.t} active="media" jsonld={jsonld}>
+<Base og="media" title={`${a.t} — Медиацентр Interna Clinic`} description={excerpt(a, 160) || a.t} active="media" jsonld={jsonld}>
   <div class="readprog" id="readprog"></div>
 
   <section class="ahero">
@@ -44,8 +44,8 @@ const toSec = (t) => t.split(':').reduce((acc, x) => acc * 60 + +x, 0);
   <section class="sec" style="padding-top:60px"><div class="shell"><div class="article">
     <article class="body abody rv">
       {a.body.map((b) => {
-        if (b[0] === 'h') { n += 1; return <h3 class="anum" data-n={String(n).padStart(2, '0')}><span class="num" data-parallax="-0.08">{String(n).padStart(2, '0')}</span>{n === 2 && <span class="spin margin" style="top:90px" data-rotate="0.08" set:html={FLOWER} />}{b[1]}</h3>; }
-        if (b[0] === 'h3') return <h4 class="asub">{b[1]}</h4>;
+        if (b[0] === 'h') { n += 1; return <h2 class="anum" data-n={String(n).padStart(2, '0')}>{n === 2 && <span class="spin margin" style="top:90px" data-rotate="0.08" set:html={FLOWER} />}{b[1]}</h2>; }
+        if (b[0] === 'h3') return <h3 class="asub">{b[1]}</h3>;
         if (b[0] === 'q') return <div class="pull apull" data-parallax="0.06">{b[1]}<span class="spin" data-rotate={n % 2 ? '0.2' : '-0.2'} set:html={STAR} /></div>;
         if (b[0] === 'ul') return <ul class="alist">{b[1].map((x) => <li>{x}</li>)}</ul>;
         if (b[0] === 'ol') return <ol class="alist">{b[1].map((x) => <li>{x}</li>)}</ol>;
