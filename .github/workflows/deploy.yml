@@ -32,6 +32,10 @@ jobs:
           BASE_PATH: ${{ vars.BASE_PATH || '/interna-clinic' }}
           # Адрес API (Cloudflare Worker из папки worker/). Пусто — форма работает в демо-режиме.
           PUBLIC_API_URL: ${{ vars.PUBLIC_API_URL || '' }}
+          # Виджет Битрикс24 (открытые линии): адрес скрипта из кабинета Битрикс. Пусто — виджет не подключается.
+          PUBLIC_BITRIX_WIDGET_URL: ${{ vars.PUBLIC_BITRIX_WIDGET_URL || '' }}
+          # Яндекс.Метрика: номер счётчика. Пусто — счётчик не ставится.
+          PUBLIC_YM_ID: ${{ vars.PUBLIC_YM_ID || '' }}
       - uses: actions/upload-pages-artifact@v3
         with:
           path: dist

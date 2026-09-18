@@ -11,7 +11,7 @@ const { title, description = 'Institut гастроэнтерологии, ге�
 const canonical = new URL(Astro.url.pathname, Astro.site).href;
 const isKk = Astro.currentLocale === 'kk';
 const basePath = import.meta.env.BASE_URL.replace(/\/$/, '');   // на GitHub Pages pathname содержит /interna-clinic
-const ruPath = (basePath && Astro.url.pathname.startsWith(basePath) ? Astro.url.pathname.slice(basePath.length) : Astro.url.pathname).replace(/^\/kk(?=\/|$)/, '') || '/';
+const ruPath = (basePath && Astro.url.pathname.startsWith(basePath) ? Astro.url.pathname.slice(basePath.length) : Astro.url.pathname).replace(/^\/kk(?=\/|$)/, '').replace(/^\/404\/?$/, '') || '/';
 const org = {
   '@context': 'https://schema.org', '@type': 'MedicalClinic', name: SITE.name, url: Astro.site?.href,
   telephone: SITE.phone, email: SITE.email,
@@ -178,6 +178,8 @@ const org = {
     <script set:html={`window.SITE_API=${JSON.stringify(import.meta.env.PUBLIC_API_URL || "")};window.LANG=${JSON.stringify(Astro.currentLocale || 'ru')};window.BASE=${JSON.stringify(import.meta.env.BASE_URL.replace(/\/$/, ''))};window.WA=${JSON.stringify(SITE.whatsapp)};`} />
     {/* Виджет Битрикс24 (открытые линии / CRM-формы): адрес скрипта задаётся при сборке — PUBLIC_BITRIX_WIDGET_URL */}
     {import.meta.env.PUBLIC_BITRIX_WIDGET_URL && <script async src={import.meta.env.PUBLIC_BITRIX_WIDGET_URL} />}
+    {/* Яндекс.Метрика: номер счётчика задаётся при сборке — PUBLIC_YM_ID */}
+    {import.meta.env.PUBLIC_YM_ID && <script set:html={`(function(m,e,t,r,i,k,a){m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};m[i].l=1*new Date();k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)})(window,document,"script","https://mc.yandex.ru/metrika/tag.js","ym");ym(${JSON.stringify(import.meta.env.PUBLIC_YM_ID)},"init",{clickmap:true,trackLinks:true,accurateTrackBounce:true,webvisor:true});`} />}
     <script defer src="/scripts/site.js"></script>
   </body>
 </html>

@@ -80,3 +80,17 @@ npm run build      # сборка в dist/
 - **Редиректы**: `src/lib/redirects.js` собирает карту старых адресов Tilda (услуги, статьи `tpost`, карточки `kids/tproduct`, разделы), для каждого генерируется страница-заглушка с мгновенным переходом и `canonical` на новую страницу (`src/pages/[...old].astro`). GitHub Pages не умеет 301, поэтому так.
 - **Sitemap**: `@astrojs/sitemap`, заглушки и `/admin` исключены. `robots.txt` пишется при сборке с адресом sitemap под текущий домен.
 - **Админка**: `/admin/` — Decap CMS, см. `worker/README.md`.
+
+## Чек-лист запуска
+
+Переменные сборки задаются в GitHub → Settings → Secrets and variables → Actions → Variables:
+
+| Переменная | Что делает | Без неё |
+|---|---|---|
+| `SITE_URL` | канонический адрес сайта (`https://internaclinic.kz`) | github.io |
+| `BASE_PATH` | подпуть на github.io; после домена — пустая строка | `/interna-clinic` |
+| `PUBLIC_API_URL` | адрес Cloudflare Worker из `worker/` (заявки → Битрикс24 / своя CRM) | формы в демо-режиме |
+| `PUBLIC_BITRIX_WIDGET_URL` | скрипт виджета Битрикс24 (открытые линии, чат) | виджета нет |
+| `PUBLIC_YM_ID` | номер счётчика Яндекс.Метрики | счётчика нет |
+
+Порядок: 1) развернуть Worker и задать `PUBLIC_API_URL`, вписать тот же адрес в `public/admin/config.yml` → `base_url`; 2) создать GitHub OAuth App для админки (см. `worker/README.md`); 3) привязать домен и убрать `BASE_PATH`; 4) добавить сайт в Search Console и Яндекс Вебмастер, отправить `sitemap-index.xml`; 5) задать `PUBLIC_YM_ID` и, когда клиент даст ключ, `PUBLIC_BITRIX_WIDGET_URL`.
