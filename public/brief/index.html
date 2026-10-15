@@ -62,7 +62,7 @@ textarea:focus,input:focus{outline:2px solid var(--sky);border-color:var(--b);ba
     <div class="k">Бриф · Interna Clinic · internaclinic.kz</div>
     <h1>Бриф на разработку сайта</h1>
     <p class="sub">Короткая версия — 18 вопросов и чек-лист материалов</p>
-    <p>Бриф нужен, чтобы зафиксировать ТЗ и стартовать 15 сентября. Отвечайте прямо под вопросом, коротко; файлы — ссылкой на папку (Google Drive / Яндекс.Диск). Можно заполнять в несколько подходов: ответы сохраняются в браузере.</p>
+    <p>Бриф нужен, чтобы зафиксировать ТЗ и стартовать 15 сентября. Отвечайте прямо под вопросом, коротко; файлы — ссылкой на папку (Google Drive / Яндекс.Диск). Можно заполнять в несколько подходов: ответы сохраняются в браузере. Когда закончите — нажмите «Отправить ответы» внизу, и они придут нам на почту.</p>
     <p>Прототип нового сайта вы уже видели: <a href="https://kabdyzhanzhaina-lang.github.io/interna-clinic/" target="_blank" rel="noopener">kabdyzhanzhaina-lang.github.io/interna-clinic</a> — многие вопросы про него: что оставить, что поменять.</p>
     <p>По договору предусмотрено 2 раунда правок (после дизайна и перед запуском), поэтому важно ответить на эти вопросы до старта — дальше будем править по списку.</p>
     <div class="meta"><span>Срок возврата — 12 сентября 2026</span><span>Старт работ — 15 сентября</span><span>Вопросы — design@yume.business</span></div>
@@ -70,12 +70,12 @@ textarea:focus,input:focus{outline:2px solid var(--sky);border-color:var(--b);ba
   </header>
   <div class="bar"><div class="prog"><i id="pg"></i></div><div class="pt"><span id="pc">Заполнено 0 из 0</span><span id="sv"></span></div></div>
   <form id="f"></form>
-  <div class="next"><b>Что дальше.</b> Заполненный бриф и материалы из чек-листа отправьте на <b>design@yume.business</b> до <b>12 сентября 2026</b>: нажмите «Сохранить ответы» внизу и приложите скачанный файл к письму. После этого мы фиксируем финальный объём приложением к договору и запускаем первую неделю: дизайн всех страниц и настройка доступов. Чем полнее ответы — тем точнее сайт попадёт в ваши задачи с первого раунда правок.</div>
+  <div class="next"><b>Что дальше.</b> Заполненный бриф и материалы из чек-листа отправьте до <b>12 сентября 2026</b>: нажмите «Отправить ответы» внизу — они придут на design@yume.business. Ссылки на папку с файлами вставьте в чек-лист. После этого мы фиксируем финальный объём приложением к договору и запускаем первую неделю: дизайн всех страниц и настройка доступов. Чем полнее ответы — тем точнее сайт попадёт в ваши задачи с первого раунда правок.</div>
 </div>
 
 <div class="actions">
-  <button type="button" class="main" onclick="saveFile()">Сохранить ответы</button>
-  <button type="button" onclick="download()">Скачать текстом</button>
+  <button type="button" class="main" id="sendBtn" onclick="send()">Отправить ответы</button>
+  <button type="button" onclick="download()">Скачать копию</button>
   <button type="button" onclick="window.print()">Печать / PDF</button>
 </div>
 <div class="toast" id="toast"></div>
@@ -83,6 +83,9 @@ textarea:focus,input:focus{outline:2px solid var(--sky);border-color:var(--b);ba
 <script>
 /* Тип: t — строка, a — абзац, c — несколько вариантов (+ комментарий), r — один вариант (+ комментарий), k — чек-лист */
 const B=[
+ ["Кто заполняет","Чтобы мы знали, с кем связаться по ответам",[
+  ["t","Имя, должность и телефон / почта"]
+ ]],
  ["Чек-лист материалов к старту","Отметьте, что уже готово, и вставьте ссылку на папку",[
   ["k","Материалы",["Ссылки на референсы","Прайс файлом (Excel)","Список врачей + фото","Логотип в векторе","Единый телефон и WhatsApp","Ответ: где ведётся расписание","Доступы: домен, Tilda, Битрикс24, Метрика","Контакт согласующего"],"Ссылка на папку с материалами и комментарий"]
  ]],
@@ -116,16 +119,15 @@ const B=[
  ]]
 ];
 
-/* Сюда кнопка «Сохранить ответы» вписывает ответы в скачиваемой копии файла */
+/* SAVED — для копии с ответами, если понадобится */
 const SAVED=null;
 const SAVED_AT="";
-const SRC="<!DOCTYPE html>\n"+document.documentElement.outerHTML;
 const KEY="interna-site-brief-v1",f=document.getElementById('f');let N=0,Q=0;
 const esc=s=>s.replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 B.forEach(([title,desc,qs],si)=>{
   let h=`<section${qs[0][0]==="k"?' class="check"':''}><h2><span>${si+1}</span>${esc(title)}</h2><p class="d">${esc(desc)}</p>`;
   qs.forEach(([type,text,x,hint])=>{
-    const id="q"+(++N); const num=type==="k"?"":`${++Q}. `;
+    const id="q"+(++N); const num=(type==="k"||si===0)?"":`${++Q}. `;
     h+=`<div class="q" data-q="${id}" data-text="${esc(text)}" data-sec="${esc(title)}"><label class="t" for="${id}">${num}${esc(text)}</label>`;
     if((type==="a"||type==="t")&&x) h+=`<div class="h">${esc(x)}</div>`;
     if((type==="c"||type==="r"||type==="k")&&hint) h+=`<div class="h">${esc(hint)}</div>`;
@@ -166,19 +168,34 @@ function asText(){
   collect().forEach(x=>{
     if(x.sec!==last){out+=`\n=== ${x.sec.toUpperCase()} ===\n`;last=x.sec}
     const a=[x.opts.join(", "),x.text].filter(Boolean).join(" — ");
-    const num=x.sec.startsWith("Чек-лист")?"":`${++n}. `;
+    const num=(x.sec.startsWith("Чек-лист")||x.sec==="Кто заполняет")?"":`${++n}. `;
     out+=`\n${num}${x.q}\n→ ${a||"—"}\n`;
   });
   return out;
 }
 function toast(m){const t=document.getElementById('toast');t.textContent=m;t.classList.add('on');setTimeout(()=>t.classList.remove('on'),2600)}
-function saveFile(){
-  const json=JSON.stringify(collect()).replace(/</g,"\\u003c");
-  const at=new Date().toLocaleString("ru");
-  const html=SRC.replace(/const SAVED=[^\n]*\n/,()=>"const SAVED="+json+";\n")
-                .replace(/const SAVED_AT=[^\n]*\n/,()=>"const SAVED_AT="+JSON.stringify(at)+";\n");
-  const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([html],{type:"text/html;charset=utf-8"}));
-  a.download="Бриф-сайт-Interna-Clinic-ответы.html";a.click();toast("Файл с ответами скачан — отправьте его на design@yume.business");
+const ENDPOINT="https://formsubmit.co/ajax/design@yume.business";
+async function send(){
+  const d=collect(); const who=(d[0].text||"").trim();
+  if(!who){toast("Укажите, кто заполняет бриф — первое поле");document.getElementById('q1').focus();return}
+  const done=d.filter(x=>x.opts.length||x.text).length;
+  if(done<4&&!confirm("Заполнено всего "+done+" из "+d.length+". Отправить как есть?"))return;
+  const btn=document.getElementById('sendBtn');btn.disabled=true;btn.textContent="Отправляем…";
+  const body={_subject:"Бриф на сайт Interna Clinic — "+who,_template:"table",_captcha:"false",_replyto:(who.match(/[\w.+-]+@[\w-]+\.[\w.]+/)||[""])[0]};
+  d.forEach((x,i)=>{body[(i?i+". ":"")+x.q]=[x.opts.join(", "),x.text].filter(Boolean).join(" — ")||"—"});
+  body["Текст целиком"]=asText();
+  try{
+    const r=await fetch(ENDPOINT,{method:"POST",headers:{"Content-Type":"application/json",Accept:"application/json"},body:JSON.stringify(body)});
+    const j=await r.json().catch(()=>({}));
+    if(!r.ok||String(j.success)==="false")throw new Error(j.message||r.status);
+    btn.textContent="Отправлено ✓";
+    document.getElementById('sv').textContent="Отправлено "+new Date().toLocaleTimeString("ru",{hour:"2-digit",minute:"2-digit"});
+    toast("Спасибо! Ответы отправлены на design@yume.business");
+  }catch(e){
+    btn.disabled=false;btn.textContent="Отправить ответы";
+    toast("Не удалось отправить автоматически — открываем письмо");
+    location.href="mailto:design@yume.business?subject="+encodeURIComponent("Бриф на сайт Interna Clinic — "+who)+"&body="+encodeURIComponent(asText().slice(0,1800)+"\n\n(полный текст — во вложении: кнопка «Скачать копию»)");
+  }
 }
 function download(){
   const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([asText()],{type:"text/plain;charset=utf-8"}));
