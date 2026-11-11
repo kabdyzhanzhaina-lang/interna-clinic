@@ -9,9 +9,17 @@ compatibility_date = "2026-06-01"
 binding = "SETTINGS"
 id = "REPLACE_WITH_KV_ID"   # подставится после `wrangler kv namespace create SETTINGS`
 
+# Повторная отправка заявок, которые CRM не приняла (очередь в KV, ключ pending)
+[triggers]
+crons = ["*/15 * * * *"]
+
 [vars]
 # Откуда разрешены запросы (сайт). Через запятую.
-ALLOWED_ORIGINS = "https://kabdyzhanzhaina-lang.github.io,https://internaclinic.kz,https://www.internaclinic.kz,http://127.0.0.1:4321"
+ALLOWED_ORIGINS = "https://interna-clinic.vercel.app,https://internaclinic.kz,https://www.internaclinic.kz,http://localhost:4321,http://127.0.0.1:4321"
 
 # Секреты задаются командой, не в файле:
 #   npx wrangler secret put ADMIN_PASSWORD   — пароль админки /admin
+#   npx wrangler secret put RESEND_API_KEY   — (необязательно) ключ resend.com для запасных писем; без него — formsubmit.co
+#   npx wrangler secret put WA_TOKEN         — (необязательно) постоянный токен WhatsApp Cloud API: заявки сразу в WhatsApp администратора
+# WA_API_VERSION = "v23.0"   — версия Graph API для WhatsApp (менять не нужно)
+# MAIL_FROM = "Сайт Interna Clinic <site@internaclinic.kz>"   — отправитель писем через Resend (домен подтверждается в Resend)
