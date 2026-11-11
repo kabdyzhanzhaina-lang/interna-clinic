@@ -1,0 +1,14 @@
+---
+// Аккордеон макета (Acc): вопрос 19/600 + иконка add/remove, ответ 15 серым; faq — вариант страницы FAQ (21/500, ответ 16)
+interface Props { items: ([string, string] | { q: string; a: string[]; list?: string[] })[]; faq?: boolean; open?: number; }
+const { items, faq = false, open = 0 } = Astro.props;
+const norm = items.map((q) => Array.isArray(q) ? { q: q[0], a: [q[1]] } : q);
+---
+<div class={`accordion acc2${faq ? ' faq' : ''}`} data-acc>
+  {norm.map((q, i) => (
+    <div class={`acc-item${i === open ? ' open' : ''}`}>
+      <button class="acc-q" type="button">{q.q}<span class="acc-ic msr">add</span></button>
+      <div class="acc-a" style={i === open ? 'height:auto' : ''}>{q.a.map((p) => <p>{p}</p>)}{q.list && <ul class="alist">{q.list.map((x) => <li>{x}</li>)}</ul>}</div>
+    </div>
+  ))}
+</div>

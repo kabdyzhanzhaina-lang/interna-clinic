@@ -1,20 +1,79 @@
 ---
+// Медиацентр (макет 14): колонка 1040 по центру — слайдер-хиро 1040×520, сетка из трёх колонок по 328
+// с фото разной высоты, карточка «Новости» в третьей колонке, ряд из четырёх материалов 239, «показать ещё».
+// Категории капсом 10–11px, заголовки 18/300 по центру. Анимации: автослайдер хиро, reveal колонок, зум фото при наведении.
 import Base from '../layouts/Base.astro';
-import PageHero from '../components/PageHero.astro';
-import Sticker from '../components/Sticker.astro';
-import Cta from '../components/Cta.astro';
-import { ALL_MEDIA as articles, fmtDate, excerpt } from '../lib/media.js';
+import { ALL_MEDIA, fmtDate } from '../lib/media.js';
+import newsFile from '../data/news.json';
 import { img } from '../lib/site.js';
-const [first, ...rest] = articles;
+
+const byId = (id) => ALL_MEDIA.find((a) => a.id === id);
+// рубрики как в макете
+const CAT = {
+  'o-kazahstanskoi-meditsine-nersesov-aleks': 'Врачи говорят • Подкаст', 'o-kazahstanskoi-meditsine-raisova-aigul': 'Врачи говорят • Подкаст',
+  'o-kazahstanskoi-meditsine-nurgozhin-talg': 'Врачи говорят • Подкаст', 'o-kazahstanskoi-meditsine-lokshin-vyache': 'Врачи говорят • Подкаст',
+  'meditsina-kak-vizov': 'Врачи говорят • Подкаст', 'rak-molochnoi-zhelezi': 'Врачи говорят • Видео',
+  'chto-delat-pri-vzdutii-zhivota-simptomi': 'Здоровье • ЖКТ', 'chto-takoe-dispepsiya-pochemu-voznikaet': 'Здоровье • ЖКТ',
+  'insulinorezistentnost-skritaya-ugroza-ra': 'Здоровье • Эндокринология', 'bariatriya': 'Диагностика • Эндоскопия',
+  'videokapsulnaya-endoskopiya': 'Диагностика • Эндоскопия', 'kak-perezhit-utratu-blizkih': 'Истории • Пациенты', 'rak-ne-prigovor': 'Истории • Пациенты',
+};
+const cat = (a) => CAT[a.id] || a.tag.split(' · ').reverse().join(' • ');
+const kind = (a) => a.tag.split(' ')[0];
+// раскладка колонок по макету: [id, высота фото]
+const COLS = [
+  [['chto-delat-pri-vzdutii-zhivota-simptomi', 420], ['rak-molochnoi-zhelezi', 328], ['bariatriya', 420]],
+  [['insulinorezistentnost-skritaya-ugroza-ra', 328], ['kak-perezhit-utratu-blizkih', 480], ['chto-takoe-dispepsiya-pochemu-voznikaet', 328]],
+  [['videokapsulnaya-endoskopiya', 328], ['meditsina-kak-vizov', 420]],
+];
+const ROW2 = ['o-kazahstanskoi-meditsine-raisova-aigul', 'o-kazahstanskoi-meditsine-nurgozhin-talg', 'o-kazahstanskoi-meditsine-lokshin-vyache', 'rak-ne-prigovor'];
+const heroIds = ['o-kazahstanskoi-meditsine-nersesov-aleks', 'meditsina-kak-vizov', 'kak-perezhit-utratu-blizkih', 'videokapsulnaya-endoskopiya', 'rak-molochnoi-zhelezi'];
+const slides = heroIds.map(byId).filter(Boolean);
+const used = new Set([...COLS.flat().map((x) => x[0]), ...ROW2, heroIds[0]]);
+const more = ALL_MEDIA.filter((a) => !used.has(a.id)); // материалы сверх макета — под «показать ещё»
+const news = (newsFile.items || newsFile).slice(0, 4);
 ---
-<Base og="media" title="Медиацентр — статьи и видео врачей Interna Clinic" description="Врачи Interna Clinic объясняют сложное простыми словами: статьи, видео и новости клиники." active="media">
-  <PageHero crumbs={[['Главная', '/'], ['Медиацентр']]} title="Медиацентр" sub="Врачи Interna Clinic объясняют сложное простыми словами: статьи, видео и новости клиники." chips={['пишут сами врачи', 'статьи · видео · новости']}><Sticker slot="deco" class="hero sky" text="СТАТЬИ · ВИДЕО · НОВОСТИ · " icon="newspaper" speed="0.1" style="left:57%;bottom:34px" /></PageHero>
-  <section class="sec"><div class="shell">
-    <a class="card rv" href={`/article/${first.id}`} style="display:grid;grid-template-columns:1.1fr 1fr;overflow:hidden;border-color:transparent;box-shadow:var(--sh-s)">
-      <div class="svc" style="border:none"><div class="img" style="aspect-ratio:1.5;height:100%"><img src={img(first.img)} alt="" loading="lazy" /></div></div>
-      <div style="padding:36px"><span class="tag">{first.tag}</span><h3 class="serif" style="font-size:clamp(22px,2.6vw,30px);margin:14px 0 12px;line-height:1.25">{first.t}</h3><p style="margin:0 0 16px;font-weight:400">{excerpt(first)}…</p><p style="font-size:12.5px;color:var(--faint);font-weight:600">{first.by} · {fmtDate(first.date)} · {first.min}</p></div>
-    </a>
-    <div class="grid4" style="margin-top:20px">{rest.map((a, i) => <a class={`card svc rv d${(i % 4) + 1}`} href={`/article/${a.id}`}><div class="img"><img src={img(a.img)} alt="" loading="lazy" /></div><div class="bd"><span class="kicker" style="margin-bottom:8px;font-size:10px">{a.tag.split(' · ')[0]}</span><h3 style="font-size:16px;line-height:1.35">{a.t}</h3><p style="font-size:12.5px;color:var(--faint);margin:0">{a.min}</p></div></a>)}</div>
+<Base og="media" title="Новости и блог — статьи, видео и подкасты врачей Interna Clinic" description="Врачи Interna Clinic объясняют сложное простыми словами: статьи, видео, подкасты и новости клиники." active="media">
+  <section class="mv3"><div class="mv3-in">
+    <div class="mhero rv" data-mslider>
+      <div class="img">
+        {slides.map((a, i) => <a class={`sl${i === 0 ? ' on' : ''}`} href={`/article/${a.id}`} aria-label={a.t}><img src={img(a.img)} alt="" loading={i === 0 ? 'eager' : 'lazy'} /></a>)}
+        <div class="dots">{slides.map((_, i) => <button type="button" class={i === 0 ? 'on' : ''} aria-label={`Слайд ${i + 1}`}></button>)}</div>
+      </div>
+      <div class="cap">{slides.map((a, i) => <a class={`c${i === 0 ? ' on' : ''}`} href={`/article/${a.id}`}><span class="mcat">{cat(a)}</span><h1 class="t">{a.t}</h1></a>)}</div>
+    </div>
+
+    <div class="mgrid3">
+      {COLS.map((col, ci) => <div class={`col rv d${ci + 1}`}>
+        {ci === 2 && <div class="newscard">
+          <span class="h">Новости</span>
+          {news.map((n) => <><a class="n" href={n.link || '/news'}>{n.title}</a><i class="ln"></i></>)}
+          <a class="m" href="/news">все новости →</a>
+        </div>}
+        {col.map(([id, h]) => { const a = byId(id); return a && <a class="item" href={`/article/${a.id}`} data-kind={kind(a)}><span class="img" style={`height:${h}px`}><img src={img(a.img)} alt="" loading="lazy" /></span><span class="mcat">{cat(a)}</span><b class="t">{a.t}</b></a>; })}
+      </div>)}
+    </div>
+
+    <div class="mrow2 rv">{ROW2.map((id) => { const a = byId(id); return a && <a class="item" href={`/article/${a.id}`} data-kind={kind(a)}><span class="img"><img src={img(a.img)} alt="" loading="lazy" /></span><span class="mcat">{cat(a)}</span><b class="t">{a.t}</b></a>; })}</div>
+
+    {more.length > 0 && <>
+      <div class="mrow2 rv" id="mmore" hidden>{more.map((a) => <a class="item" href={`/article/${a.id}`} data-kind={kind(a)}><span class="img"><img src={img(a.img)} alt="" loading="lazy" /></span><span class="mcat">{cat(a)}</span><b class="t">{a.t}</b></a>)}</div>
+      <div class="mmore"><button type="button" data-mmore>показать ещё →</button></div>
+    </>}
   </div></section>
-  <Cta title="Есть вопрос <em>к врачу</em>?" text="Задайте его на приёме — запишитесь онлайн или по телефону." />
+
+  <script is:inline>
+    (function(){
+      // автослайдер хиро: кадры меняются раз в 6 с, точки переключают вручную
+      var s=document.querySelector('[data-mslider]');if(s){var sl=s.querySelectorAll('.sl'),cp=s.querySelectorAll('.cap .c'),dt=s.querySelectorAll('.dots button'),i=0,t;
+        function go(k){i=(k+sl.length)%sl.length;sl.forEach(function(e,j){e.classList.toggle('on',j===i);});cp.forEach(function(e,j){e.classList.toggle('on',j===i);});dt.forEach(function(e,j){e.classList.toggle('on',j===i);});}
+        function auto(){clearInterval(t);t=setInterval(function(){go(i+1);},6000);}
+        dt.forEach(function(d,k){d.addEventListener('click',function(){go(k);auto();});});
+        if(!matchMedia('(prefers-reduced-motion:reduce)').matches)auto();}
+      // «показать ещё»
+      var b=document.querySelector('[data-mmore]');if(b)b.addEventListener('click',function(){document.getElementById('mmore').hidden=false;b.parentElement.hidden=true;});
+      // фильтр из футера: /media?t=video | podcast — оставляем только нужный тип единой сеткой
+      var q=new URLSearchParams(location.search).get('t'),map={video:'ВИДЕО',podcast:'ПОДКАСТ',press:'СТАТЬЯ'};
+      if(q&&map[q]){var root=document.querySelector('.mv3-in');root.classList.add('flat');root.querySelectorAll('[data-kind]').forEach(function(c){c.hidden=c.dataset.kind!==map[q];});}
+    })();
+  </script>
 </Base>

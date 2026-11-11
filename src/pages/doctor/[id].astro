@@ -1,43 +1,90 @@
 ---
+// Врач (макет 05): профиль с фото 480×600, крошки, айбрау-роль, H1, био, теги, факты, кнопки; подменю; образование/специализация/отзывы слева, цены/график/коллеги справа; CTA
 import Base from '../../layouts/Base.astro';
-import PageHero from '../../components/PageHero.astro';
-import DoctorCard from '../../components/DoctorCard.astro';
+import SubNav from '../../components/SubNav.astro';
+import DocRow from '../../components/DocRow.astro';
 import Cta from '../../components/Cta.astro';
 import doctorsFile from '../../data/doctors.json';
-const doctors = doctorsFile.items;
-import Body from '../../components/Body.astro';
+import reviewsFile from '../../data/reviews.json';
 import prices from '../../data/prices.json';
-import { img } from '../../lib/site.js';
+import { SITE, img } from '../../lib/site.js';
+const doctors = doctorsFile.items.filter((d) => !d.hidden);
 
-export function getStaticPaths() { return doctorsFile.items.map((d) => ({ params: { id: d.id } })); }
-const d = doctors.find((x) => x.id === Astro.params.id);
-const rel = doctors.filter((x) => x.cat === d.cat && x.id !== d.id).slice(0, 4);
+export function getStaticPaths() { return doctorsFile.items.filter((d) => !d.hidden).map((d) => ({ params: { id: d.id } })); }
+const d0 = doctors.find((x) => x.id === Astro.params.id);
+const d = { ...d0, tags: (d0.tags || []).filter((t) => t && t.trim()), exp: d0.exp || "", price: d0.price || "", bio: d0.bio || "", r: d0.r || "Врач" };
+const rel = doctors.filter((x) => x.cat === d.cat && x.id !== d.id).slice(0, 3);
+const [surname, ...rest] = d.n.split(' ');
+const short = `${surname} ${rest.filter(Boolean).map((w) => w[0] + '.').join(' ')}`;
+const dative = /ов$|ев$|ин$|ын$|ек$|ар$/.test(surname) ? surname + 'у' : /ова$|ева$|ина$|ына$/.test(surname) ? surname.slice(0, -1) + 'е' : surname;
+const isProf = /профессор/i.test(d.r);
 // позиции прайса, где в подписи указан этот врач
 const key = d.n.toLowerCase().split(' ').slice(0, 2).join(' ');
 const rows = []; for (const k in prices) for (const r of prices[k]) if ((r[1] || '').toLowerCase().includes(key) && !rows.some((x) => x[0] === r[0])) rows.push(r);
-const expLabel = d.exp ? (/^практика/.test(d.exp) ? d.exp : `стаж ${d.exp}`) : '';
-const jsonld = { '@context': 'https://schema.org', '@type': 'Physician', name: d.n, jobTitle: d.r, description: d.bio, image: new URL(img(d.img), Astro.site).href, worksFor: { '@type': 'MedicalClinic', name: 'Interna Clinic' } };
+const priceRows = rows.length ? rows.slice(0, 4).map((r) => [r[0], r[2]]) : [['Первичный приём', d.price || 'по запросу'], ['Повторный приём', 'по прайсу']];
+const expLabel = d.exp ? (/^практика/.test(d.exp) ? d.exp.replace('практика с ', 'с ') : d.exp) : '—';
+const degree = d.tags.find((t) => /д\.м\.н|к\.м\.н|phd|профессор|доцент/i.test(t)) || (isProf ? 'профессор' : 'врач');
+// образование и карьера: из d.about — заголовки h3 и списки; строки с годом в начале → год + текст
+const about = d.about || [];
+const yearRe = /^(\d{4}(?:\s*[-–]\s*\d{4})?)\s*(?:г\.?|гг\.?)?\s*[-–:.]?\s*/;
+const eduItems = [];
+let cur = '';
+for (const b of about) {
+  if (b[0] === 'h3') cur = b[1].trim();
+  else if (b[0] === 'ul') for (const it of b[1]) { const m = it.match(yearRe); if (m && it.length > m[0].length + 3) eduItems.push([m[1].replace(/\s/g, ''), it.slice(m[0].length).trim()]); }
+  else if (b[0] === 'p' && /стаж/i.test(b[1])) eduItems.push(['сейчас', b[1]]);
+}
+const edu = (eduItems.length ? eduItems : [['сейчас', d.bio]]).slice(0, 7);
+const plain = about.filter((b) => b[0] === 'ul').flatMap((b) => b[1]).filter((it) => !yearRe.test(it) && it.length < 120).slice(0, 6);
+// специализация: теги + типовые жалобы по направлению
+const SPEC = { gastro: ['Боль и тяжесть в животе', 'Изжога и рефлюкс', 'Вздутие, нарушение стула', 'Гепатиты и жировая болезнь печени', 'Гастрит, язва, Helicobacter', 'Болезнь Крона и язвенный колит'], endo: ['Сахарный диабет 1 и 2 типа', 'Заболевания щитовидной железы', 'Ожирение и обмен веществ', 'Гормональные нарушения', 'Остеопороз', 'Надпочечники и гипофиз'], endoscopy: ['Гастроскопия (ЭГДС)', 'Колоноскопия во сне', 'Удаление полипов', 'Биопсия', 'Капсульная эндоскопия', 'Скрининг рака ЖКТ'], cardio: ['Гипертония', 'Аритмия', 'ЭхоКГ и ЭКГ', 'Боли в груди, одышка', 'Холестерин и атеросклероз', 'Сердечная недостаточность'], kids: ['Плановые осмотры детей', 'Боли в животе у ребёнка', 'Нарушения роста и веса', 'Частые простуды', 'Аллергия', 'Питание и пищеварение'], other: ['Первичный приём и диагностика', 'Хронические заболевания', 'Второе мнение', 'Подготовка к обследованиям', 'Расшифровка анализов', 'План лечения'] };
+const spec = [...new Set([...d.tags.filter((t) => !/д\.м\.н|к\.м\.н|профессор|главный врач|руководитель/i.test(t)).map((t) => t[0].toUpperCase() + t.slice(1)), ...(SPEC[d.cat] || SPEC.other)])].slice(0, 6);
+// отзывы, где упоминается фамилия (или имя-отчество), иначе общие
+const stem = surname.slice(0, 5).toLowerCase(), io = rest.join(' ').toLowerCase();
+const own = reviewsFile.items.filter((r) => r.text.toLowerCase().includes(stem) || (io && r.text.toLowerCase().includes(io.split(' ')[0] || '—')));
+const quotes = [...own, ...reviewsFile.items.filter((r) => !own.includes(r))].slice(0, 2);
+const cut = (t) => (t.length > 260 ? t.slice(0, t.lastIndexOf(' ', 260)) + '…' : t);
+const srcName = (s) => (/google/i.test(s) ? 'Google' : /idoctor/i.test(s) ? 'iDoctor' : '2ГИС');
+const jsonld = { '@context': 'https://schema.org', '@type': 'Physician', name: d.n, jobTitle: d.r, description: d.bio, ...(d.img ? { image: new URL(img(d.img), Astro.site).href } : {}), worksFor: { '@type': 'MedicalClinic', name: 'Interna Clinic' } };
+const bookLabel = isProf ? 'Записаться к профессору' : 'Записаться на приём';
 ---
 <Base og="doctors" title={`${d.n} — ${d.r} | Interna Clinic`} description={d.bio} active="doctors" jsonld={jsonld}>
-  <PageHero crumbs={[['Главная', '/'], ['Врачи', '/doctors'], [d.n.split(' ')[0]]]} title={d.n} sub={d.r}>
-    <div slot="extra">
-      <div class="chips rise d3" style="margin-top:22px">{d.tags.map((t) => <span class="chip" style="background:rgba(255,255,255,.12);color:#fff">{t}</span>)}{expLabel && <span class="chip" style="background:rgba(255,255,255,.12);color:#fff">{expLabel}</span>}</div>
-      <div class="hero-actions rise d4"><button class="btn btn-sky" data-book data-svc={`Приём · ${d.n}`}>Записаться к врачу</button></div>
+  <section class="dprof"><div class="shell"><div class="dprof-in">
+    <div class={`photo rise d1${d.img ? '' : ' ini'}`}>{d.img ? <img src={img(d.img)} alt={d.n} /> : <span aria-hidden="true">{surname[0]}{(rest[0] || '')[0] || ''}</span>}</div>
+    <div class="info">
+      <nav class="crumbs rise d1" aria-label="Навигация"><a href="/" aria-label="Главная"><span class="msr home">home</span></a><span class="msr">chevron_right</span><a href="/doctors">Врачи</a><span class="msr">chevron_right</span><b>{short}</b></nav>
+      <p class="kicker rise d1">{d.r}</p>
+      <h1 class="rise d1">{d.n}</h1>
+      <p class="bio rise d2">{d.bio}</p>
+      {d.tags.length > 0 && <div class="tags rise d2">{d.tags.map((t) => <span class="tagp">{t}</span>)}</div>}
+      <div class="dfacts rise d3"><div class="dfact"><b>{expLabel}</b><span>опыт работы</span></div><div class="dfact"><b>{degree}</b><span>степень и звание</span></div><div class="dfact"><b>{d.price || 'по запросу'}</b><span>первичный приём</span></div><div class="dfact"><b>Пн–Сб</b><span>дни приёма, по записи</span></div></div>
+      <div class="btns rise d4"><button class="btn btn-primary" data-book data-svc={`Приём · ${d.n}`}>{bookLabel}</button><a class="btn btn-wa" href="#" data-wa={`Здравствуйте! Хочу записаться к врачу: ${d.n}.`}><span class="msr">chat</span>Спросить в WhatsApp</a></div>
     </div>
-    <div slot="right" class="phero-img rise d2" style="aspect-ratio:.85;max-width:380px;margin-left:auto"><img src={img(d.img)} alt={d.n} style="object-position:top" /></div>
-  </PageHero>
-  <section class="sec"><div class="shell"><div class="article">
-    <article class="body card rv" style="padding:34px 38px"><h3 class="serif" style="font-size:24px;margin:0 0 14px">О враче</h3><p style="margin:0 0 22px;font-size:16px;line-height:1.7;font-weight:400">{d.bio}</p>
-      {d.about && d.about.length > 0 && <div class="dbio"><Body body={d.about} /></div>}
-    </article>
-    <aside class="side rv d2">
-      <div class="pricecard"><h3>Приёмы и услуги</h3><p class="dt">{d.r}</p>
-        {rows.length > 0 ? rows.slice(0, 5).map((r) => <div class="prow"><span><b>{r[0]}</b></span><span class="pv">{r[2]}</span></div>) : <div class="prow"><span><b>Первичный приём</b></span><span class="pv">{d.price || 'по запросу'}</span></div>}
-        <button class="btn btn-primary" data-book data-svc={`Приём · ${d.n}`} style="width:100%;margin-top:18px">Записаться</button>
-        <p style="margin:12px 0 0;font-size:12px;color:var(--faint);font-weight:600">Полный прайс — на странице <a href="/prices" style="color:var(--blue-600)">Цены</a>.</p></div>
-      {d.kids && <div class="card" style="padding:20px;background:#FFF4D6;border-color:transparent"><b style="font-size:14px">Принимает детей</b><p style="margin:6px 0 10px;font-size:13.5px;font-weight:400;color:#7A4B00">{d.kidsRole}</p><a class="btn btn-line sm" href="/kids">Interna KIDS <span class="msr ai">arrow_forward</span></a></div>}
+  </div></div></section>
+  <div style="height:56px"></div>
+  <SubNav items={[['Обзор', '#edu'], ['Образование', '#edu'], ['Специализация', '#spec'], ['Приём и цены', '#price'], ['Отзывы', '#reviews'], ['Публикации', '#edu']]} />
+
+  <section style="padding:72px 0 96px"><div class="shell"><div class="lay">
+    <div class="main dbody">
+      <div class="dsec rv" id="edu">
+        <p class="kicker">Образование и карьера</p><h2>Путь {isProf ? 'профессора' : 'врача'}</h2>
+        <div class="edu">{edu.map((e) => <div class="r"><span class="yr">{e[0]}</span><span class="t">{e[1]}</span></div>)}{plain.length > 0 && edu.length < 4 && plain.map((p) => <div class="r"><span class="yr">·</span><span class="t">{p}</span></div>)}</div>
+      </div>
+      <div class="dsec rv" id="spec">
+        <p class="kicker">Специализация</p><h2>С чем обращаются</h2>
+        <div class="specgrid">{spec.map((s) => <div class="c"><span class="msr">check</span>{s}</div>)}</div>
+      </div>
+      <div class="dsec rv" id="reviews">
+        <p class="kicker">Отзывы</p><h2>Что говорят пациенты</h2>
+        {quotes.map((q) => <div class="quote"><p class="q">«{cut(q.text)}»</p><span class="a">{q.name} · {srcName(q.src)}</span></div>)}
+      </div>
+    </div>
+    <aside class="dside">
+      <div class="pcard p28 rv" id="price"><p class="kicker">Приём и цены</p>{priceRows.map((r) => <div class="r"><span>{r[0]}</span><span>{r[1]}</span></div>)}<div class="b"><button class="btn btn-dark" data-book data-svc={`Приём · ${d.n}`}>Записаться</button></div></div>
+      <div class="lcard rv d2"><p class="kicker">График</p>{SITE.hours.map((h) => <div class="r"><span>{h[0]}</span><span>{h[1]}</span></div>)}</div>
+      {rel.length > 0 && <div class="rv d3"><p class="kicker" style="margin-bottom:4px">Коллеги по направлению</p>{rel.map((x) => <DocRow d={x} />)}</div>}
     </aside>
   </div></div></section>
-  {rel.length > 0 && <section class="sec" style="padding-top:0"><div class="shell"><div class="sec-head rv"><div><p class="kicker">Коллеги</p><h2 class="h">Врачи того же <em>направления</em></h2></div><a class="btn btn-line" href="/doctors">Все врачи <span class="msr ai">arrow_forward</span></a></div><div class="grid4">{rel.map((x, i) => <DoctorCard d={x} delay={i + 1} />)}</div></div></section>}
-  <Cta />
+
+  <Cta title={isProf ? `Записаться к профессору ${dative}` : `Записаться к врачу: ${short}`} text="Позвоните или оставьте заявку — администратор подтвердит время приёма в течение 10 минут и подскажет, какие обследования взять с собой." btn={bookLabel} svc={`Приём · ${d.n}`} />
 </Base>

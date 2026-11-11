@@ -1,26 +1,66 @@
 ---
+// Цены (макет 08): хиро с поиском, чипы разделов, группы цен слева, справа — оплата, акция, прайс PDF; CTA
 import Base from '../layouts/Base.astro';
 import PageHero from '../components/PageHero.astro';
 import Cta from '../components/Cta.astro';
 import prices from '../data/prices.json';
+import promos from '../data/promos.json';
+import { activePromos, untilLabel } from '../lib/site.js';
 const cats = Object.keys(prices);
+// ТЗ: позиции внутри раздела — по алфавиту; строки «по запросу» — в конце раздела
+const byName = (a, b) => { const qa = /по запросу/i.test(a[2]), qb = /по запросу/i.test(b[2]); if (qa !== qb) return qa ? 1 : -1; return a[0].localeCompare(b[0], 'ru', { sensitivity: 'base' }); };
+cats.forEach((k) => { prices[k] = prices[k].slice().sort(byName); });
 const total = Object.values(prices).reduce((a, v) => a + v.length, 0);
+const LIMIT = 8;
+const promo = activePromos(promos.items)[0];
+const plural = (n) => n % 10 === 1 && n % 100 !== 11 ? 'услуга' : [2, 3, 4].includes(n % 10) && ![12, 13, 14].includes(n % 100) ? 'услуги' : 'услуг';
+const slug = (k) => encodeURIComponent(k);
+const pay = [['credit_card', 'Карта, наличные, Kaspi', 'Оплата в клинике перед приёмом или процедурой'], ['account_balance_wallet', 'Рассрочка на обследования', 'Kaspi Red до 4 месяцев и Kaspi рассрочка до 12 месяцев на комплексные программы'], ['verified', 'Актуальные цены', 'Прайс клиники по направлениям; точную стоимость подтвердит администратор при записи'], ['receipt_long', 'Чек и выписка', 'Фискальный чек и документы для страховой или работодателя']];
 ---
-<Base og="prices" title="Цены на услуги — Interna Clinic, Алматы" description="Прайс клиники: эндоскопия, приёмы врачей, УЗИ, check-up, диагностика, стационар. Цены фиксированы." active="prices">
-  <PageHero crumbs={[['Главная', '/'], ['Цены']]} title="Цены на услуги" sub={`Прайс клиники: ${total} позиций по ${cats.length} направлениям. Цены фиксированы — доплат на месте не будет.`} chips={[`${total} позиций`, 'цены фиксированы']}>
-    <div slot="extra" class="search rise d3" style="margin-top:26px"><span>🔍</span><input id="psearch" placeholder="Найти услугу, например «колоноскопия»" aria-label="Поиск по прайсу" /><button class="btn btn-primary sm" type="button">Найти</button></div>
+<Base og="prices" title="Цены на услуги — Interna Clinic, Алматы" description={`Прайс клиники: ${total} позиций по ${cats.length} разделам — эндоскопия, приёмы врачей, УЗИ, анализы, стационар.`} active="prices">
+  <PageHero crumbs={[['Цены']]} title="Цены на услуги" sub="Актуальный прайс клиники по направлениям. Найдите услугу или выберите раздел.">
+    <div class="sbar rise d2"><div class="sin"><span class="msr" aria-hidden="true">search</span><input id="psearch" type="search" placeholder="Найти услугу, например «колоноскопия»" aria-label="Поиск по прайсу" autocomplete="off" /><button type="button" class="btn btn-dark" id="psearch-go">Найти</button></div></div>
+    <div class="chips rise d3" id="ptabs"><button class="chip on" type="button" data-all>Все <span class="cnt">{total}</span></button>{cats.map((k) => <button class="chip" type="button" data-tab={k}>{k} <span class="cnt">{prices[k].length}</span></button>)}</div>
   </PageHero>
-  <section class="sec"><div class="shell">
-    <div class="chips rv" id="ptabs">{cats.map((k, i) => <button class={`chip${i === 0 ? ' on' : ''}`} data-tab={k}>{k}</button>)}</div>
-    <div class="rv d2" style="margin-top:28px">
-      {cats.map((k, i) => (
-        <div class="tbl" data-price-tab={k} hidden={i !== 0} style={i ? 'margin-top:18px' : ''}>
-          <div class="th"><span>{k}</span><span>Цена</span></div>
-          {prices[k].map((r) => <div class="tr"><div class="n"><b>{r[0]}</b><small>{r[1]}</small></div><span class="pv">{r[2]}</span><button class="btn btn-line sm" data-book>Записаться</button></div>)}
+
+  <section style="padding:48px 0 96px"><div class="shell"><div class="lay g60">
+    <div class="main pgroups">
+      {cats.map((k, gi) => { const rows = prices[k]; const extra = rows.length - LIMIT; return (
+        <div class="pgroup" id={slug(k)} data-price-tab={k} data-collapsed={extra > 0 ? '' : undefined}>
+          <div class="gh rv"><div class="tt"><h3>{k}</h3><span class="cnt">{rows.length} {plural(rows.length)}</span></div></div>
+          {rows.map((r, i) => <div class={`tr srow sm${i >= LIMIT ? ' more' : ''}${i < 6 ? ` rv d${(i % 3) + 1}` : ''}`}><span class="i"><b>{r[0]}</b>{r[1] && <small>{r[1]}</small>}</span><span class="pr">{r[2]}</span></div>)}
+          {extra > 0 && <button type="button" class="link showall" data-showall>Показать все в разделе <span class="msr">expand_more</span></button>}
         </div>
-      ))}
+      ); })}
+      <p class="pnote">Актуальные цены уточняйте при записи. Имеются противопоказания, необходима консультация специалиста. Лицензия на медицинскую деятельность — в разделе «Документы».</p>
     </div>
-    <p style="margin:16px 0 0;font-size:12.5px;color:var(--faint);font-weight:600">Актуальные цены уточняйте при записи. Имеются противопоказания, необходима консультация специалиста.</p>
-  </div></section>
-  <Cta title="Нужна помощь <em>с выбором</em>?" text="Администратор подскажет, какие исследования нужны именно вам, и посчитает стоимость комплекса." />
+
+    <aside class="pside">
+      <div class="pcard p28 rv"><p class="kicker">Оплата</p>
+        {pay.map(([ic, b, t]) => <div class="payrow"><span class="msr">{ic}</span><span class="i"><b>{b}</b><small>{t}</small></span></div>)}
+        <div class="b"><button class="btn btn-primary" data-book>Записаться</button></div>
+      </div>
+      {promo && <div class="dkcard rv d2"><p class="kicker">{untilLabel(promo).replace(/^До/, 'Акция до')}</p><b>{promo.t}</b><p>{promo.d}</p><div class="pp"><span class="new">{promo.p}</span><s>{promo.old}</s><span class="off">{promo.off}</span></div><a class="link w" href={promo.link}>Подробнее <span class="msr">arrow_forward</span></a></div>}
+      <button type="button" class="srow sm dl rv d3" data-print><span class="msr ai">download</span><span class="i"><b>Полный прайс-лист PDF</b><small>{total} позиций, {cats.length} разделов · распечатать или сохранить</small></span><span class="msr ai">arrow_outward</span></button>
+    </aside>
+  </div></div></section>
+
+  <Cta title="Нужна точная стоимость?" text="Администратор посчитает комплекс под вашу задачу, подскажет, что входит в цену, и запишет на удобное время." />
+
+  <script is:inline>
+    (function () {
+      var tabs = document.getElementById('ptabs'); var groups = [].slice.call(document.querySelectorAll('[data-price-tab]'));
+      var expand = function (g) { g.removeAttribute('data-collapsed'); var b = g.querySelector('[data-showall]'); if (b) b.hidden = true; };
+      document.addEventListener('click', function (e) {
+        var sa = e.target.closest('[data-showall]'); if (sa) { expand(sa.closest('[data-price-tab]')); return; }
+        if (e.target.closest('[data-print]')) { window.print(); return; }
+        var all = e.target.closest('[data-all]'); if (all && tabs) { tabs.querySelectorAll('.chip').forEach(function (c) { c.classList.toggle('on', c === all); }); var s = document.getElementById('psearch'); if (s) s.value = ''; groups.forEach(function (g) { g.hidden = false; g.querySelectorAll('.tr').forEach(function (r) { r.hidden = false; }); }); }
+        var tab = e.target.closest('[data-tab]'); if (tab) { groups.forEach(expand); }
+      });
+      var s = document.getElementById('psearch'); var go = document.getElementById('psearch-go');
+      if (s) { s.addEventListener('input', function () { if (s.value.trim()) { groups.forEach(expand); tabs && tabs.querySelectorAll('.chip').forEach(function (c) { c.classList.remove('on'); }); } }); }
+      if (go && s) go.addEventListener('click', function () { s.dispatchEvent(new Event('input')); s.focus(); });
+      if (location.hash) { var g = document.getElementById(decodeURIComponent(location.hash.slice(1))); if (g && g.hasAttribute('data-price-tab')) { expand(g); } }
+    })();
+  </script>
 </Base>

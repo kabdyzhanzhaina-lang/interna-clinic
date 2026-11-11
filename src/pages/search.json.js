@@ -14,12 +14,25 @@ export function GET() {
   const items = [];
   const add = (g, t, s, u, k = '') => { if (t) items.push({ g, t, s: s || '', u, k }); };
 
-  for (const d of doctorsFile.items) add('Врачи', d.n, d.r, `/doctor/${d.id}`, [...(d.tags || []), d.cat, d.kidsRole || ''].join(' '));
+  for (const d of doctorsFile.items.filter((d) => !d.hidden)) add('Врачи', d.n, d.r, `/doctor/${d.id}`, [...(d.tags || []), d.cat, d.kidsRole || ''].join(' '));
   for (const [k, s] of Object.entries(services)) add('Услуги', s.t, [s.cat, s.price].filter(Boolean).join(' · '), `/service/${k}`, s.h1 || '');
   for (const [k, s] of Object.entries(extra)) add('Услуги', s.t, s.cat, `/uslugi/${k}`, s.h1 || '');
   for (const p of checkups.programs) add('Check-up', `Check-up «${p.title}»`, p.price, `/checkup#cu-${p.id}`, 'чекап обследование программа');
   for (const s of kids.services) add('Interna KIDS', s.t, 'детская клиника', `/kids/${s.id}`, 'детский ребёнок');
-  for (const m of mediaFile.items) add('Медиацентр', m.t, m.tag || 'статья', `/article/${m.id}`);
+  // Блог: ключевые слова — тема статьи + первые абзацы текста, чтобы находилось по симптомам («вздутие», «изжога», «инсулин»)
+  const MEDIA_KW = {
+    'chto-delat-pri-vzdutii-zhivota-simptomi': 'вздутие метеоризм газы живот срк дисбактериоз питание',
+    'chto-takoe-dispepsiya-pochemu-voznikaet': 'диспепсия изжога тяжесть тошнота желудок гастрит',
+    'insulinorezistentnost-skritaya-ugroza-ra': 'инсулин инсулинорезистентность диабет сахар вес ожирение эндокринолог',
+    'meditsina-kak-vizov': 'видео интервью врачи управление клиника',
+    'kak-perezhit-utratu-blizkih': 'видео психология утрата горе поддержка',
+    'rak-molochnoi-zhelezi': 'видео рак молочная железа онкология профилактика маммография',
+    'rak-ne-prigovor': 'видео рак онкология лечение',
+    'videokapsulnaya-endoskopiya': 'видео капсула видеокапсула эндоскопия кишечник тонкая кишка',
+    'bariatriya': 'видео бариатрия баллон похудение вес ожирение желудок',
+  };
+  const bodyText = (m) => (m.body || []).filter((b) => b[0] === 'p').slice(0, 3).map((b) => String(b[1]).replace(/<[^>]+>/g, '')).join(' ').slice(0, 400);
+  for (const m of mediaFile.items) add('Блог', m.t, (m.tag || 'статья').toLowerCase().replace(/^([а-яё])/, (c) => c.toUpperCase()), `/article/${m.id}`, [MEDIA_KW[m.id] || '', /подкаст/i.test(m.tag) ? 'подкаст медицина казахстан' : '', bodyText(m)].join(' '));
   for (const [sec, rows] of Object.entries(prices)) for (const r of rows) add('Цены', r[0], [r[2], sec].filter(Boolean).join(' · '), `/prices?q=${encodeURIComponent(r[0])}`, r[1] || '');
 
   for (const n of newsFile.items) add('Новости', n.title, n.tag, `/news#${n.id}`, n.text);

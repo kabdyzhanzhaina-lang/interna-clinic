@@ -1,0 +1,10 @@
+---
+// Боковое оглавление (макет Side TOC, макеты 02/11): «Разделы» + ссылки + карточка WhatsApp
+interface Props { items: [string, string][]; active?: number; w260?: boolean; card?: { title: string; text: string; btn: string; wa?: string; href?: string; line?: boolean }; title?: string; }
+const { items, active = 0, w260 = false, card, title = 'Разделы' } = Astro.props;
+---
+<aside class={`stoc${w260 ? ' w260' : ''} rv`} data-toc>
+  <p class="kicker">{title}</p>
+  {items.map((it, i) => <a href={it[1]} class={i === active ? 'on' : ''}>{it[0]}</a>)}
+  {card && <div class={`wacard${card.line ? ' line' : ''}`}><b>{card.title}</b><p>{card.text}</p>{card.href ? <a class="btn btn-wa" href={card.href}><span class="msr">chat</span>{card.btn}</a> : <a class="btn btn-wa" href="#" data-wa={card.wa || 'Здравствуйте! Пишу с сайта Interna Clinic.'}><span class="msr">chat</span>{card.btn}</a>}</div>}
+</aside>

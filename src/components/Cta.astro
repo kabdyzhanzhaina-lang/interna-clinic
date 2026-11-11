@@ -1,10 +1,14 @@
 ---
+// CTA (макет CTA): по центру, айбрау «Спланируйте визит», H2 46, текст, Button/Primary + Button/Line с телефоном; фон — один тон $ice50
 import { SITE } from '../lib/site.js';
-const { title = 'Запишитесь <em>на приём</em>', text = 'Позвоните или выберите время онлайн — ответим в течение 10 минут в рабочее время.', typed } = Astro.props;
+interface Props { kicker?: string; title?: string; text?: string; btn?: string; svc?: string; }
+const { kicker = 'Спланируйте визит', title = 'Запишитесь на приём', text = 'Позвоните или оставьте заявку — администратор ответит в течение 10 минут в рабочее время и подберёт удобное время.', btn = 'Записаться на приём', svc } = Astro.props;
 ---
-<section class="sec" style="padding-top:0"><div class="shell"><div class="cta rv">
-  <h2 class="h">{typed ? <>Запишитесь на <em data-words={typed}>приём</em><span class="caret"></span></> : <Fragment set:html={title} />}</h2>
-  <p>{text}</p>
-  <div class="row"><button class="btn btn-sky" data-book>Записаться онлайн</button><a class="btn btn-white" href={SITE.phoneHref}>{SITE.phone}</a></div>
-  <p class="fine">Имеются противопоказания, необходима консультация специалиста. Лицензия {SITE.license}.</p>
-</div></div></section>
+<section class="cta rv">
+  <div class="shell">
+    <p class="kicker">{kicker}</p>
+    <h2 class="h" set:html={title} />
+    <p>{text}</p>
+    <div class="row"><button class="btn btn-primary" data-book data-svc={svc}>{btn}</button><a class="btn btn-line hide-m" href={SITE.phoneHref}>{SITE.phone}</a><a class="btn btn-wa hide-d" href="#" data-wa="Здравствуйте! Хочу записаться на приём."><span class="msr">chat</span>Написать в WhatsApp</a></div>
+  </div>
+</section>

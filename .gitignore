@@ -16,3 +16,4 @@ worker/.wrangler/
 .i18n-todo.json
 .vercel
 .env*
+review-site/

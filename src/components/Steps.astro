@@ -1,0 +1,8 @@
+---
+// Шаги (макет Steps): номер курсивом, заголовок, текст; dark — чёрная линия сверху (макеты 19/22)
+interface Props { items: [string, string][]; dark?: boolean; cols?: 3 | 4; }
+const { items, dark = false, cols = 4 } = Astro.props;
+---
+<div class={`steps${dark ? ' dark g32' : ''}${cols === 3 ? ' c3' : ''}`}>
+  {items.map((s, i) => <div class={`step rv d${i + 1}`}><span class="n">{String(i + 1).padStart(2, '0')}</span><b>{s[0]}</b><p>{s[1]}</p></div>)}
+</div>

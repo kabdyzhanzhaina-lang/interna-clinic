@@ -1,25 +1,19 @@
 ---
-// Хиро внутренних страниц: крошки, заголовок, подзаголовок, опционально фото/чипы/правый слот
-import { img } from '../lib/site.js';
-interface Props { crumbs: [string, string?][]; title: string; sub?: string; image?: string; chips?: [string, string]; theme?: string; }
-const { crumbs, title, sub, image, chips, theme = '' } = Astro.props;
-const hasRight = !!image || Astro.slots.has('right');
+// Хиро внутренних страниц (макет PageHero): крошки с иконкой дома, H1 64, подзаголовок 18 — всё по центру;
+// слот — строка поиска, чипы, алфавит и т. п. (макеты 02/04/07/08/10/11/12/18/20/21/23)
+import { SITE } from '../lib/site.js';
+interface Props { crumbs: [string, string?][]; title: string; sub?: string; cta?: boolean; }
+const { crumbs, title, sub, cta = true } = Astro.props;
 ---
-<section class={`phero ${theme}${hasRight ? ' has-right' : ''}`}>
-  <span class="blob b1" style="opacity:.35"></span>
-  <span class="ring" style="width:320px;height:320px;right:8%;top:-120px"></span>
-  {chips && <><div class="chip-float a">{chips[0]}</div><div class="chip-float b">{chips[1]}</div></>}
-  <slot name="deco" />
-  <div class="shell"><div class={hasRight ? 'phero-grid' : ''}>
-    <div>
-      <nav class="crumbs rise d1" aria-label="Навигация">
-        {crumbs.map((c, i) => i === crumbs.length - 1 ? <b>{c[0]}</b> : <><a href={c[1]}>{c[0]}</a><span>/</span></>)}
-      </nav>
-      <h1 class="rise d1" set:html={title} />
-      {sub && <p class="sub rise d2" set:html={sub} />}
-      <slot name="extra" />
-    </div>
-    {image && <div class="phero-img rise d2"><img src={img(image)} alt={title.replace(/<[^>]+>/g, '')} /></div>}
-    <slot name="right" />
+<section class="phero">
+  <div class="shell"><div class="in">
+    <nav class="crumbs rise d1" aria-label="Навигация">
+      <a href="/" aria-label="Главная"><span class="msr home">home</span></a>
+      {crumbs.map((c, i) => <><span class="msr">chevron_right</span>{i === crumbs.length - 1 ? <b>{c[0]}</b> : <a href={c[1]}>{c[0]}</a>}</>)}
+    </nav>
+    <h1 class="rise d1" set:html={title} />
+    {sub && <p class="sub rise d2" set:html={sub} />}
+    {cta && <div class="hacts rise d2"><button class="btn btn-primary" data-book>Записаться на приём</button><a class="btn btn-line hide-m" href={SITE.phoneHref}>{SITE.phone}</a></div>}
+    <slot />
   </div></div>
 </section>

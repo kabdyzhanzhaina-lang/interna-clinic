@@ -9,9 +9,12 @@
   const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
   const KK = window.LANG === "kk";
   // строки, которые скрипт пишет сам (остальной текст переводится при сборке)
-  const T = KK ? { slots: [["Таң", "08:00–12:00"], ["Күндіз", "12:00–17:00"], ["Кеш", "17:00–22:00"], ["Кез келген", "ыңғайлы уақыт"]], book: "Жазылу: ", any: "кез келген уақыт", stac: "Стационарлық формат: палата, дәрігер бақылауы, тамақтану және емшаралар кіреді. Бағдарлама бағасына стационарда болу қосылады.", amb: "Амбулаторлық формат: ыңғайлы, икемді жоспарлау, оңтайлы баға.", plusStac: " + стационар", yours: "Сіздің бағдарламаңыз: ", bookBtn: "Жазылу", confirm: "Растауды мына нөмірге жібереміз: ", none: "Ештеңе табылмады — телефон соғыңыз, көмектесеміз", date: "күні ", waCu: "Сәлеметсіз бе! Сайтта check-up-қа өтінім қалдырдым.", tel: "Телефон: " }
-    : { slots: [["Утро", "08:00–12:00"], ["День", "12:00–17:00"], ["Вечер", "17:00–22:00"], ["Любое", "как удобно"]], book: "Записаться: ", any: "любое время", stac: "", amb: "", plusStac: " + стационар", yours: "Ваша программа: ", bookBtn: "Записаться", confirm: "Подтверждение отправим на ", none: "Ничего не нашли — позвоните, подскажем", date: "дата ", waCu: "Здравствуйте! Оставил(а) заявку на check-up на сайте.", tel: "Телефон: " };
+  const T = KK ? { slots: [["Таң", "08:00–12:00"], ["Күндіз", "12:00–17:00"], ["Кеш", "17:00–20:00"], ["Кез келген", "ыңғайлы уақыт"]], book: "Жазылу: ", any: "кез келген уақыт", stac: "Стационарлық формат: палата, дәрігер бақылауы, тамақтану және емшаралар кіреді. Бағдарлама бағасына стационарда болу қосылады.", amb: "Амбулаторлық формат: ыңғайлы, икемді жоспарлау, оңтайлы баға.", plusStac: " + стационар", yours: "Сіздің бағдарламаңыз: ", bookBtn: "Жазылу", confirm: "Растау — ", callTo: "қоңыраумен: ", waBook: "Сәлеметсіз бе! Жазылғым келеді: ", none: "Ештеңе табылмады — телефон соғыңыз, көмектесеміз", hintEnter: "Enter — бірінші нәтижені ашу", hintEsc: "Esc — жабу", date: "күні ", waCu: "Сәлеметсіз бе! Сайтта check-up-қа өтінім қалдырдым.", tel: "Телефон: ", fail: "Өтінімді жіберу мүмкін болмады. Телефон соғыңыз немесе WhatsApp-қа жазыңыз — біз байланыстамыз." }
+    : { slots: [["Утро", "08:00–12:00"], ["День", "12:00–17:00"], ["Вечер", "17:00–20:00"], ["Любое", "как удобно"]], book: "Записаться: ", any: "любое время", stac: "", amb: "", plusStac: " + стационар", yours: "Ваша программа: ", bookBtn: "Записаться", confirm: "Подтверждение — ", callTo: "звонком на ", waBook: "Здравствуйте! Хочу записаться: ", none: "Ничего не нашли — позвоните, подскажем", hintEnter: "Enter — открыть первый результат", hintEsc: "Esc — закрыть", date: "дата ", waCu: "Здравствуйте! Оставил(а) заявку на check-up на сайте.", tel: "Телефон: " };
   const SLOTS = T.slots;   // точное время подтверждает администратор
+
+  /* ── шапка: «Алматы · сегодня до 20:00» — часы на текущий день ── */
+  $$("[data-today]").forEach((el) => { const d = new Date().getDay(), h = d === 0 || d === 6 ? el.dataset.we : el.dataset.wd; el.textContent = (KK ? "Алматы · бүгін " : "Алматы · сегодня до ") + h + (KK ? "-ге дейін" : ""); });
 
   /* ── появление при прокрутке ── */
   if (!reduce && "IntersectionObserver" in window) {
@@ -19,6 +22,22 @@
     const io = new IntersectionObserver((en) => en.forEach((x) => { if (x.isIntersecting) { reveal(x.target); io.unobserve(x.target); } }), { rootMargin: "-40px 0px" });
     $$(".rv").forEach((e) => { if (e.getBoundingClientRect().top < innerHeight * 0.9) reveal(e); else io.observe(e); });
   } else $$(".rv").forEach((e) => e.classList.add("in"));
+
+  /* ── заголовки по словам: h2.h внутри .rv — каждое слово выезжает снизу с задержкой ── */
+  if (!reduce) $$("h2.h").forEach((h) => {
+    if (!h.closest(".rv") || h.querySelector(".sw")) return;
+    let i = 0;
+    const wrap = (node) => {
+      Array.from(node.childNodes).forEach((c) => {
+        if (c.nodeType === 3) {
+          const parts = c.textContent.split(/(\s+)/); const frag = document.createDocumentFragment();
+          parts.forEach((t) => { if (!t) return; if (/^\s+$/.test(t)) { frag.appendChild(document.createTextNode(t)); return; } const o = document.createElement("span"); o.className = "sw"; const n = document.createElement("span"); n.textContent = t; n.style.setProperty("--i", i++); o.appendChild(n); frag.appendChild(o); });
+          c.replaceWith(frag);
+        } else if (c.nodeType === 1 && !c.classList.contains("msr")) wrap(c);
+      });
+    };
+    wrap(h);
+  });
 
   /* ── счётчики ── */
   function runCount(el) {
@@ -42,6 +61,28 @@
       if (!open) { item.classList.add("open"); const a = $(".acc-a", item); a.style.height = a.scrollHeight + "px"; }
     }));
   });
+
+  /* ── печатающееся слово в хиро: [data-typing="слово|слово"] — набирается по буквам, стирается, следующее ── */
+  function rotateWords(el) {
+    if (!el) return;
+    const words = (el.dataset.typing || "").split("|").filter(Boolean); if (words.length < 2) return;
+    const w = $(".rw-w", el); if (!w || reduce) return;
+    const m = document.createElement("span"); m.className = "rw-m"; el.appendChild(m);
+    const cur = document.createElement("i"); cur.className = "rw-cur"; cur.setAttribute("aria-hidden", "true"); el.appendChild(cur);
+    const fit = () => { let mx = 0; words.forEach((t) => { m.textContent = t; mx = Math.max(mx, m.getBoundingClientRect().width); }); el.style.minWidth = Math.ceil(mx) + "px"; };
+    fit(); addEventListener("resize", fit);
+    let wi = 0, ci = words[0].length, del = false;
+    const tick = () => {
+      if (!el.isConnected) return;
+      const t = words[wi]; w.textContent = t.slice(0, ci);
+      el.classList.toggle("typing", !(ci === t.length && !del) && ci !== 0);
+      if (!del) { ci++; if (ci > t.length) { ci = t.length; del = true; setTimeout(tick, 2200); return; } }
+      else { ci--; if (ci < 0) { ci = 0; del = false; wi = (wi + 1) % words.length; setTimeout(tick, 350); return; } }
+      setTimeout(tick, del ? 45 : 95);
+    };
+    setTimeout(tick, 2200);
+  }
+  rotateWords($("[data-typing]"));
 
   /* ── печатная машинка ── */
   function typewriter(el) {
@@ -202,7 +243,17 @@
   });
   /* ── прогресс чтения статьи ── */
   const prog = $("#readprog");
-  if (prog) addEventListener("scroll", () => { const a = $(".article .body"); if (!a) return; const r = a.getBoundingClientRect(); const total = r.height - innerHeight * 0.6; const p = Math.min(1, Math.max(0, -r.top / (total <= 0 ? 1 : total))); prog.style.width = (p * 100).toFixed(1) + "%"; }, { passive: true });
+  const rail = $("#arail");
+  if (prog) addEventListener("scroll", () => { const a = $(".article .body"); if (!a) return; const r = a.getBoundingClientRect(); const total = r.height - innerHeight * 0.6; const p = Math.min(1, Math.max(0, -r.top / (total <= 0 ? 1 : total))); prog.style.width = (p * 100).toFixed(1) + "%"; if (rail) { $("b", rail).textContent = Math.round(p * 100) + "%"; $(".track i", rail).style.height = (p * 100).toFixed(1) + "%"; } }, { passive: true });
+  /* ── статья: липкий CTA скрывает общий FAB, «поделиться» копирует ссылку ── */
+  if ($("#stickycta")) document.body.classList.add("has-stickycta");
+  document.addEventListener("click", (e) => {
+    const b = e.target.closest("[data-share]"); if (!b) return; e.preventDefault();
+    const url = location.href.split("?")[0];
+    if (navigator.share) { navigator.share({ title: document.title, url }).catch(() => {}); return; }
+    if (navigator.clipboard) navigator.clipboard.writeText(url).then(() => { const t = b.textContent; b.textContent = "Скопировано"; setTimeout(() => { b.textContent = t; }, 1500); });
+  });
+  $$("[data-share-tg]").forEach((a) => { a.href = a.href.replace("url=&", "url=" + encodeURIComponent(location.href.split("?")[0]) + "&"); });
 
   /* ── свечение кнопок ── */
   document.addEventListener("pointermove", (e) => { const b = e.target.closest && e.target.closest(".btn"); if (!b) return; const r = b.getBoundingClientRect(); b.style.setProperty("--mx", e.clientX - r.left + "px"); b.style.setProperty("--my", e.clientY - r.top + "px"); });
@@ -213,43 +264,75 @@
   addEventListener("pointermove", (e) => { if (reduce) return; const h = $("#hero"); if (!h) return; const x = e.clientX / innerWidth - 0.5, y = e.clientY / innerHeight - 0.5; $$(".blob", h).forEach((b, i) => { b.style.translate = `${x * (i ? -30 : 40)}px ${y * (i ? -24 : 30)}px`; }); });
 
   /* ── мобильное меню + дропдаун ── */
-  $("#burger").addEventListener("click", () => $("#mnav").classList.add("open"));
-  $("#mnavX").addEventListener("click", () => $("#mnav").classList.remove("open"));
+  const mnav = $("#mnav");
+  const mnavSet = (on) => { mnav.classList.toggle("open", on); document.body.classList.toggle("mn-open", on); $("#burger").setAttribute("aria-expanded", on ? "true" : "false"); };
+  $("#burger").addEventListener("click", () => mnavSet(true));
+  $("#mnavX").addEventListener("click", () => mnavSet(false));
+  $$(".mn-nav a, .mn-sec a, .mn-lang a", mnav).forEach((a) => a.addEventListener("click", () => mnavSet(false)));
+  addEventListener("keydown", (e) => { if (e.key === "Escape") mnavSet(false); });
   const w = $("#ddWrap");
   if (w) {
-    w.querySelector("a").addEventListener("click", (e) => { if (matchMedia("(hover:none)").matches && !w.classList.contains("open")) { e.preventDefault(); w.classList.add("open"); } });
-    document.addEventListener("click", (e) => { if (!w.contains(e.target)) w.classList.remove("open"); });
+    const a = w.querySelector("a");
+    const setOpen = (on) => { w.classList.toggle("open", on); document.body.classList.toggle("dd-open", on); a.setAttribute("aria-expanded", on ? "true" : "false"); };
+    a.setAttribute("aria-haspopup", "true");
+    a.addEventListener("click", (e) => { e.preventDefault(); setOpen(!w.classList.contains("open")); });
+    document.addEventListener("click", (e) => { if (!w.contains(e.target)) setOpen(false); });
+    document.addEventListener("keydown", (e) => { if (e.key === "Escape") setOpen(false); });
+    $$(".dd a", w).forEach((l) => l.addEventListener("click", () => setOpen(false)));
+    addEventListener("scroll", () => { if (w.classList.contains("open") && scrollY > 120) setOpen(false); }, { passive: true });
   }
 
-  /* ── модалка записи ── */
-  const modal = $("#modal");
-  const syncFormat = () => { $("#mFormatWrap").hidden = !/check-up/i.test($("#mSvc").value); };
-  function openModal(svc) {
-    modal.classList.add("open"); $("#mform").hidden = false; $("#mdone").hidden = true; renderSlots($("#mslots"), null, 4);
-    if (svc) { const o = [...$("#mSvc").options].find((o) => o.text === svc); if (o) $("#mSvc").value = o.text; }
-    syncFormat(); document.body.style.overflow = "hidden";
+  /* ── модалка записи (макет 17 / 27 B): имя, телефон, услуга или врач, дата, время, способ связи ── */
+  /* ── отправка заявки: true только после ответа сервера { ok: true }; без API (прототип) — считаем отправленной ── */
+  window.sendLead = async (api, payload) => {
+    if (!api) return true;
+    try { const r = await fetch(api, { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify(payload) }); const d = await r.json().catch(() => ({})); return r.ok && d.ok !== false; } catch (_) { return false; }
+  };
+  window.leadFail = (el, T) => {
+    if (!el) return;
+    el.classList.add("err"); el.style.color = "#B4342C";
+    el.innerHTML = (T && T.fail ? T.fail : "Не получилось отправить заявку. Позвоните <a href='" + (document.querySelector('.hdr-phone,[href^="tel:"]')?.getAttribute('href') || '#') + "'>по телефону</a> или напишите в WhatsApp — мы на связи.");
+  };
+  const modal = $("#modal"), mSvc = $("#mSvc"), mDate = $("#mDate");
+  const svcLabel = () => mSvc.value;
+  const dateLabel = () => { if (!mDate.value) return ""; const [y, m, d] = mDate.value.split("-"); return `${d}.${m}.${y}`; };
+  const contact = () => ($("#mContact .on") || {}).textContent || "";
+  const summary = () => [svcLabel(), dateLabel(), $("#mTime").value].filter(Boolean).join(", ");
+  let mType = "";   // тип заявки для CRM: visit | checkup | kids | vacancy | promo (data-type на кнопке, иначе воркер определит по услуге/странице)
+  function openModal(svc, type) {
+    mType = type || ""; modal.classList.add("open"); $("#mform").hidden = false; $("#mdone").hidden = true;
+    if (svc) { let o = [...mSvc.options].find((x) => x.text === svc); if (!o) { o = new Option(svc, svc); mSvc.add(o, 0); } mSvc.value = o.value; }
+    if (!mDate.min) mDate.min = new Date(Date.now() - new Date().getTimezoneOffset() * 6e4).toISOString().slice(0, 10);
+    document.body.style.overflow = "hidden";
+    if (matchMedia("(min-width:701px)").matches) setTimeout(() => $("#mName").focus(), 320);
   }
   const closeModal = () => { modal.classList.remove("open"); document.body.style.overflow = ""; };
-  $("#mSvc").addEventListener("change", syncFormat);
-  $("#mFormat").addEventListener("click", (e) => { const b = e.target.closest("[data-fmt]"); if (!b) return; $$("#mFormat button").forEach((x) => x.classList.toggle("on", x === b)); });
-  document.addEventListener("click", (e) => { const b = e.target.closest("[data-book]"); if (b) { e.preventDefault(); openModal(b.dataset.svc); } });
+  $("#mContact").addEventListener("click", (e) => { const b = e.target.closest("button"); if (!b) return; $$("#mContact button").forEach((x) => x.classList.toggle("on", x === b)); });
+  document.addEventListener("click", (e) => { const b = e.target.closest("[data-book]"); if (b) { e.preventDefault(); document.body.classList.remove("mn-open"), $("#mnav").classList.remove("open"); openModal(b.dataset.svc, b.dataset.type); } });
   $("#modalX").addEventListener("click", closeModal); $("#mClose2").addEventListener("click", closeModal);
   modal.addEventListener("click", (e) => { if (e.target === modal) closeModal(); });
-  addEventListener("keydown", (e) => { if (e.key === "Escape") { closeModal(); $("#mnav").classList.remove("open"); } });
+  // иконка календаря открывает системный выбор даты
+  $("#mDate").parentElement.querySelector(".msr").addEventListener("click", () => { try { mDate.showPicker(); } catch (_) { mDate.focus(); } });
+  addEventListener("keydown", (e) => { if (e.key === "Escape") { closeModal(); document.body.classList.remove("mn-open"), $("#mnav").classList.remove("open"); } });
+  // WhatsApp из модалки: текст собирается из заполненных полей
+  $("#mWa").addEventListener("click", (e) => {
+    e.preventDefault();
+    const name = $("#mName").value.trim();
+    open(waHref(`${T.waBook}${summary()}.${name ? " " + name + "." : ""}`), "_blank", "noopener");
+  });
   $("#mSubmit").addEventListener("click", async () => {
     const name = $("#mName").value.trim(), phone = $("#mPhone").value.trim();
-    if (!$("#mAgree").checked) { $("#mAgree").focus(); $("#mAgree").parentElement.style.color = "#B4342C"; return; }
+    if (!$("#mAgree").checked) { $("#mAgree").focus(); $("#mAgree").parentElement.classList.add("err"); return; }
     if (!phone || !window.phoneOk(phone)) { $("#mPhone").focus(); $("#mPhone").style.borderColor = "#B4342C"; return; }
-    const slot = $('#mslots .slot[aria-pressed="true"]'); const st = slot ? slot.firstChild.nodeValue.trim() + ", " + $("small", slot).textContent : T.any;
-    const fmt = $("#mFormatWrap").hidden ? "" : " (" + $("#mFormat .on").dataset.fmt.toLowerCase() + ")";
-    const utm = Object.fromEntries([...new URLSearchParams(location.search)].filter(([k]) => k.startsWith("utm_")));
-    const payload = { name, phone, service: $("#mSvc").value, format: fmt.replace(/[() ]/g, ""), slot: st, agree: true, page: location.pathname, ...utm };
+    const utm = Object.fromEntries([...new URLSearchParams(location.search)].filter(([k]) => /^(utm_|gclid|yclid|ymclid|fbclid)/.test(k)));
+    const payload = { name, phone, service: svcLabel(), type: mType, referrer: document.referrer, date: dateLabel(), time: $("#mTime").value, contact: contact(), slot: [dateLabel(), $("#mTime").value].filter(Boolean).join(", ") || T.any, agree: true, page: location.pathname, ...utm };
     // Адрес API задаётся при сборке (PUBLIC_API_URL); куда дальше уходит заявка — настраивается в админке API (/admin)
     const api = window.SITE_API ? window.SITE_API.replace(/\/$/, "") + "/lead" : null;
     $("#mSubmit").disabled = true;
-    if (api) { try { await fetch(api, { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify(payload) }); } catch (_) { /* заявка покажется в журнале API, даже если CRM не ответила */ } }
+    const sent = await window.sendLead(api, payload);
     $("#mSubmit").disabled = false;
-    $("#mdoneTxt").textContent = `${name ? name + ", " : ""}${$("#mSvc").value}${fmt} — ${st}. ${T.confirm}${phone}.`;
+    if (!sent) { window.leadFail($("#mform .note"), T); return; }
+    $("#mdoneTxt").textContent = `${name ? name + ", " : ""}${summary()}. ${T.confirm}${contact() === "Telegram" ? "Telegram " : contact() === "WhatsApp" ? "WhatsApp " : T.callTo}${phone}.`;
     $("#mform").hidden = true; $("#mdone").hidden = false;
   });
 
@@ -273,23 +356,26 @@
   }
   $$("[data-search]").forEach((box) => {
     const inp = $("input", box), res = $(".sres", box);
+    const host = box.closest(".scard, .spanel") || box; // карточка главной / оверлей: пока есть результаты, прячем чипы
+    const show = (on) => { res.hidden = !on; host.classList.toggle("has-res", on); };
     const render = (list) => {
-      res.innerHTML = list.length ? list.map((it) => `<a class="sitem" href="${link(it.u)}" role="option"><span class="sg">${esc(it.g)}</span><span><b>${esc(it.t)}</b><small>${esc(it.s)}</small></span></a>`).join("") : `<div class="snone">${T.none}</div>`;
-      res.hidden = false;
+      res.innerHTML = (list.length ? list.map((it) => `<a class="sitem" href="${link(it.u)}" role="option"><span class="sg">${esc(it.g)}</span><span><b>${esc(it.t)}</b><small>${esc(it.s)}</small></span><span class="msr ai" aria-hidden="true">arrow_forward</span></a>`).join("") : `<div class="snone">${T.none}</div>`)
+        + `<div class="shint"><span>${T.hintEnter}</span><span>${T.hintEsc}</span></div>`;
+      show(true);
     };
-    const run = async () => { if (norm(inp.value).length < 2) { res.hidden = true; return; } await loadIdx(); render(search(inp.value)); };
+    const run = async () => { if (norm(inp.value).length < 2) { show(false); return; } await loadIdx(); render(search(inp.value)); };
     inp.addEventListener("focus", () => loadIdx(), { once: true });
     inp.addEventListener("input", run);
-    inp.addEventListener("keydown", (e) => { if (e.key === "Enter") { e.preventDefault(); const a = $(".sitem", res); if (a) location.href = a.href; else run(); } if (e.key === "Escape") res.hidden = true; });
+    inp.addEventListener("keydown", (e) => { if (e.key === "Enter") { e.preventDefault(); const a = $(".sitem", res); if (a) location.href = a.href; else run(); } if (e.key === "Escape") show(false); });
     $("[data-search-go]", box).addEventListener("click", () => { const a = $(".sitem", res); if (a) location.href = a.href; else run(); });
     $$("[data-search-q]", box).forEach((b) => b.addEventListener("click", () => { inp.value = b.dataset.searchQ; inp.focus(); run(); }));
-    document.addEventListener("click", (e) => { if (!box.contains(e.target)) res.hidden = true; });
+    document.addEventListener("click", (e) => { if (!box.contains(e.target)) show(false); });
   });
   const sp = $("#spanel");
   if (sp) {
     const openS = () => { sp.classList.add("open"); document.body.style.overflow = "hidden"; setTimeout(() => $("input", sp).focus(), 60); };
     const closeS = () => { sp.classList.remove("open"); document.body.style.overflow = ""; };
-    $("#hsearch").addEventListener("click", openS); $("#spanelX").addEventListener("click", closeS);
+    $("#hsearch").addEventListener("click", openS); $$("[data-search-open]").forEach((b) => b.addEventListener("click", () => { $("#mnav").classList.remove("open"); document.body.classList.remove("mn-open"); openS(); })); $("#spanelX").addEventListener("click", closeS);
     sp.addEventListener("click", (e) => { if (e.target === sp) closeS(); });
     addEventListener("keydown", (e) => { if (e.key === "Escape") closeS(); if (e.key === "/" && !/INPUT|TEXTAREA|SELECT/.test(document.activeElement.tagName)) { e.preventDefault(); openS(); } });
   }
@@ -313,13 +399,15 @@
       e.preventDefault();
       const name = $("#cuName").value.trim(), phone = $("#cuPhone").value.trim();
       if (!$("#cuAgree").checked) { $("#cuAgree").focus(); $("#cuAgree").parentElement.style.color = "#B4342C"; return; }
+      if (!name) { $("#cuName").focus(); $("#cuName").style.borderColor = "#B4342C"; return; }
       if (!phone || !window.phoneOk(phone)) { $("#cuPhone").focus(); $("#cuPhone").style.borderColor = "#B4342C"; return; }
       const utm = Object.fromEntries([...new URLSearchParams(location.search)].filter(([k]) => /^(utm_|gclid|ymclid|fbclid)/.test(k)));
       const payload = { type: "checkup", name, phone, program: val("program")[0] || "", format: val("format")[0] || "", who: val("who")[0] || "", sex: val("sex")[0] || "", age: val("age")[0] || "", goals: val("goals"), comment: $("#cuComment").value.trim(), date: $("#cuDate").value, time: val("time")[0] || "", channel: val("channel")[0] || "", promo: $("#cuPromo").value.trim(), agree: true, page: location.pathname, referrer: document.referrer, ...utm };
       const api = window.SITE_API ? window.SITE_API.replace(/\/$/, "") + "/lead" : null;
       $("#cuSubmit").disabled = true;
-      if (api) { try { await fetch(api, { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify(payload) }); } catch (_) { /* заявка сохранится в журнале API */ } }
+      const sent = await window.sendLead(api, payload);
       $("#cuSubmit").disabled = false;
+      if (!sent) { window.leadFail(cr.querySelector(".note") || $("#cuSubmit").parentElement, T); return; }
       const sum = [payload.program, payload.format, payload.who, payload.sex, payload.age, payload.goals.join(", "), payload.date && (T.date + payload.date), payload.time].filter(Boolean).join(" · ");
       $("#cuDoneTxt").textContent = `${name ? name + ", " : ""}${sum}. ${T.confirm}${phone}.`;
       const wa = $("#cuDoneWa"); wa.href = (window.WA || "https://wa.me/77007110550") + "?text=" + encodeURIComponent(`${T.waCu}\n${sum}\n${T.tel}${phone}`); wa.target = "_blank";
@@ -348,5 +436,19 @@
     inp.addEventListener("focus", () => { if (!inp.value) inp.value = "+7 ("; });
     inp.addEventListener("blur", () => { if (inp.value === "+7 (" || inp.value === "+7") inp.value = ""; if (inp.value && !window.phoneOk(inp.value)) inp.style.borderColor = "#B4342C"; });
     inp.addEventListener("keydown", (e) => { if (e.key === "Backspace" && inp.value.replace(/\D/g, "").length <= 1) { e.preventDefault(); inp.value = ""; } });
+  });
+})();
+/* ── подменю раздела и боковые оглавления: подсветка активного пункта по прокрутке (макеты SubNav / Side TOC / Item TOC) ── */
+(function () {
+  const groups = Array.from(document.querySelectorAll(".subnav, [data-toc]"));
+  if (!groups.length || !("IntersectionObserver" in window)) return;
+  groups.forEach((g) => {
+    const links = Array.from(g.querySelectorAll('a[href^="#"]'));
+    const secs = links.map((a) => document.getElementById(a.getAttribute("href").slice(1))).filter(Boolean);
+    if (secs.length < 2) return;
+    const set = (id) => links.forEach((a) => a.classList.toggle("on", a.getAttribute("href") === "#" + id));
+    const io = new IntersectionObserver((en) => { en.forEach((x) => { if (x.isIntersecting) set(x.target.id); }); }, { rootMargin: "-30% 0px -60% 0px" });
+    secs.forEach((s) => io.observe(s));
+    links.forEach((a) => a.addEventListener("click", (e) => { const t = document.getElementById(a.getAttribute("href").slice(1)); if (!t) return; e.preventDefault(); t.scrollIntoView({ behavior: "smooth", block: "start" }); set(t.id); history.replaceState(null, "", a.getAttribute("href")); }));
   });
 })();

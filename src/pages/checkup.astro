@@ -1,87 +1,76 @@
 ---
-// Check-up: 5 программ с полным составом и ценами + 4 профильных направления — перенесено со старого сайта (scripts/migrate-pages.mjs)
+// Check-up (макет 06): фото-хиро, подменю, программы (сегменты + вертикальные вкладки + панель состава), как проходит, для компаний, профильные программы, вопросы, CTA
 import Base from '../layouts/Base.astro';
-import PageHero from '../components/PageHero.astro';
-import Cta from '../components/Cta.astro';
+import PhotoHero from '../components/PhotoHero.astro';
+import SubNav from '../components/SubNav.astro';
+import SecHead from '../components/SecHead.astro';
+import Steps from '../components/Steps.astro';
+import Accordion from '../components/Accordion.astro';
 import Faq from '../components/Faq.astro';
-import CheckupHighlight from '../components/CheckupHighlight.astro';
+import Cta from '../components/Cta.astro';
 import data from '../data/checkups.json';
+import { img } from '../lib/site.js';
 const { programs, directions } = data;
-// Единая матрица сравнения: строки — все исследования в порядке первой программы
-const rows = programs[0].groups.map((g) => ({ title: g.title, items: g.items.map((i) => i.n) }));
-const has = (p, name) => p.groups.some((g) => g.items.some((i) => i.n === name && i.in));
-const count = (p) => p.groups.reduce((n, g) => n + g.items.filter((i) => i.in).length, 0);
 const hot = 'gastrologicheskiy-standart';
+const count = (p) => p.groups.reduce((n, g) => n + g.items.filter((i) => i.in).length, 0);
+const groupsOf = (p) => p.groups.map((g) => ({ title: g.title, items: g.items.filter((i) => i.in).map((i) => i.n) })).filter((g) => g.items.length).slice(0, 3);
+const desc = { bazovyy: 'Базовая проверка основных систем организма: лаборатория, УЗИ, ЭКГ и консультация терапевта.', 'gastrologicheskiy-standart': 'Стандартная проверка желудочно-кишечного тракта: лаборатория, УЗИ, гастроскопия и консультация гастроэнтеролога.', 'gastrologicheskiy-rasshirennyy': 'Расширенная проверка ЖКТ: к стандарту добавляются колоноскопия, фиброскан и расширенная лаборатория.', 'premium-muzhskoy': 'Полное обследование для мужчин: все системы организма, эндоскопия, консультации профильных специалистов.', 'premium-zhenskiy': 'Полное обследование для женщин: все системы организма, эндоскопия, женское здоровье, консультации специалистов.' };
+const steps = [['Заявка', 'Оставляете заявку на сайте или в WhatsApp — координатор уточняет жалобы и цели и подбирает программу.'], ['Подготовка', 'Присылаем памятку: что взять с собой, как подготовиться к анализам, УЗИ и эндоскопии.'], ['Обследование', 'Утром натощак — анализы, УЗИ, функциональная диагностика и эндоскопия во сне. Всё в одном здании, без очередей.'], ['Заключение', 'Вечером или на следующий день — разбор результатов с профильным врачом и план наблюдения.']];
 const faq = [
   ['Сколько времени занимает check-up?', 'Большинство программ проходят за 1–2 дня. В первый день — анализы, УЗИ, функциональная диагностика и эндоскопия при необходимости; во второй — консультации специалистов и разбор результатов.'],
   ['Амбулаторно или в стационаре — в чём разница?', 'Амбулаторно — приезжаете по согласованному графику, минимальный отрыв от работы. В стационаре — комфортная палата, сопровождение медперсонала, координация маршрута и обследования без ожидания.'],
   ['Нужна ли подготовка?', 'Прийти натощак для анализов и УЗИ брюшной полости. Подробную памятку пришлём в WhatsApp — см. раздел «Подготовка».'],
   ['Можно ли изменить состав программы?', 'Да. В каждой программе — личный координатор: выясняем жалобы и цели, профильные панели настраиваются под ваш запрос.'],
 ];
+const dirItems = directions.map((d) => ({ q: d.name, a: [...d.intro, ...d.programs.map((p) => `${p.name}: ${p.items.join(', ').toLowerCase()}${p.note ? '. ' + p.note : ''}.`)], list: d.indications }));
 ---
 <Base og="checkup" title="Check-up программы в Алматы — полное обследование за 1–2 дня | Interna Clinic" description="5 программ check-up с полным составом и ценами: базовая, гастро стандарт и расширенный, премиум мужской и женский. Профильные программы: гастро, кардио, эндокринология, женское здоровье." active="checkup">
-  <PageHero crumbs={[['Главная', '/'], ['Check-up']]} title="Check-up у профильных <em>экспертов</em>" sub="Комплексная оценка здоровья: расширенная лаборатория, инструментальная диагностика и очная консультация узкого специалиста с разбором результатов. Личный координатор на каждом этапе.">
-    <div slot="right" class="quiz rise d2" id="quiz"><b style="font-size:16.5px">Подобрать check-up за 30 секунд</b>
-      <div class="q" style="margin-top:14px"><label>Кому</label><div class="opts" data-q="who"><button type="button" data-v="f">Женщине</button><button type="button" data-v="m">Мужчине</button></div></div>
-      <div class="q"><label>Возраст</label><div class="opts" data-q="age"><button type="button" data-v="30">до 30</button><button type="button" data-v="45">30–45</button><button type="button" data-v="60">45+</button></div></div>
-      <div class="q"><label>Что беспокоит</label><div class="opts" data-q="pain"><button type="button" data-v="gi">ЖКТ</button><button type="button" data-v="heart">сердце</button><button type="button" data-v="horm">гормоны</button><button type="button" data-v="none">ничего</button></div></div>
-      <div class="res" id="quizres">Ответьте на три вопроса — покажем программу</div></div>
-  </PageHero>
+  <PhotoHero image="hero" eyebrow="Check-up" title="Полное обследование за 1–2 дня" sub="Лаборатория, УЗИ, эндоскопия во сне и консультации профильных врачей — в одном здании, с личным координатором и заключением в тот же день.">
+    <a class="btn btn-ghost" href="#programs">Выбрать программу</a><a class="btn btn-ghost" href="/checkup-request">Оставить заявку</a>
+  </PhotoHero>
+  <SubNav items={[['Программы', '#programs'], ['Как проходит', '#how'], ['Для компаний', '#corp'], ['Цены', '#programs'], ['Вопросы', '#faq']]} />
 
-  <section class="sec"><div class="shell">
-    <div class="seg wide rv" id="cuFormat">
-      <button type="button" class="on" data-fmt="amb"><b>Амбулаторно</b><small>без госпитализации, по согласованному графику · минимальный отрыв от работы</small></button>
-      <button type="button" data-fmt="stac"><b>В стационаре</b><small>палата, сопровождение медперсонала, координация маршрута, обследования без ожидания</small></button>
-    </div>
-    <p class="center rv" id="cuNote" style="margin:-10px 0 26px;font-size:13px;color:var(--faint);font-weight:600">Амбулаторный формат: комфортно, гибкое планирование, оптимальная стоимость.</p>
-
-    <div class="cugrid" id="cugrid">
-      {programs.map((c, i) => (
-        <div class={`card bcard cu${c.id === hot ? ' fill' : ''} rv d${(i % 3) + 1}`} data-cu data-title={c.title} data-price={c.price} data-who={c.who.join(',')} data-age={c.age.join(',')} data-pain={c.pain.join(',')} id={`cu-${c.id}`}>
-          <span class="tag" style={c.id === hot ? 'background:var(--sky);color:var(--navy)' : ''}>{c.sub || 'Программа'}</span>
-          <h3 style="font-size:21px;margin:12px 0 6px">{c.title}</h3>
-          <p class="cucount">{count(c)} исследований и консультаций</p>
-          <ul class="cuinc">{c.groups.flatMap((g) => g.items.filter((x) => x.in)).slice(0, 5).map((x) => <li>{x.n}</li>)}{count(c) > 5 && <li class="more">и ещё {count(c) - 5} — в полном составе ниже</li>}</ul>
-          <div class="ft" style="display:flex;justify-content:space-between;align-items:center;margin-top:auto;padding-top:18px"><b style={`font-size:19px;color:${c.id === hot ? '#fff' : 'var(--blue-700)'}`}>{c.price}</b><button class={`btn ${c.id === hot ? 'btn-sky' : 'btn-line'} sm`} data-book data-svc={`Check-up · ${c.title}`}>Записаться</button></div>
-        </div>
-      ))}
+  <section id="programs" style="padding:80px 0 0"><div class="shell cuex">
+    <div class="cuhead rv"><SecHead eyebrow="Программы" title="Выберите программу" /><div class="segm" id="cuSeg"><button type="button" class="on">Для него</button><button type="button">Для неё</button><button type="button">Детям</button></div></div>
+    <div class="cupick rv d2" id="cuPick">
+      <div class="vtabs">{programs.map((p) => <button type="button" class={`vtab${p.id === hot ? ' on' : ''}`} data-prog={p.id}><span class="n">{p.title}</span><span class="p">{p.price}</span><span class="msr">chevron_right</span></button>)}</div>
+      {programs.map((p) => <div class="cudet" data-det={p.id} hidden={p.id !== hot}>
+        <div class="dh"><p class="kicker">{p.sub || 'Самая востребованная'}</p><h3>{p.title}</h3><p class="d">{desc[p.id] || `${count(p)} исследований и консультаций.`}</p></div>
+        <div class="dp"><b>{p.price}</b><span>амбулаторно, от</span></div>
+        <div class="dg">{groupsOf(p).map((g) => <div class="g"><span class="t">{g.title}</span>{g.items.slice(0, 4).map((x) => <span class="r"><span class="msr">check</span>{x}</span>)}</div>)}</div>
+        <div class="db"><a class="btn btn-primary" href="/checkup-request">Оставить заявку</a><button type="button" class="btn btn-line" data-book data-svc={`Check-up · ${p.title}`}>Полный состав программы</button><span class="nt">{count(p)} исследований и консультаций · точный состав пришлёт координатор</span></div>
+      </div>)}
     </div>
   </div></section>
 
-  <section class="sec" style="padding-top:0"><div class="shell">
-    <div class="sec-head rv"><div><p class="kicker">Состав программ</p><h2 class="h">Что <em>входит</em> в каждую программу</h2></div><a class="btn btn-line" href="/prepare">Подготовка к обследованиям <span class="msr ai">arrow_forward</span></a></div>
-    <div class="cmpwrap rv d2"><table class="cmp">
-      <thead><tr><th>Исследование</th>{programs.map((p) => <th><span>{p.title}</span><small>{p.price}</small></th>)}</tr></thead>
-      <tbody>{rows.map((g) => <>
-        <tr class="grp"><td colspan={programs.length + 1}>{g.title}</td></tr>
-        {g.items.map((name) => <tr><td>{name}</td>{programs.map((p) => <td class={has(p, name) ? 'yes' : 'no'}>{has(p, name) ? <span class="material-symbols-rounded">check</span> : <span class="dash">—</span>}</td>)}</tr>)}
-      </>)}</tbody>
-    </table></div>
-    <p class="small rv" style="color:var(--faint);font-weight:600;margin-top:14px">Во все программы включены расширенные лабораторные маркеры; профильные панели настраиваются координатором под ваш запрос. Цены указаны «от» и зависят от выбранного формата.</p>
+  <section id="how" style="padding:96px 0 0"><div class="shell">
+    <div class="rv"><SecHead eyebrow="Как проходит" title="Один день — и полная картина здоровья" /></div>
+    <div class="rv d2" style="margin-top:40px"><Steps items={steps} /></div>
   </div></section>
 
-  <section class="sec" style="background:var(--ice-50)"><div class="shell">
-    <div class="sec-head rv"><div><p class="kicker">Профильные программы</p><h2 class="h">Углублённая проверка <em>по направлению</em></h2></div></div>
-    <div class="chips rv" id="dirtabs">{directions.map((d, i) => <button class={`chip${i === 0 ? ' on' : ''}`} data-prep={`dir-${d.id}`}>{d.name}</button>)}</div>
-    {directions.map((d, i) => <div class="article rv d2" data-prep-set={`dir-${d.id}`} hidden={i !== 0} style="margin-top:26px">
-      <div>
-        <div class="card" style="padding:30px 34px;margin-bottom:16px">{d.intro.map((p) => <p style="font-weight:400;line-height:1.7;margin:0 0 12px">{p}</p>)}
-          {d.indications.length > 0 && <><h4 class="asub" style="margin-top:18px">Кому рекомендуется</h4><ul class="alist">{d.indications.map((x) => <li>{x}</li>)}</ul></>}</div>
-        {d.programs.map((p, k) => <details class="acc card" open={k === 0}><summary><b>{p.name}</b><span class="cnt">{p.items.length} позиций</span></summary><ol class="alist">{p.items.map((x) => <li>{x}</li>)}</ol>{p.note && <p class="small" style="color:var(--faint);font-weight:600">{p.note}</p>}</details>)}
-      </div>
-      <aside class="side"><div class="card" style="padding:22px;background:var(--navy);border-color:transparent;color:#fff"><b style="font-size:15px;display:block;margin-bottom:6px">Стоимость — по составу программы</b><p style="margin:0 0 14px;font-size:13.5px;color:#9CC4DB;font-weight:400">Координатор рассчитает точную цену по выбранной программе и формату и пришлёт в WhatsApp.</p><button class="btn btn-sky sm" data-book data-svc={`Check-up · ${d.name}`} style="width:100%">Рассчитать и записаться</button></div></aside>
-    </div>)}
+  <section id="corp" style="padding:96px 0 0"><div class="shell">
+    <div class="banner dark flip rv"><div class="img" style={`background-image:url(${img('team')})`}></div><div class="in"><p class="kicker">Для компаний</p><h3>Check-up для сотрудников — в удобный для бизнеса день</h3><p>Составим программу под возраст и задачи команды, примем группу за один день и пришлём обобщённый отчёт без персональных данных.</p><div class="btns"><a class="btn btn-ghost" href="#" data-wa="Здравствуйте! Хотим обсудить корпоративный check-up для сотрудников.">Обсудить корпоративный check-up</a></div></div></div>
   </div></section>
 
-  <section class="sec"><div class="shell">
-    <div class="sec-head rv"><div><p class="kicker">Как проходит</p><h2 class="h">Обследование <em>за 1–2 дня</em></h2></div></div>
-    <div class="grid3 rv d2">
-      <div class="card bcard"><span class="tag">День 1</span><h3 style="font-size:19px;margin:12px 0 8px">Диагностика</h3><ul class="alist"><li>сдача анализов крови и мочи</li><li>ультразвуковые исследования</li><li>функциональная диагностика</li><li>эндоскопические исследования (при необходимости)</li></ul></div>
-      <div class="card bcard"><span class="tag">День 2</span><h3 style="font-size:19px;margin:12px 0 8px">Разбор и план</h3><ul class="alist"><li>консультации профильных специалистов</li><li>разбор результатов</li><li>рекомендации по лечению, питанию и наблюдению</li><li>итоговое резюме check-up</li></ul></div>
-      <div class="card bcard fill"><span class="tag" style="background:var(--sky);color:var(--navy)">Координатор</span><h3 style="font-size:19px;margin:12px 0 8px;color:#fff">С вами на каждом этапе</h3><ul class="alist light"><li>выясняем жалобы и цели</li><li>контроль тайминга и сбор результатов</li><li>финальный пакет рекомендаций</li></ul></div>
-    </div>
+  <section id="dirs" style="padding:96px 0 0"><div class="shell">
+    <div class="rv"><SecHead eyebrow="Профильные программы" title="Углублённая проверка по направлению" /></div>
+    <div class="rv d2" style="margin-top:32px"><Accordion items={dirItems} /></div>
   </div></section>
-  <CheckupHighlight compact />
-  <Faq items={faq} />
-  <Cta title="Один визит <em>вместо трёх</em>" text="Запишитесь — подберём обследования, которые действительно нужны, и проведём их за один-два дня." />
+
+  <section id="faq" style="padding:96px 0 0"><div class="shell"><Faq items={faq} kicker="Вопросы" title="Частые вопросы о check-up" /></div></section>
+
+  <Cta title="Подобрать программу check-up" text="Оставьте заявку — координатор уточнит жалобы и цели, подберёт программу и пришлёт памятку по подготовке." btn="Оставить заявку" svc="Check-up" />
+
+  <script is:inline>
+    (() => {
+      const pick = document.getElementById('cuPick'); if (!pick) return;
+      pick.addEventListener('click', (e) => {
+        const b = e.target.closest('.vtab'); if (!b) return;
+        pick.querySelectorAll('.vtab').forEach((x) => x.classList.toggle('on', x === b));
+        pick.querySelectorAll('.cudet').forEach((d) => { d.hidden = d.dataset.det !== b.dataset.prog; });
+      });
+      const seg = document.getElementById('cuSeg');
+      if (seg) seg.addEventListener('click', (e) => { const b = e.target.closest('button'); if (!b) return; seg.querySelectorAll('button').forEach((x) => x.classList.toggle('on', x === b)); });
+    })();
+  </script>
 </Base>

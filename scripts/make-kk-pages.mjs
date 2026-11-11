@@ -10,7 +10,7 @@ import path from 'node:path';
 
 const SRC = 'src/pages', OUT = 'src/pages/kk';
 const SKIP = new Set(['404.astro', '[...old].astro']);
-const walk = (d) => fs.readdirSync(d).flatMap((f) => { const p = path.join(d, f); return fs.statSync(p).isDirectory() ? (p === OUT ? [] : walk(p)) : [p]; });
+const walk = (d) => fs.readdirSync(d).flatMap((f) => { const p = path.join(d, f); return fs.statSync(p).isDirectory() ? (p === OUT || p === path.join(SRC, 'admin') ? [] : walk(p)) : [p]; });
 fs.rmSync(OUT, { recursive: true, force: true });
 let n = 0;
 for (const file of walk(SRC)) {

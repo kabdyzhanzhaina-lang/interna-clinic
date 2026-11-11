@@ -20,7 +20,7 @@
 ## Стек боевого сайта
 
 - **Astro** — статическая генерация: скорость, SEO, две языковые версии (`/` и `/kk/`).
-- **Контент в файлах** (`src/content/*.json|md`) + **Decap CMS** — админка для цен, врачей, акций без сервера.
+- **Контент в файлах** (`src/data/*.json`) + **своя админка** `/admin/` — врачи, прайс, акции, статьи; публикация = коммит в GitHub, сервер не нужен.
 - **API-слой** (`worker/`, Cloudflare Worker, бесплатно) — принимает заявки с сайта и отправляет в CRM. Админка «Интеграции» `/admin`: Битрикс24 / своя CRM клиники / обе — переключается без правки сайта.
 - **CRM** — сегодня Битрикс24 (лиды через вебхук), в перспективе собственная CRM клиники: сайт к ней уже готов по контракту в `worker/README.md`.
 - Без тяжёлых библиотек анимаций: механики из прототипа переносятся на чистом CSS/JS.
@@ -45,26 +45,37 @@
 - Мобильная шапка: кнопки «Позвонить / Записаться» закреплены.
 - Вне объёма: интеграция с МИС, съёмка, юридические тексты, реклама.
 
-## Хостинг: GitHub Pages
+## Хостинг: Vercel
 
-Репозиторий: https://github.com/kabdyzhanzhaina-lang/interna-clinic (публичный — Pages бесплатен только для публичных).
-Папки `docs/`, `content/`, `prototype/` в репозиторий **не попадают** (`.gitignore`) — они внутренние и живут только локально.
+Репозиторий: https://github.com/kabdyzhanzhaina-lang/interna-clinic. Папки `docs/`, `content/`, `prototype/` в репозиторий **не попадают** (`.gitignore`).
 
-Каждый push в `main` запускает `.github/workflows/deploy.yml`: сборка Astro → публикация.
-Текущий адрес: **https://kabdyzhanzhaina-lang.github.io/interna-clinic/**
-(переменные `SITE_URL`/`BASE_PATH` в воркфлоу дают префикс `/interna-clinic`; скрипт `scripts/apply-base.mjs` проставляет его во все ссылки).
+Проект подключён к Vercel: каждый push в `main` → `npm run build` → публикация (`vercel.json`: сборка, `cleanUrls`, `trailingSlash`, кэш статики, 301-редиректы).
+Текущий адрес: **https://interna-clinic.vercel.app/** (временный, до привязки домена). Pull request получает свой preview-адрес.
 
-### Подключение домена internaclinic.kz (после согласования с клиникой)
+Переменные окружения (Vercel → проект → Settings → Environment Variables, после изменения — Redeploy):
 
-1. В настройках репозитория → Pages → Custom domain: `internaclinic.kz` (GitHub создаст файл `public/CNAME` — закоммитить).
-2. У регистратора домена клиники (DNS сейчас через DDoS-Guard):
-   - `A` записи для `internaclinic.kz` → `185.199.108.153`, `185.199.109.153`, `185.199.110.153`, `185.199.111.153`
-   - `CNAME` для `www` → `kabdyzhanzhaina-lang.github.io`
-3. В Settings → Variables репозитория: `SITE_URL=https://internaclinic.kz`, `BASE_PATH=/` — сайт соберётся без префикса.
-4. Включить «Enforce HTTPS» после выпуска сертификата (10–30 минут).
-5. Загрузить `public/_redirects` не работает на GitHub Pages — 301 со старых адресов делаем через страницы-заглушки с `<meta http-equiv="refresh">` + canonical (скрипт `scripts/redirects.mjs`, неделя 4) либо переносим хостинг на Cloudflare Pages, где есть настоящие 301.
+| Переменная | Что делает | Без неё |
+|---|---|---|
+| `SITE_URL` | канонический адрес сайта (`https://internaclinic.kz`) — sitemap, canonical, OG | адрес vercel.app |
+| `PUBLIC_API_URL` | адрес Cloudflare Worker из `worker/` (заявки → Битрикс24 / своя CRM / письмо) | формы в демо-режиме |
+| `PUBLIC_BITRIX_WIDGET_URL` | скрипт виджета Битрикс24 (открытые линии, чат) | виджета нет |
+| `PUBLIC_YM_ID` | номер счётчика Яндекс.Метрики | счётчика нет |
+| `GITHUB_CLIENT_ID`, `GITHUB_CLIENT_SECRET` | вход в админку `/admin/` (см. ниже) | админка только локально |
 
-> У GitHub Pages нет бэкенда, поэтому заявки уходят в отдельный API (`worker/`). Его адрес задаётся переменной `PUBLIC_API_URL` в Settings → Variables. Пока переменная пустая — форма работает в демо-режиме. Развёртывание и админка описаны в `worker/README.md`.
+`BASE_PATH` больше не нужен: сайт собирается от корня. GitHub Pages и `.github/workflows/deploy.yml` не используются.
+
+### Подключение домена internaclinic.kz (после готовности сайта и согласования с клиникой)
+
+1. Vercel → проект → Settings → Domains → Add: `internaclinic.kz` и `www.internaclinic.kz` (www → редирект на корень уже в `vercel.json`).
+2. У регистратора домена клиники (DNS сейчас через DDoS-Guard) — записи, которые покажет Vercel:
+   - `A` для `internaclinic.kz` → `76.76.21.21`
+   - `CNAME` для `www` → `cname.vercel-dns.com`
+   Старые записи на Tilda убрать. Сертификат Vercel выпустит сам (несколько минут после обновления DNS).
+3. `SITE_URL=https://internaclinic.kz` в переменных окружения → Redeploy.
+4. В настройках Worker (`worker/wrangler.toml` → `ALLOWED_ORIGINS`) домен уже перечислен; после деплоя воркера проверить тестовой заявкой из админки `/admin` воркера.
+5. Search Console и Яндекс Вебмастер: добавить домен, отправить `https://internaclinic.kz/sitemap-index.xml`, в Яндексе — «Переезд сайта» со старого адреса.
+
+> Бэкенда у статического сайта нет: заявки уходят в отдельный API (`worker/`), адрес задаётся `PUBLIC_API_URL`. Пока переменная пустая, форма работает в демо-режиме (показывает «заявка отправлена», никуда не шлёт).
 
 ## Команды
 
@@ -77,20 +88,26 @@ npm run build      # сборка в dist/
 
 ## SEO и переезд со старого сайта
 
-- **Редиректы**: `src/lib/redirects.js` собирает карту старых адресов Tilda (услуги, статьи `tpost`, карточки `kids/tproduct`, разделы), для каждого генерируется страница-заглушка с мгновенным переходом и `canonical` на новую страницу (`src/pages/[...old].astro`). GitHub Pages не умеет 301, поэтому так.
+- **Редиректы (301)**: карта старых адресов Tilda (услуги, статьи `tpost`, карточки `kids/tproduct`, разделы) — `src/lib/redirects-core.js` + данные в `src/data/`. `npm run redirects` записывает её в `vercel.json` (ключ `redirects`, с `/` и без, плюс www → корень); после правки данных перегенерировать и закоммитить. Дополнительно `src/pages/[...old].astro` делает страницы-заглушки с `canonical` и мгновенным переходом — на случай, если адрес не попал в `vercel.json`.
 - **Sitemap**: `@astrojs/sitemap`, заглушки и `/admin` исключены. `robots.txt` пишется при сборке с адресом sitemap под текущий домен.
-- **Админка**: `/admin/` — Decap CMS, см. `worker/README.md`.
+- **Админка**: `/admin/` — своё приложение (Preact, `src/admin/`, страница `src/pages/admin/index.astro`, макет — экраны A1–A7 в `design/interna-clinic.pen`). Разделы: врачи, прайс, акции, новости, события, медиацентр, отзывы, вопросы, оборудование. Правки копятся черновиком в браузере, «Опубликовать» показывает список изменений и делает **один коммит** в `main` через GitHub API → Vercel пересобирает сайт. Фото сжимаются в WebP прямо в браузере и получают новое имя (картинки кешируются на год). Обзор показывает историю правок с откатом и что стоит дозаполнить. JSON сохраняется в прежнем форматировании — в диффе только изменённые строки.
+
+### Админка: настройка входа (один раз)
+
+1. GitHub → Settings → Developer settings → OAuth Apps → New OAuth App: Homepage — адрес сайта, **Authorization callback URL** — `https://<домен>/api/callback`.
+2. Vercel → проект → Settings → Environment Variables: `GITHUB_CLIENT_ID`, `GITHUB_CLIENT_SECRET` (из OAuth App). Redeploy.
+3. Редакторам дать доступ к репозиторию (Collaborator с правом Write). Вход: `https://<домен>/admin/` → «Войти через GitHub».
+
+Для preview-адресов Vercel нужен отдельный OAuth App (у GitHub один callback на приложение).
+
+Локально вход не нужен: `npm run dev` → `http://localhost:4321/admin/`. «Опубликовать» записывает файлы прямо в `src/data/` и `public/images/` (dev-API `scripts/admin-dev-api.mjs`, в сборку не попадает), коммит делаете сами.
+
+Скрыть врача, не удаляя, — переключатель «Показывать на сайте» (`"hidden": true` в `doctors.json`). Казахская версия новых текстов автоматически не переводится — строки без перевода попадают в `.i18n-todo.json` при сборке.
 
 ## Чек-лист запуска
 
-Переменные сборки задаются в GitHub → Settings → Secrets and variables → Actions → Variables:
-
-| Переменная | Что делает | Без неё |
-|---|---|---|
-| `SITE_URL` | канонический адрес сайта (`https://internaclinic.kz`) | github.io |
-| `BASE_PATH` | подпуть на github.io; после домена — пустая строка | `/interna-clinic` |
-| `PUBLIC_API_URL` | адрес Cloudflare Worker из `worker/` (заявки → Битрикс24 / своя CRM) | формы в демо-режиме |
-| `PUBLIC_BITRIX_WIDGET_URL` | скрипт виджета Битрикс24 (открытые линии, чат) | виджета нет |
-| `PUBLIC_YM_ID` | номер счётчика Яндекс.Метрики | счётчика нет |
-
-Порядок: 1) развернуть Worker и задать `PUBLIC_API_URL`, вписать тот же адрес в `public/admin/config.yml` → `base_url`; 2) создать GitHub OAuth App для админки (см. `worker/README.md`); 3) привязать домен и убрать `BASE_PATH`; 4) добавить сайт в Search Console и Яндекс Вебмастер, отправить `sitemap-index.xml`; 5) задать `PUBLIC_YM_ID` и, когда клиент даст ключ, `PUBLIC_BITRIX_WIDGET_URL`.
+1. Развернуть Worker (`worker/README.md`) и задать `PUBLIC_API_URL` в Vercel. В админке воркера `/admin`: вебхук Битрикс24, стадия «Новый лид», поле тегов, e-mail для запасных писем → «Тестовая заявка». Заявки в WhatsApp администратора: Meta Cloud API, секрет `WA_TOKEN`, шаблон `lead_site` — пошагово в `worker/README.md`.
+2. Настроить вход в админку сайта (см. «Админка: настройка входа» выше).
+3. Привязать домен (см. «Подключение домена»), задать `SITE_URL`, Redeploy.
+4. Добавить сайт в Search Console и Яндекс Вебмастер, отправить `sitemap-index.xml`, проверить несколько старых адресов на 301.
+5. Задать `PUBLIC_YM_ID` (доступ к Метрике даст клиника) и, когда клиент даст ключ, `PUBLIC_BITRIX_WIDGET_URL`.

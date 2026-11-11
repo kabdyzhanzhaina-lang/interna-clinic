@@ -1,8 +1,9 @@
 import { defineConfig } from 'astro/config';
 import sitemap from '@astrojs/sitemap';
 import { REDIRECT_PATHS } from './src/lib/redirects.js';
+import adminDevApi from './scripts/admin-dev-api.mjs';
 
-// SITE_URL / BASE_PATH задаются в CI (GitHub Pages: https://<user>.github.io + /interna-clinic).
+// SITE_URL задаётся в Vercel (Environment Variables); BASE_PATH остался для сборки под подпуть и обычно пуст.
 // Локально и на своём домене — site по умолчанию, base = '/'.
 const site = process.env.SITE_URL || 'https://internaclinic.kz';
 const base = (process.env.BASE_PATH || '/').replace(/\/+$/, '') || '/';
@@ -19,5 +20,5 @@ export default defineConfig({
     routing: { prefixDefaultLocale: false }
   },
   build: { format: 'directory' },
-  vite: { server: { allowedHosts: true }, preview: { allowedHosts: true } }
+  vite: { plugins: [adminDevApi()], server: { allowedHosts: true }, preview: { allowedHosts: true } }
 });

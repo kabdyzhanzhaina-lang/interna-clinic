@@ -1,52 +1,53 @@
 ---
-// Статья медиацентра — редакционный лонгрид: параллакс обложки и цитат, прогресс чтения, нумерованные разделы
+// Статья медиацентра v2 — редакционный лонгрид в духе The Blueprint с элементами, которые двигаются при скролле:
+// полоса прогресса, призрачные номера разделов (параллакс), «плавающий факт», липкая рейка с процентом,
+// пастельные пятна у цитат, липкий CTA после 600px прокрутки, каскадное появление «ещё по теме»
 import Base from '../../layouts/Base.astro';
 import Cta from '../../components/Cta.astro';
-import Sticker from '../../components/Sticker.astro';
-const STAR = '<svg viewBox="0 0 100 100"><path d="M50 0C53 30 70 47 100 50 70 53 53 70 50 100 47 70 30 53 0 50 30 47 47 30 50 0Z"/></svg>';
-const FLOWER = '<svg viewBox="0 0 100 100"><path d="M50 4a17 17 0 0 1 17 17 17 17 0 0 1 29 29 17 17 0 0 1 0 0 17 17 0 0 1-29 29A17 17 0 0 1 50 96a17 17 0 0 1-17-17A17 17 0 0 1 4 50a17 17 0 0 1 29-29A17 17 0 0 1 50 4Z"/><circle cx="50" cy="50" r="9" fill="#fff"/></svg>';
 import { ALL_MEDIA as articles, fmtDate, excerpt } from '../../lib/media.js';
 import doctorsFile from '../../data/doctors.json';
-const doctors = doctorsFile.items;
+const doctors = doctorsFile.items.filter((d) => !d.hidden);
 import { img } from '../../lib/site.js';
 
 export function getStaticPaths() { return articles.map((a) => ({ params: { id: a.id } })); }
 const a = articles.find((x) => x.id === Astro.params.id);
 const d = a.doc ? doctors.find((x) => x.id === a.doc) : null;
-const others = articles.filter((x) => x.id !== a.id).slice(0, 4);
+const others = articles.filter((x) => x.id !== a.id).slice(0, 3);
 const jsonld = { '@context': 'https://schema.org', '@type': 'MedicalWebPage', headline: a.t, author: { '@type': 'Person', name: a.by }, image: new URL(img(a.img), Astro.site).href, datePublished: a.date };
-let n = 0, firstP = true;
+let n = 0, firstP = true, factDone = false;
 const toSec = (t) => t.split(':').reduce((acc, x) => acc * 60 + +x, 0);
+const kind = a.tag.split(' · ')[0];
+const topic = a.tag.split(' · ')[1] || 'Блог';
+// «плавающий факт» — цифра из текста статьи, если найдётся
+const factSrc = a.body.map((b) => (b[0] === 'p' ? b[1] : '')).join(' ').match(/(\d{1,3}\s?%|\d{1,2}\s?(?:минут|мин|часов|лет|дней))/);
+const fact = factSrc ? [factSrc[0], 'из текста статьи — чтобы запомнить главное'] : ['1 визит', 'приём и обследования в один день'];
 ---
-<Base og="media" title={`${a.t} — Медиацентр Interna Clinic`} description={excerpt(a, 160) || a.t} active="media" jsonld={jsonld}>
+<Base og="media" title={`${a.t} — блог Interna Clinic`} description={excerpt(a, 160) || a.t} active="media" jsonld={jsonld}>
   <div class="readprog" id="readprog"></div>
 
   <section class="ahero">
-    <span class="blob b1" style="opacity:.45;left:-200px;top:-100px" data-parallax="-0.15"></span>
-    <span class="ring" style="width:420px;height:420px;right:-120px;top:-160px" data-parallax="0.25"></span>
-    <span class="ring dashed" style="width:160px;height:160px;right:18%;bottom:-40px" data-parallax="-0.3" data-rotate="0.12"></span>
-    <span class="ring dashed" style="width:260px;height:260px;left:38%;top:-90px;opacity:.6" data-rotate="-0.06"></span>
-    <span class="spin" style="right:9%;top:120px;width:38px;height:38px" data-rotate="0.25" data-parallax="0.1" set:html={STAR}></span>
+    <div class="cover">{a.video ? <img src={img(a.img)} alt="" data-parallax="-0.2" /> : <img src={img(a.img)} alt="" data-parallax="-0.2" />}</div>
+    <div class="toprow"><span>{kind} · {topic}</span><span>{fmtDate(a.date)}</span></div>
     <div class="shell">
-      <nav class="crumbs rise d1"><a href="/">Главная</a><span>/</span><a href="/media">Медиацентр</a><span>/</span><b>{a.tag.split(' · ')[0]}</b></nav>
-      <span class="tag rise d1" style="background:rgba(255,255,255,.12);color:#fff;margin:6px 0 18px;display:inline-block">{a.tag}</span>
-      <h1 class="rise d2">{a.t}</h1>
-      <p class="ameta rise d3">{a.by} · {fmtDate(a.date)}{a.min ? ` · ${a.min}` : ''}</p>
-    </div>
-    <div class="shell acover-wrap">
-      <Sticker class="hero cover" text="ЧИТАТЬ · МЕДИАЦЕНТР · INTERNA CLINIC · " icon="arrow_downward" speed="0.1" style="right:36px;top:-58px" />
-      {a.video
-        ? <div class="acover rise d3" style="aspect-ratio:16/9"><iframe id="ytframe" data-video={a.video} src={`https://www.youtube-nocookie.com/embed/${a.video}`} title={a.t} loading="lazy" allowfullscreen></iframe></div>
-        : <div class="acover rise d3"><img src={img(a.img)} alt="" data-parallax="0.12" data-parallax-scale="1.12" /></div>}
+      <nav class="crumbs rise d1" style="color:rgba(255,255,255,.8);font-size:12px;margin-bottom:24px"><a href="/" style="color:inherit">Главная</a><span>/</span><a href="/media" style="color:inherit">Блог</a><span>/</span><b style="color:#fff">{topic}</b></nav>
+      <h1 class={`rise d2${a.t.length <= 36 ? ' short' : ''}`}>{a.t}</h1>
+      <div class="ameta rise d3"><div><span>Автор</span>{a.by}</div><div><span>Рубрика</span>{topic}</div>{a.min && <div><span>Время</span>{a.min}</div>}</div>
     </div>
   </section>
 
-  <section class="sec" style="padding-top:60px"><div class="shell"><div class="article">
+  <section class="sec" style="padding-top:64px"><div class="shell"><div class="article ed">
+    <aside class="arail" id="arail" aria-label="Прогресс чтения">
+      <b>0%</b>
+      <span class="track"><i></i></span>
+      <button type="button" data-share aria-label="Поделиться"><span class="msr">share</span></button>
+      <button type="button" data-book aria-label="Записаться"><span class="msr">calendar_month</span></button>
+    </aside>
     <article class="body abody rv">
+      {a.video && <div class="acover" style="aspect-ratio:16/9;border-radius:20px;overflow:hidden;margin-bottom:32px"><iframe id="ytframe" data-video={a.video} src={`https://www.youtube-nocookie.com/embed/${a.video}`} title={a.t} loading="lazy" allowfullscreen style="width:100%;height:100%;border:0"></iframe></div>}
       {a.body.map((b) => {
-        if (b[0] === 'h') { n += 1; return <h2 class="anum" data-n={String(n).padStart(2, '0')}>{n === 2 && <span class="spin margin" style="top:90px" data-rotate="0.08" set:html={FLOWER} />}{b[1]}</h2>; }
+        if (b[0] === 'h') { n += 1; const num = String(n).padStart(2, '0'); return <><span class="ghost" aria-hidden="true" data-parallax="0.18">{num}</span><h2 class="anum">{num} — {b[1]}</h2></>; }
         if (b[0] === 'h3') return <h3 class="asub">{b[1]}</h3>;
-        if (b[0] === 'q') return <div class="pull apull" data-parallax="0.06">{b[1]}<span class="spin" data-rotate={n % 2 ? '0.2' : '-0.2'} set:html={STAR} /></div>;
+        if (b[0] === 'q') return <blockquote class="apull" data-parallax="0.04"><span class="blobl" data-parallax="-0.12"></span><span class="blobr" data-parallax="0.1"></span>{b[1]}</blockquote>;
         if (b[0] === 'ul') return <ul class="alist">{b[1].map((x) => <li>{x}</li>)}</ul>;
         if (b[0] === 'ol') return <ol class="alist">{b[1].map((x) => <li>{x}</li>)}</ol>;
         if (b[0] === 'tc') return <div class="tc"><b class="kicker">Содержание выпуска</b>{b[1].map(([t, l]) => <button type="button" data-seek={toSec(t)}><span>{t}</span>{l}</button>)}</div>;
@@ -54,19 +55,21 @@ const toSec = (t) => t.split(':').reduce((acc, x) => acc * 60 + +x, 0);
         return <p class={cls}>{b[1]}</p>;
       })}
       {a.video && <p class="small" style="margin-top:28px;font-weight:600"><a class="btn btn-line sm" href={`https://www.youtube.com/watch?v=${a.video}`} target="_blank" rel="noopener">Смотреть на YouTube-канале клиники <span class="msr ai">open_in_new</span></a></p>}
+      <div class="share"><span>Поделиться</span><a href="#" data-share>Скопировать ссылку</a><a href={`https://wa.me/?text=${encodeURIComponent(a.t)}`} target="_blank" rel="noopener">WhatsApp</a><a href={`https://t.me/share/url?url=&text=${encodeURIComponent(a.t)}`} target="_blank" rel="noopener" data-share-tg>Telegram</a></div>
+      {d && <div class="author"><span class="ph">{d.img && <img src={img(d.img)} alt="" />}</span><span><b>{d.n}</b><small>{d.r}</small></span><button class="btn btn-primary sm" data-book>Записаться</button></div>}
     </article>
     <aside class="side rv d2">
-      {d && <div class="card" style="padding:22px"><div style="display:flex;gap:14px;align-items:center"><div style="width:64px;height:64px;border-radius:50%;overflow:hidden;flex:none"><img src={img(d.img)} alt="" style="width:100%;height:100%;object-fit:cover;object-position:top" /></div><div><b style="color:var(--ink);font-size:15px;display:block;line-height:1.3">{d.n}</b><span style="font-size:12.5px;color:var(--faint);font-weight:600">{d.r}</span></div></div><button class="btn btn-primary" data-book style="width:100%;margin-top:16px">Записаться на приём</button></div>}
-      <div class="card" style="padding:22px;background:var(--navy);border-color:transparent;color:#fff"><b style="font-size:15px;display:block;margin-bottom:6px">Есть вопрос по теме?</b><p style="margin:0 0 14px;font-size:13.5px;color:#9CC4DB;font-weight:400">Запишитесь на приём — врач ответит на всё за один визит и назначит только нужные обследования.</p><button class="btn btn-sky sm" data-book style="width:100%">Записаться</button></div>
-      <div class="toc"><b style="font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--faint);display:block;margin-bottom:10px">Читайте также</b>{others.map((x) => <a href={`/article/${x.id}`}>{x.t}</a>)}</div>
+      <div class="floatfact" data-parallax="0.1"><b>{fact[0]}</b><span>{fact[1]}</span></div>
+      <div class="card" style="padding:22px;margin-top:28px"><p class="kicker" style="font-size:17px">Есть вопрос по теме?</p><p style="margin:0 0 14px;font-size:14px;color:var(--g600)">Запишитесь на приём — врач ответит на всё за один визит и назначит только нужные обследования.</p><button class="btn btn-primary sm" data-book style="width:100%">Записаться</button></div>
+      <div class="toc" style="margin-top:28px"><b style="font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--g600);display:block;margin-bottom:12px">Читайте также</b>{others.map((x) => <a href={`/article/${x.id}`} style="display:block;font-size:14px;color:var(--black);padding:10px 0;border-top:1px solid var(--g200)">{x.t}</a>)}</div>
     </aside>
   </div></div></section>
 
-  <section class="sec" style="padding-top:0;position:relative;overflow:hidden"><div class="shell" style="position:relative;isolation:isolate">
-    <Sticker class="navy more" text="ЕЩЁ ПО ТЕМЕ · ЧИТАЙТЕ · СМОТРИТЕ · " icon="menu_book" speed="-0.09" size={104} style="left:460px;top:0" />
-    <span class="spin ice" style="left:-40px;bottom:-30px;width:120px;height:120px;z-index:-1" data-rotate="0.05" set:html={FLOWER}></span>
-    <div class="sec-head rv"><div><p class="kicker">Медиацентр</p><h2 class="h">Ещё <em>по теме</em></h2></div><a class="btn btn-line" href="/media">Все материалы <span class="msr ai">arrow_forward</span></a></div>
-    <div class="grid4">{others.map((x, i) => <a class={`card svc rv d${i + 1}`} href={`/article/${x.id}`}><div class="img"><img src={img(x.img)} alt="" loading="lazy" data-parallax="0.05" /></div><div class="bd"><span class="kicker" style="margin-bottom:8px;font-size:10px">{x.tag.split(' · ')[0]}</span><h3 style="font-size:15.5px;line-height:1.35">{x.t}</h3></div></a>)}</div>
+  <section class="sec" style="padding-top:0"><div class="shell related">
+    <p class="h">Читайте также</p>
+    <div class="rgrid">{others.map((x, i) => <a class={`item rv d${i + 1}`} href={`/article/${x.id}`}><span class="img"><img src={img(x.img)} alt="" loading="lazy" /></span><span class="mcat">{x.tag.split(' · ').reverse().join(' • ')}</span><b class="t">{x.t}</b></a>)}</div>
   </div></section>
-  <Cta />
+
+  <div class="stickycta" id="stickycta"><span><b>Записаться на приём</b><small>ответ в WhatsApp за 10 минут</small></span><button class="btn btn-primary sm" data-book>Записаться</button></div>
+  <Cta kicker="Вопрос врачу" title="Есть вопрос <em>к врачу</em>?" text="Задайте его на приёме — запишитесь онлайн или по телефону." />
 </Base>

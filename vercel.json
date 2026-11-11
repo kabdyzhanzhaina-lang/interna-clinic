@@ -5,8 +5,1225 @@
   "cleanUrls": true,
   "trailingSlash": true,
   "headers": [
-    { "source": "/images/(.*)", "headers": [{ "key": "Cache-Control", "value": "public, max-age=31536000, immutable" }] },
-    { "source": "/_astro/(.*)", "headers": [{ "key": "Cache-Control", "value": "public, max-age=31536000, immutable" }] },
-    { "source": "/scripts/(.*)", "headers": [{ "key": "Cache-Control", "value": "public, max-age=86400" }] }
+    {
+      "source": "/images/(.*)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=31536000, immutable"
+        }
+      ]
+    },
+    {
+      "source": "/_astro/(.*)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=31536000, immutable"
+        }
+      ]
+    },
+    {
+      "source": "/scripts/(.*)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=86400"
+        }
+      ]
+    }
+  ],
+  "redirects": [
+    {
+      "source": "/:path*",
+      "has": [
+        {
+          "type": "host",
+          "value": "www.internaclinic.kz"
+        }
+      ],
+      "destination": "https://internaclinic.kz/:path*",
+      "statusCode": 301
+    },
+    {
+      "source": "/fibroscan",
+      "destination": "/service/fibroscan/",
+      "statusCode": 301
+    },
+    {
+      "source": "/fibroscan/",
+      "destination": "/service/fibroscan/",
+      "statusCode": 301
+    },
+    {
+      "source": "/colonoscopy",
+      "destination": "/service/colonoscopy/",
+      "statusCode": 301
+    },
+    {
+      "source": "/colonoscopy/",
+      "destination": "/service/colonoscopy/",
+      "statusCode": 301
+    },
+    {
+      "source": "/fgds",
+      "destination": "/service/fgds/",
+      "statusCode": 301
+    },
+    {
+      "source": "/fgds/",
+      "destination": "/service/fgds/",
+      "statusCode": 301
+    },
+    {
+      "source": "/ultrasound",
+      "destination": "/service/ultrasound/",
+      "statusCode": 301
+    },
+    {
+      "source": "/ultrasound/",
+      "destination": "/service/ultrasound/",
+      "statusCode": 301
+    },
+    {
+      "source": "/gastroenterolog",
+      "destination": "/service/gastro/",
+      "statusCode": 301
+    },
+    {
+      "source": "/gastroenterolog/",
+      "destination": "/service/gastro/",
+      "statusCode": 301
+    },
+    {
+      "source": "/endocrinology",
+      "destination": "/service/endo/",
+      "statusCode": 301
+    },
+    {
+      "source": "/endocrinology/",
+      "destination": "/service/endo/",
+      "statusCode": 301
+    },
+    {
+      "source": "/endocrynolog",
+      "destination": "/service/endo/",
+      "statusCode": 301
+    },
+    {
+      "source": "/endocrynolog/",
+      "destination": "/service/endo/",
+      "statusCode": 301
+    },
+    {
+      "source": "/gastroenterologist",
+      "destination": "/service/gastro/",
+      "statusCode": 301
+    },
+    {
+      "source": "/gastroenterologist/",
+      "destination": "/service/gastro/",
+      "statusCode": 301
+    },
+    {
+      "source": "/sonogram",
+      "destination": "/service/ultrasound/",
+      "statusCode": 301
+    },
+    {
+      "source": "/sonogram/",
+      "destination": "/service/ultrasound/",
+      "statusCode": 301
+    },
+    {
+      "source": "/fibroscan1",
+      "destination": "/service/fibroscan/",
+      "statusCode": 301
+    },
+    {
+      "source": "/fibroscan1/",
+      "destination": "/service/fibroscan/",
+      "statusCode": 301
+    },
+    {
+      "source": "/equip",
+      "destination": "/about/#equip",
+      "statusCode": 301
+    },
+    {
+      "source": "/equip/",
+      "destination": "/about/#equip",
+      "statusCode": 301
+    },
+    {
+      "source": "/feedback",
+      "destination": "/reviews/",
+      "statusCode": 301
+    },
+    {
+      "source": "/feedback/",
+      "destination": "/reviews/",
+      "statusCode": 301
+    },
+    {
+      "source": "/salesss",
+      "destination": "/promo/",
+      "statusCode": 301
+    },
+    {
+      "source": "/salesss/",
+      "destination": "/promo/",
+      "statusCode": 301
+    },
+    {
+      "source": "/free",
+      "destination": "/promo/#osms",
+      "statusCode": 301
+    },
+    {
+      "source": "/free/",
+      "destination": "/promo/#osms",
+      "statusCode": 301
+    },
+    {
+      "source": "/fibrofree",
+      "destination": "/promo/#osms",
+      "statusCode": 301
+    },
+    {
+      "source": "/fibrofree/",
+      "destination": "/promo/#osms",
+      "statusCode": 301
+    },
+    {
+      "source": "/procfree",
+      "destination": "/promo/#osms",
+      "statusCode": 301
+    },
+    {
+      "source": "/procfree/",
+      "destination": "/promo/#osms",
+      "statusCode": 301
+    },
+    {
+      "source": "/special_expert",
+      "destination": "/uslugi/baloon/",
+      "statusCode": 301
+    },
+    {
+      "source": "/special_expert/",
+      "destination": "/uslugi/baloon/",
+      "statusCode": 301
+    },
+    {
+      "source": "/sedation",
+      "destination": "/uslugi/sedation/",
+      "statusCode": 301
+    },
+    {
+      "source": "/sedation/",
+      "destination": "/uslugi/sedation/",
+      "statusCode": 301
+    },
+    {
+      "source": "/hepatologist",
+      "destination": "/uslugi/hepatologist/",
+      "statusCode": 301
+    },
+    {
+      "source": "/hepatologist/",
+      "destination": "/uslugi/hepatologist/",
+      "statusCode": 301
+    },
+    {
+      "source": "/cardiologist",
+      "destination": "/uslugi/cardiologist/",
+      "statusCode": 301
+    },
+    {
+      "source": "/cardiologist/",
+      "destination": "/uslugi/cardiologist/",
+      "statusCode": 301
+    },
+    {
+      "source": "/revmo",
+      "destination": "/uslugi/revmo/",
+      "statusCode": 301
+    },
+    {
+      "source": "/revmo/",
+      "destination": "/uslugi/revmo/",
+      "statusCode": 301
+    },
+    {
+      "source": "/endoscopist",
+      "destination": "/uslugi/endoscopist/",
+      "statusCode": 301
+    },
+    {
+      "source": "/endoscopist/",
+      "destination": "/uslugi/endoscopist/",
+      "statusCode": 301
+    },
+    {
+      "source": "/derma",
+      "destination": "/uslugi/derma/",
+      "statusCode": 301
+    },
+    {
+      "source": "/derma/",
+      "destination": "/uslugi/derma/",
+      "statusCode": 301
+    },
+    {
+      "source": "/allergy",
+      "destination": "/uslugi/allergy/",
+      "statusCode": 301
+    },
+    {
+      "source": "/allergy/",
+      "destination": "/uslugi/allergy/",
+      "statusCode": 301
+    },
+    {
+      "source": "/ultra",
+      "destination": "/uslugi/ultra/",
+      "statusCode": 301
+    },
+    {
+      "source": "/ultra/",
+      "destination": "/uslugi/ultra/",
+      "statusCode": 301
+    },
+    {
+      "source": "/station",
+      "destination": "/uslugi/station/",
+      "statusCode": 301
+    },
+    {
+      "source": "/station/",
+      "destination": "/uslugi/station/",
+      "statusCode": 301
+    },
+    {
+      "source": "/surgeon",
+      "destination": "/uslugi/surgeon/",
+      "statusCode": 301
+    },
+    {
+      "source": "/surgeon/",
+      "destination": "/uslugi/surgeon/",
+      "statusCode": 301
+    },
+    {
+      "source": "/proccab",
+      "destination": "/uslugi/proccab/",
+      "statusCode": 301
+    },
+    {
+      "source": "/proccab/",
+      "destination": "/uslugi/proccab/",
+      "statusCode": 301
+    },
+    {
+      "source": "/nevro",
+      "destination": "/uslugi/nevro/",
+      "statusCode": 301
+    },
+    {
+      "source": "/nevro/",
+      "destination": "/uslugi/nevro/",
+      "statusCode": 301
+    },
+    {
+      "source": "/psychologist",
+      "destination": "/uslugi/psychologist/",
+      "statusCode": 301
+    },
+    {
+      "source": "/psychologist/",
+      "destination": "/uslugi/psychologist/",
+      "statusCode": 301
+    },
+    {
+      "source": "/gematologist",
+      "destination": "/uslugi/gematologist/",
+      "statusCode": 301
+    },
+    {
+      "source": "/gematologist/",
+      "destination": "/uslugi/gematologist/",
+      "statusCode": 301
+    },
+    {
+      "source": "/infection",
+      "destination": "/uslugi/infection/",
+      "statusCode": 301
+    },
+    {
+      "source": "/infection/",
+      "destination": "/uslugi/infection/",
+      "statusCode": 301
+    },
+    {
+      "source": "/urologist",
+      "destination": "/uslugi/urologist/",
+      "statusCode": 301
+    },
+    {
+      "source": "/urologist/",
+      "destination": "/uslugi/urologist/",
+      "statusCode": 301
+    },
+    {
+      "source": "/nefro",
+      "destination": "/uslugi/nefro/",
+      "statusCode": 301
+    },
+    {
+      "source": "/nefro/",
+      "destination": "/uslugi/nefro/",
+      "statusCode": 301
+    },
+    {
+      "source": "/diet",
+      "destination": "/uslugi/diet/",
+      "statusCode": 301
+    },
+    {
+      "source": "/diet/",
+      "destination": "/uslugi/diet/",
+      "statusCode": 301
+    },
+    {
+      "source": "/childgastro",
+      "destination": "/uslugi/childgastro/",
+      "statusCode": 301
+    },
+    {
+      "source": "/childgastro/",
+      "destination": "/uslugi/childgastro/",
+      "statusCode": 301
+    },
+    {
+      "source": "/childendo",
+      "destination": "/uslugi/childendo/",
+      "statusCode": 301
+    },
+    {
+      "source": "/childendo/",
+      "destination": "/uslugi/childendo/",
+      "statusCode": 301
+    },
+    {
+      "source": "/parasite",
+      "destination": "/uslugi/parasite/",
+      "statusCode": 301
+    },
+    {
+      "source": "/parasite/",
+      "destination": "/uslugi/parasite/",
+      "statusCode": 301
+    },
+    {
+      "source": "/ginecologist",
+      "destination": "/uslugi/ginecologist/",
+      "statusCode": 301
+    },
+    {
+      "source": "/ginecologist/",
+      "destination": "/uslugi/ginecologist/",
+      "statusCode": 301
+    },
+    {
+      "source": "/coloproctologist",
+      "destination": "/uslugi/coloproctologist/",
+      "statusCode": 301
+    },
+    {
+      "source": "/coloproctologist/",
+      "destination": "/uslugi/coloproctologist/",
+      "statusCode": 301
+    },
+    {
+      "source": "/inbody",
+      "destination": "/uslugi/inbody/",
+      "statusCode": 301
+    },
+    {
+      "source": "/inbody/",
+      "destination": "/uslugi/inbody/",
+      "statusCode": 301
+    },
+    {
+      "source": "/sudoscan",
+      "destination": "/uslugi/sudoscan/",
+      "statusCode": 301
+    },
+    {
+      "source": "/sudoscan/",
+      "destination": "/uslugi/sudoscan/",
+      "statusCode": 301
+    },
+    {
+      "source": "/cardio_dia",
+      "destination": "/uslugi/cardio_dia/",
+      "statusCode": 301
+    },
+    {
+      "source": "/cardio_dia/",
+      "destination": "/uslugi/cardio_dia/",
+      "statusCode": 301
+    },
+    {
+      "source": "/capsule",
+      "destination": "/uslugi/capsule/",
+      "statusCode": 301
+    },
+    {
+      "source": "/capsule/",
+      "destination": "/uslugi/capsule/",
+      "statusCode": 301
+    },
+    {
+      "source": "/uzdg-head",
+      "destination": "/uslugi/uzdg-head/",
+      "statusCode": 301
+    },
+    {
+      "source": "/uzdg-head/",
+      "destination": "/uslugi/uzdg-head/",
+      "statusCode": 301
+    },
+    {
+      "source": "/uzdg-legs",
+      "destination": "/uslugi/uzdg-legs/",
+      "statusCode": 301
+    },
+    {
+      "source": "/uzdg-legs/",
+      "destination": "/uslugi/uzdg-legs/",
+      "statusCode": 301
+    },
+    {
+      "source": "/biopsia",
+      "destination": "/uslugi/biopsia/",
+      "statusCode": 301
+    },
+    {
+      "source": "/biopsia/",
+      "destination": "/uslugi/biopsia/",
+      "statusCode": 301
+    },
+    {
+      "source": "/ph-metr",
+      "destination": "/uslugi/ph-metr/",
+      "statusCode": 301
+    },
+    {
+      "source": "/ph-metr/",
+      "destination": "/uslugi/ph-metr/",
+      "statusCode": 301
+    },
+    {
+      "source": "/esg",
+      "destination": "/uslugi/esg/",
+      "statusCode": 301
+    },
+    {
+      "source": "/esg/",
+      "destination": "/uslugi/esg/",
+      "statusCode": 301
+    },
+    {
+      "source": "/baloon",
+      "destination": "/uslugi/baloon/",
+      "statusCode": 301
+    },
+    {
+      "source": "/baloon/",
+      "destination": "/uslugi/baloon/",
+      "statusCode": 301
+    },
+    {
+      "source": "/tpost/2nkld8zrh1-chto-delat-pri-vzdutii-zhivota-simptomi",
+      "destination": "/article/chto-delat-pri-vzdutii-zhivota-simptomi/",
+      "statusCode": 301
+    },
+    {
+      "source": "/tpost/2nkld8zrh1-chto-delat-pri-vzdutii-zhivota-simptomi/",
+      "destination": "/article/chto-delat-pri-vzdutii-zhivota-simptomi/",
+      "statusCode": 301
+    },
+    {
+      "source": "/tpost/l9n9x6gjv1-chto-takoe-dispepsiya-pochemu-voznikaet",
+      "destination": "/article/chto-takoe-dispepsiya-pochemu-voznikaet/",
+      "statusCode": 301
+    },
+    {
+      "source": "/tpost/l9n9x6gjv1-chto-takoe-dispepsiya-pochemu-voznikaet/",
+      "destination": "/article/chto-takoe-dispepsiya-pochemu-voznikaet/",
+      "statusCode": 301
+    },
+    {
+      "source": "/tpost/picx3lhv31-insulinorezistentnost-skritaya-ugroza-ra",
+      "destination": "/article/insulinorezistentnost-skritaya-ugroza-ra/",
+      "statusCode": 301
+    },
+    {
+      "source": "/tpost/picx3lhv31-insulinorezistentnost-skritaya-ugroza-ra/",
+      "destination": "/article/insulinorezistentnost-skritaya-ugroza-ra/",
+      "statusCode": 301
+    },
+    {
+      "source": "/tpost/dfvhvpyek1-meditsina-kak-vizov",
+      "destination": "/article/meditsina-kak-vizov/",
+      "statusCode": 301
+    },
+    {
+      "source": "/tpost/dfvhvpyek1-meditsina-kak-vizov/",
+      "destination": "/article/meditsina-kak-vizov/",
+      "statusCode": 301
+    },
+    {
+      "source": "/tpost/e8s1ktdys1-kak-perezhit-utratu-blizkih",
+      "destination": "/article/kak-perezhit-utratu-blizkih/",
+      "statusCode": 301
+    },
+    {
+      "source": "/tpost/e8s1ktdys1-kak-perezhit-utratu-blizkih/",
+      "destination": "/article/kak-perezhit-utratu-blizkih/",
+      "statusCode": 301
+    },
+    {
+      "source": "/tpost/9v4c3m8zo1-rak-molochnoi-zhelezi",
+      "destination": "/article/rak-molochnoi-zhelezi/",
+      "statusCode": 301
+    },
+    {
+      "source": "/tpost/9v4c3m8zo1-rak-molochnoi-zhelezi/",
+      "destination": "/article/rak-molochnoi-zhelezi/",
+      "statusCode": 301
+    },
+    {
+      "source": "/tpost/5pfcjzhvs1-rak-ne-prigovor",
+      "destination": "/article/rak-ne-prigovor/",
+      "statusCode": 301
+    },
+    {
+      "source": "/tpost/5pfcjzhvs1-rak-ne-prigovor/",
+      "destination": "/article/rak-ne-prigovor/",
+      "statusCode": 301
+    },
+    {
+      "source": "/tpost/aglgao8nn1-videokapsulnaya-endoskopiya",
+      "destination": "/article/videokapsulnaya-endoskopiya/",
+      "statusCode": 301
+    },
+    {
+      "source": "/tpost/aglgao8nn1-videokapsulnaya-endoskopiya/",
+      "destination": "/article/videokapsulnaya-endoskopiya/",
+      "statusCode": 301
+    },
+    {
+      "source": "/tpost/xg6d27rju1-bariatriya",
+      "destination": "/article/bariatriya/",
+      "statusCode": 301
+    },
+    {
+      "source": "/tpost/xg6d27rju1-bariatriya/",
+      "destination": "/article/bariatriya/",
+      "statusCode": 301
+    },
+    {
+      "source": "/tpost/t6s9xdsn01-o-kazahstanskoi-meditsine-nersesov-aleks",
+      "destination": "/article/o-kazahstanskoi-meditsine-nersesov-aleks/",
+      "statusCode": 301
+    },
+    {
+      "source": "/tpost/t6s9xdsn01-o-kazahstanskoi-meditsine-nersesov-aleks/",
+      "destination": "/article/o-kazahstanskoi-meditsine-nersesov-aleks/",
+      "statusCode": 301
+    },
+    {
+      "source": "/tpost/pk2h97xzi1-o-kazahstanskoi-meditsine-nurgozhin-talg",
+      "destination": "/article/o-kazahstanskoi-meditsine-nurgozhin-talg/",
+      "statusCode": 301
+    },
+    {
+      "source": "/tpost/pk2h97xzi1-o-kazahstanskoi-meditsine-nurgozhin-talg/",
+      "destination": "/article/o-kazahstanskoi-meditsine-nurgozhin-talg/",
+      "statusCode": 301
+    },
+    {
+      "source": "/tpost/3espektry1-o-kazahstanskoi-meditsine-lokshin-vyache",
+      "destination": "/article/o-kazahstanskoi-meditsine-lokshin-vyache/",
+      "statusCode": 301
+    },
+    {
+      "source": "/tpost/3espektry1-o-kazahstanskoi-meditsine-lokshin-vyache/",
+      "destination": "/article/o-kazahstanskoi-meditsine-lokshin-vyache/",
+      "statusCode": 301
+    },
+    {
+      "source": "/tpost/ce6gh893c1-o-kazahstanskoi-meditsine-raisova-aigul",
+      "destination": "/article/o-kazahstanskoi-meditsine-raisova-aigul/",
+      "statusCode": 301
+    },
+    {
+      "source": "/tpost/ce6gh893c1-o-kazahstanskoi-meditsine-raisova-aigul/",
+      "destination": "/article/o-kazahstanskoi-meditsine-raisova-aigul/",
+      "statusCode": 301
+    },
+    {
+      "source": "/kids/tproduct/1072600311-978156382644-detskii-endokrinolog-v-interna-kids",
+      "destination": "/kids/detskii-endokrinolog/",
+      "statusCode": 301
+    },
+    {
+      "source": "/kids/tproduct/1072600311-978156382644-detskii-endokrinolog-v-interna-kids/",
+      "destination": "/kids/detskii-endokrinolog/",
+      "statusCode": 301
+    },
+    {
+      "source": "/kids/tproduct/1072600311-542208484254-shkola-diabeta-dlya-detei-i-roditelei",
+      "destination": "/kids/shkola-diabeta-dlya-detei-i-roditelei/",
+      "statusCode": 301
+    },
+    {
+      "source": "/kids/tproduct/1072600311-542208484254-shkola-diabeta-dlya-detei-i-roditelei/",
+      "destination": "/kids/shkola-diabeta-dlya-detei-i-roditelei/",
+      "statusCode": 301
+    },
+    {
+      "source": "/kids/tproduct/1072600311-554520382984-detskii-dietolog-v-interna-kids",
+      "destination": "/kids/detskii-dietolog/",
+      "statusCode": 301
+    },
+    {
+      "source": "/kids/tproduct/1072600311-554520382984-detskii-dietolog-v-interna-kids/",
+      "destination": "/kids/detskii-dietolog/",
+      "statusCode": 301
+    },
+    {
+      "source": "/kids/tproduct/1072600311-330504243324-pediatr-v-interna-kids",
+      "destination": "/kids/pediatr/",
+      "statusCode": 301
+    },
+    {
+      "source": "/kids/tproduct/1072600311-330504243324-pediatr-v-interna-kids/",
+      "destination": "/kids/pediatr/",
+      "statusCode": 301
+    },
+    {
+      "source": "/kids/tproduct/1072600311-519594132664-detskii-gastroenterolog-v-interna-kids",
+      "destination": "/kids/detskii-gastroenterolog/",
+      "statusCode": 301
+    },
+    {
+      "source": "/kids/tproduct/1072600311-519594132664-detskii-gastroenterolog-v-interna-kids/",
+      "destination": "/kids/detskii-gastroenterolog/",
+      "statusCode": 301
+    },
+    {
+      "source": "/kids/tproduct/1072600311-277639453794-detskii-revmatolog-v-interna-kids-s-5-le",
+      "destination": "/kids/detskii-revmatolog/",
+      "statusCode": 301
+    },
+    {
+      "source": "/kids/tproduct/1072600311-277639453794-detskii-revmatolog-v-interna-kids-s-5-le/",
+      "destination": "/kids/detskii-revmatolog/",
+      "statusCode": 301
+    },
+    {
+      "source": "/kids/tproduct/1072600311-376604238864-detskii-gematolog-v-interna-kids",
+      "destination": "/kids/detskii-gematolog/",
+      "statusCode": 301
+    },
+    {
+      "source": "/kids/tproduct/1072600311-376604238864-detskii-gematolog-v-interna-kids/",
+      "destination": "/kids/detskii-gematolog/",
+      "statusCode": 301
+    },
+    {
+      "source": "/kids/tproduct/1072600311-671818752424-detskii-ginekolog-v-interna-kids",
+      "destination": "/kids/detskii-ginekolog/",
+      "statusCode": 301
+    },
+    {
+      "source": "/kids/tproduct/1072600311-671818752424-detskii-ginekolog-v-interna-kids/",
+      "destination": "/kids/detskii-ginekolog/",
+      "statusCode": 301
+    },
+    {
+      "source": "/kids/tproduct/1072600311-347535655014-detskii-kardiolog-v-interna-kids",
+      "destination": "/kids/detskii-kardiolog/",
+      "statusCode": 301
+    },
+    {
+      "source": "/kids/tproduct/1072600311-347535655014-detskii-kardiolog-v-interna-kids/",
+      "destination": "/kids/detskii-kardiolog/",
+      "statusCode": 301
+    },
+    {
+      "source": "/kids/tproduct/1072600311-506564000814-detskii-allergolog-v-interna-kids",
+      "destination": "/kids/detskii-allergolog/",
+      "statusCode": 301
+    },
+    {
+      "source": "/kids/tproduct/1072600311-506564000814-detskii-allergolog-v-interna-kids/",
+      "destination": "/kids/detskii-allergolog/",
+      "statusCode": 301
+    },
+    {
+      "source": "/kids/tproduct/1072600311-349445828784-detskii-fibroskan-v-interna-kids",
+      "destination": "/kids/detskii-fibroskan/",
+      "statusCode": 301
+    },
+    {
+      "source": "/kids/tproduct/1072600311-349445828784-detskii-fibroskan-v-interna-kids/",
+      "destination": "/kids/detskii-fibroskan/",
+      "statusCode": 301
+    },
+    {
+      "source": "/kids/tproduct/1072600311-450119260664-detskii-nefrolog-v-interna-kids",
+      "destination": "/kids/detskii-nefrolog/",
+      "statusCode": 301
+    },
+    {
+      "source": "/kids/tproduct/1072600311-450119260664-detskii-nefrolog-v-interna-kids/",
+      "destination": "/kids/detskii-nefrolog/",
+      "statusCode": 301
+    },
+    {
+      "source": "/kids/tproduct/1072600311-130887240124-egds-u-detei-v-interna-kids",
+      "destination": "/kids/egds/",
+      "statusCode": 301
+    },
+    {
+      "source": "/kids/tproduct/1072600311-130887240124-egds-u-detei-v-interna-kids/",
+      "destination": "/kids/egds/",
+      "statusCode": 301
+    },
+    {
+      "source": "/kids/tproduct/1072600311-754002191924-kolonoskopiya-u-detei-v-interna-kids",
+      "destination": "/kids/kolonoskopiya/",
+      "statusCode": 301
+    },
+    {
+      "source": "/kids/tproduct/1072600311-754002191924-kolonoskopiya-u-detei-v-interna-kids/",
+      "destination": "/kids/kolonoskopiya/",
+      "statusCode": 301
+    },
+    {
+      "source": "/kids/tproduct/1072600311-325854756514-kapsulnaya-endoskopiya-u-detei-v-interna",
+      "destination": "/kids/kapsulnaya-endoskopiya-u-detei-v-interna/",
+      "statusCode": 301
+    },
+    {
+      "source": "/kids/tproduct/1072600311-325854756514-kapsulnaya-endoskopiya-u-detei-v-interna/",
+      "destination": "/kids/kapsulnaya-endoskopiya-u-detei-v-interna/",
+      "statusCode": 301
+    },
+    {
+      "source": "/kids/tproduct/1072600311-307793345564-ph-impedansometriya-u-detei-v-interna-ki",
+      "destination": "/kids/ph-impedansometriya-u-detei-v-interna-ki/",
+      "statusCode": 301
+    },
+    {
+      "source": "/kids/tproduct/1072600311-307793345564-ph-impedansometriya-u-detei-v-interna-ki/",
+      "destination": "/kids/ph-impedansometriya-u-detei-v-interna-ki/",
+      "statusCode": 301
+    },
+    {
+      "source": "/kids/tproduct/1072600311-783665345134-detskii-infektsionist-v-interna-kids",
+      "destination": "/kids/detskii-infektsionist/",
+      "statusCode": 301
+    },
+    {
+      "source": "/kids/tproduct/1072600311-783665345134-detskii-infektsionist-v-interna-kids/",
+      "destination": "/kids/detskii-infektsionist/",
+      "statusCode": 301
+    },
+    {
+      "source": "/about-us",
+      "destination": "/about/",
+      "statusCode": 301
+    },
+    {
+      "source": "/about-us/",
+      "destination": "/about/",
+      "statusCode": 301
+    },
+    {
+      "source": "/team",
+      "destination": "/doctors/",
+      "statusCode": 301
+    },
+    {
+      "source": "/team/",
+      "destination": "/doctors/",
+      "statusCode": 301
+    },
+    {
+      "source": "/interna_team",
+      "destination": "/doctors/",
+      "statusCode": 301
+    },
+    {
+      "source": "/interna_team/",
+      "destination": "/doctors/",
+      "statusCode": 301
+    },
+    {
+      "source": "/teamold",
+      "destination": "/doctors/",
+      "statusCode": 301
+    },
+    {
+      "source": "/teamold/",
+      "destination": "/doctors/",
+      "statusCode": 301
+    },
+    {
+      "source": "/service",
+      "destination": "/services/",
+      "statusCode": 301
+    },
+    {
+      "source": "/service/",
+      "destination": "/services/",
+      "statusCode": 301
+    },
+    {
+      "source": "/price",
+      "destination": "/prices/",
+      "statusCode": 301
+    },
+    {
+      "source": "/price/",
+      "destination": "/prices/",
+      "statusCode": 301
+    },
+    {
+      "source": "/calculated",
+      "destination": "/prices/",
+      "statusCode": 301
+    },
+    {
+      "source": "/calculated/",
+      "destination": "/prices/",
+      "statusCode": 301
+    },
+    {
+      "source": "/consult_dr",
+      "destination": "/prices/",
+      "statusCode": 301
+    },
+    {
+      "source": "/consult_dr/",
+      "destination": "/prices/",
+      "statusCode": 301
+    },
+    {
+      "source": "/endoscopy_menu",
+      "destination": "/prices/",
+      "statusCode": 301
+    },
+    {
+      "source": "/endoscopy_menu/",
+      "destination": "/prices/",
+      "statusCode": 301
+    },
+    {
+      "source": "/ultra_menu",
+      "destination": "/prices/",
+      "statusCode": 301
+    },
+    {
+      "source": "/ultra_menu/",
+      "destination": "/prices/",
+      "statusCode": 301
+    },
+    {
+      "source": "/function_dia",
+      "destination": "/prices/",
+      "statusCode": 301
+    },
+    {
+      "source": "/function_dia/",
+      "destination": "/prices/",
+      "statusCode": 301
+    },
+    {
+      "source": "/species",
+      "destination": "/prices/",
+      "statusCode": 301
+    },
+    {
+      "source": "/species/",
+      "destination": "/prices/",
+      "statusCode": 301
+    },
+    {
+      "source": "/women-checkup",
+      "destination": "/checkup/",
+      "statusCode": 301
+    },
+    {
+      "source": "/women-checkup/",
+      "destination": "/checkup/",
+      "statusCode": 301
+    },
+    {
+      "source": "/gastro-checkup",
+      "destination": "/checkup/",
+      "statusCode": 301
+    },
+    {
+      "source": "/gastro-checkup/",
+      "destination": "/checkup/",
+      "statusCode": 301
+    },
+    {
+      "source": "/cardio-checkup",
+      "destination": "/checkup/",
+      "statusCode": 301
+    },
+    {
+      "source": "/cardio-checkup/",
+      "destination": "/checkup/",
+      "statusCode": 301
+    },
+    {
+      "source": "/endocrinology-checkup",
+      "destination": "/checkup/",
+      "statusCode": 301
+    },
+    {
+      "source": "/endocrinology-checkup/",
+      "destination": "/checkup/",
+      "statusCode": 301
+    },
+    {
+      "source": "/packet",
+      "destination": "/checkup/",
+      "statusCode": 301
+    },
+    {
+      "source": "/packet/",
+      "destination": "/checkup/",
+      "statusCode": 301
+    },
+    {
+      "source": "/oferta",
+      "destination": "/legal/",
+      "statusCode": 301
+    },
+    {
+      "source": "/oferta/",
+      "destination": "/legal/",
+      "statusCode": 301
+    },
+    {
+      "source": "/rulse",
+      "destination": "/legal/",
+      "statusCode": 301
+    },
+    {
+      "source": "/rulse/",
+      "destination": "/legal/",
+      "statusCode": 301
+    },
+    {
+      "source": "/page133270433",
+      "destination": "/legal/",
+      "statusCode": 301
+    },
+    {
+      "source": "/page133270433/",
+      "destination": "/legal/",
+      "statusCode": 301
+    },
+    {
+      "source": "/page133270433\\.html",
+      "destination": "/legal/",
+      "statusCode": 301
+    },
+    {
+      "source": "/page50293545",
+      "destination": "/uslugi/esg/",
+      "statusCode": 301
+    },
+    {
+      "source": "/page50293545/",
+      "destination": "/uslugi/esg/",
+      "statusCode": 301
+    },
+    {
+      "source": "/page50293545\\.html",
+      "destination": "/uslugi/esg/",
+      "statusCode": 301
+    },
+    {
+      "source": "/thesis",
+      "destination": "/about/",
+      "statusCode": 301
+    },
+    {
+      "source": "/thesis/",
+      "destination": "/about/",
+      "statusCode": 301
+    },
+    {
+      "source": "/academy",
+      "destination": "/about/",
+      "statusCode": 301
+    },
+    {
+      "source": "/academy/",
+      "destination": "/about/",
+      "statusCode": 301
+    },
+    {
+      "source": "/contacts_old",
+      "destination": "/contacts/",
+      "statusCode": 301
+    },
+    {
+      "source": "/contacts_old/",
+      "destination": "/contacts/",
+      "statusCode": 301
+    },
+    {
+      "source": "/taplink",
+      "destination": "/contacts/",
+      "statusCode": 301
+    },
+    {
+      "source": "/taplink/",
+      "destination": "/contacts/",
+      "statusCode": 301
+    },
+    {
+      "source": "/tapacademy",
+      "destination": "/about/",
+      "statusCode": 301
+    },
+    {
+      "source": "/tapacademy/",
+      "destination": "/about/",
+      "statusCode": 301
+    },
+    {
+      "source": "/cal_tera",
+      "destination": "/contacts/",
+      "statusCode": 301
+    },
+    {
+      "source": "/cal_tera/",
+      "destination": "/contacts/",
+      "statusCode": 301
+    },
+    {
+      "source": "/cal_proc",
+      "destination": "/contacts/",
+      "statusCode": 301
+    },
+    {
+      "source": "/cal_proc/",
+      "destination": "/contacts/",
+      "statusCode": 301
+    },
+    {
+      "source": "/cal_gastro",
+      "destination": "/contacts/",
+      "statusCode": 301
+    },
+    {
+      "source": "/cal_gastro/",
+      "destination": "/contacts/",
+      "statusCode": 301
+    },
+    {
+      "source": "/cal_cardio",
+      "destination": "/contacts/",
+      "statusCode": 301
+    },
+    {
+      "source": "/cal_cardio/",
+      "destination": "/contacts/",
+      "statusCode": 301
+    },
+    {
+      "source": "/cal_uro",
+      "destination": "/contacts/",
+      "statusCode": 301
+    },
+    {
+      "source": "/cal_uro/",
+      "destination": "/contacts/",
+      "statusCode": 301
+    },
+    {
+      "source": "/cal_inf",
+      "destination": "/contacts/",
+      "statusCode": 301
+    },
+    {
+      "source": "/cal_inf/",
+      "destination": "/contacts/",
+      "statusCode": 301
+    },
+    {
+      "source": "/endo_cal",
+      "destination": "/contacts/",
+      "statusCode": 301
+    },
+    {
+      "source": "/endo_cal/",
+      "destination": "/contacts/",
+      "statusCode": 301
+    },
+    {
+      "source": "/cal_nevro",
+      "destination": "/contacts/",
+      "statusCode": 301
+    },
+    {
+      "source": "/cal_nevro/",
+      "destination": "/contacts/",
+      "statusCode": 301
+    },
+    {
+      "source": "/cal_ultra",
+      "destination": "/contacts/",
+      "statusCode": 301
+    },
+    {
+      "source": "/cal_ultra/",
+      "destination": "/contacts/",
+      "statusCode": 301
+    },
+    {
+      "source": "/fibro_cal",
+      "destination": "/service/fibroscan/",
+      "statusCode": 301
+    },
+    {
+      "source": "/fibro_cal/",
+      "destination": "/service/fibroscan/",
+      "statusCode": 301
+    },
+    {
+      "source": "/interna_cal_team",
+      "destination": "/doctors/",
+      "statusCode": 301
+    },
+    {
+      "source": "/interna_cal_team/",
+      "destination": "/doctors/",
+      "statusCode": 301
+    }
   ]
 }

@@ -1,0 +1,6 @@
+---
+// Заметка (макет Note): иконка info синим + текст на голубом фоне
+interface Props { icon?: string; soft?: boolean; }
+const { icon = 'info', soft = false } = Astro.props;
+---
+<div class={`note${soft ? ' soft' : ''} rv`}><span class="msr">{icon}</span><span><slot /></span></div>

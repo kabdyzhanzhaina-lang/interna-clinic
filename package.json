@@ -7,10 +7,13 @@
     "dev": "node scripts/make-kk-pages.mjs && astro dev",
     "build": "node scripts/make-kk-pages.mjs && astro build && node scripts/apply-kk.mjs && node scripts/apply-base.mjs",
     "preview": "astro preview",
-    "check": "astro check"
+    "check": "astro check",
+    "redirects": "node scripts/make-vercel-redirects.mjs"
   },
   "dependencies": {
     "@astrojs/sitemap": "^3.7.4",
-    "astro": "^5.0.0"
+    "astro": "^5.0.0",
+    "htm": "^3.1.1",
+    "preact": "^10.29.8"
   }
 }

@@ -1,0 +1,15 @@
+---
+// Строка врача (макет DocRow): фото 92×92, имя, роль, теги синим, стрелка
+import { img } from '../lib/site.js';
+interface Props { d: any; role?: string; tags?: string[]; cat?: string; }
+const { d, role, tags, cat } = Astro.props;
+const t = tags || d.tags || [];
+const [sn, ...rn] = (d.n || '').split(' ');
+const short = `${sn} ${rn.filter(Boolean).map((w) => w[0] + '.').join(' ')}`;
+const ini = [sn, rn[0]].filter(Boolean).map((w) => w[0]).join('');
+---
+<a class="docrow" href={`/doctor/${d.id}`} data-doc-cat={cat || d.cat}>
+  {d.img ? <span class="ph"><img src={img(d.img)} alt={d.n} loading="lazy" /></span> : <span class="ph ini" aria-hidden="true">{ini}</span>}
+  <span class="i"><b><span class="n-full">{d.n}</span><span class="n-short">{short}</span></b><small>{role || d.r}</small>{t.length > 0 && <span class="tags">{t.slice(0, 3).map((x) => <span>{x}</span>)}</span>}</span>
+  <span class="msr ai">arrow_forward</span>
+</a>

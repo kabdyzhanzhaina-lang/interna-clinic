@@ -1,0 +1,16 @@
+---
+// Фото-хиро (макеты 03/06/09/13/19): фото во всю ширину, затемнение, айбрау, H1 72, подзаголовок и две белые кнопки по центру
+import { img } from '../lib/site.js';
+interface Props { image: string; eyebrow?: string; title: string; sub?: string; wide?: boolean; }
+const { image, eyebrow, title, sub, wide = false } = Astro.props;
+const src = image.startsWith('/') ? image : img(image);
+---
+<section class={`photohero${wide ? ' wide' : ''}`}>
+  <div class="bg" style={`background-image:url(${src})`}></div>
+  <div class="in">
+    {eyebrow && <p class="eb rise d1">{eyebrow}</p>}
+    <h1 class="rise d1" set:html={title} />
+    {sub && <p class="sub rise d2" set:html={sub} />}
+    <div class="btns rise d3"><slot /></div>
+  </div>
+</section>

@@ -1,0 +1,89 @@
+---
+// Вакансии (макет 28): хиро, четыре преимущества, открытые позиции списком, отклик — текст слева и форма справа, CTA.
+// Данные — src/data/vacancies.json (редактируются в админке); отклик уходит в API как заявка типа vacancy.
+import Base from '../layouts/Base.astro';
+import PageHero from '../components/PageHero.astro';
+import Cta from '../components/Cta.astro';
+import data from '../data/vacancies.json';
+import { SITE } from '../lib/site.js';
+const items = data.items.filter((v) => !v.hidden);
+const jsonld = { '@context': 'https://schema.org', '@graph': items.map((v) => ({ '@type': 'JobPosting', title: v.title, description: v.text, employmentType: 'FULL_TIME', hiringOrganization: { '@type': 'Organization', name: SITE.name }, jobLocation: { '@type': 'Place', address: { '@type': 'PostalAddress', addressLocality: 'Алматы', addressCountry: 'KZ' } }, baseSalary: v.salary ? { '@type': 'MonetaryAmount', currency: 'KZT', value: { '@type': 'QuantitativeValue', minValue: Number(v.salary.replace(/\D/g, '')) || undefined, unitText: 'MONTH' } } : undefined })) };
+---
+<Base og="about" title="Вакансии — работа в Interna Clinic, Алматы" description="Открытые вакансии Interna Clinic: врачи, медсёстры, администраторы. Экспертное оборудование, понятный график, обучение. Откликнитесь на сайте." active="about" jsonld={jsonld}>
+  <PageHero cta={false} crumbs={[['О клинике', '/about'], ['Вакансии']]} title="Вакансии" sub={data.intro} />
+
+  <section style="padding:24px 0 0"><div class="shell">
+    <div class="perks">{data.perks.map(([ic, t, d], i) => <div class={`perk rv d${i + 1}`}><span class="msr">{ic}</span><b>{t}</b><p>{d}</p></div>)}</div>
+  </div></section>
+
+  <section id="open" style="padding:72px 0 0"><div class="shell">
+    <div class="sec-head rv"><div><p class="kicker">Открытые позиции</p><h2 class="h">Кого мы ищем</h2></div><a class="link" href="#respond">Нет подходящей — напишите нам <span class="msr">arrow_forward</span></a></div>
+    <div class="vlist">{items.map((v, i) => <article class={`vac rv d${(i % 3) + 1}`} id={v.id}>
+      <div class="l"><b class="t">{v.title}</b><div class="meta"><span>{v.type}</span>{v.salary && <span class="s">{v.salary}</span>}</div><p>{v.text}</p></div>
+      <a class="btn btn-line" href="#respond" data-vac={v.title}>Откликнуться</a>
+    </article>)}</div>
+    {!items.length && <p class="pnote">Сейчас открытых вакансий нет — оставьте отклик, и мы свяжемся, когда появится подходящая позиция.</p>}
+  </div></section>
+
+  <section id="respond" style="padding:72px 0 96px"><div class="shell"><div class="respond">
+    <div class="rl rv">
+      <p class="kicker">Отклик</p><h2 class="h">Расскажите о себе</h2>
+      <p>Оставьте контакты и пару слов об опыте — HR-менеджер свяжется в течение двух рабочих дней. Резюме можно прикрепить файлом или прислать в WhatsApp.</p>
+      <div class="cts"><a href={`mailto:${SITE.email}`}>{SITE.email}</a><a href={SITE.phoneHref}>{SITE.phone} · WhatsApp</a></div>
+      <a class="btn btn-wa" href="#" data-wa="Здравствуйте! Хочу откликнуться на вакансию в Interna Clinic."><span class="msr">chat</span>Написать в WhatsApp</a>
+    </div>
+    <form class="vform rv d2" id="vform" novalidate>
+      <div class="field"><label for="vName">Имя</label><input id="vName" name="name" placeholder="Как к вам обращаться" autocomplete="name" required /></div>
+      <div class="field"><label for="vPhone">Телефон</label><input id="vPhone" name="phone" placeholder="+7 ___ ___ __ __" inputmode="tel" autocomplete="tel" required /></div>
+      <div class="field"><label for="vPos">Желаемая должность</label><div class="sel"><select id="vPos" name="position"><option value="">Выберите из списка</option>{items.map((v) => <option>{v.title}</option>)}<option>Другая позиция</option></select><span class="msr" aria-hidden="true">keyboard_arrow_down</span></div></div>
+      <div class="field"><label for="vMsg">О себе</label><textarea id="vMsg" name="message" rows="4" placeholder="Опыт, специализация, когда готовы выйти"></textarea></div>
+      <label class="vfile" id="vDrop"><input type="file" id="vFile" accept=".pdf,.doc,.docx" hidden /><span class="tile"><span class="msr">attach_file</span></span><span class="tx"><b class="ft">Прикрепить резюме</b><small class="fh">PDF или DOCX до 5 МБ · можно перетащить файл сюда</small></span><span class="btn btn-line sm pick">Выбрать файл</span><button type="button" class="rm" id="vRm" aria-label="Убрать файл" hidden><span class="msr">close</span></button></label>
+      <input type="text" name="website" tabindex="-1" autocomplete="off" class="hp" aria-hidden="true" />
+      <label class="chk"><input type="checkbox" id="vAgree" /><span>Согласен(на) на <a href="/legal#consent">обработку персональных данных</a> и ознакомлен(а) с <a href="/legal">политикой конфиденциальности</a></span></label>
+      <button type="submit" class="btn btn-dark" id="vSubmit">Отправить отклик</button>
+      <p class="note">Ответим в течение двух рабочих дней. Данные используем только для связи по вакансии.</p>
+    </form>
+    <div class="vform done" id="vDone" hidden>
+      <div class="ok"><span class="msr">check</span></div>
+      <p class="kicker">Отклик</p><h3>Спасибо, отклик отправлен</h3>
+      <p class="sub" id="vDoneTxt"></p>
+      <p class="note">HR-менеджер свяжется с вами в течение двух рабочих дней.</p>
+    </div>
+  </div></div></section>
+
+  <Cta kicker="Пациентам" title="Записаться на приём" text="Если вы ищете не работу, а врача — позвоните или оставьте заявку, администратор подберёт время." />
+  <script is:inline>
+    (function () {
+      var f = document.getElementById('vform'); if (!f) return;
+      var $ = function (s) { return document.querySelector(s); };
+      // кнопка «Откликнуться» подставляет должность
+      document.addEventListener('click', function (e) { var b = e.target.closest('[data-vac]'); if (!b) return; var sel = $('#vPos'); [].forEach.call(sel.options, function (o) { if (o.text === b.dataset.vac) sel.value = o.text; }); });
+      // поле резюме: имя и размер файла, кнопка «убрать», перетаскивание
+      var file = $('#vFile'), drop = $('#vDrop'), ft = $('.vfile .ft'), fh = $('.vfile .fh'), rm = $('#vRm'), ftTxt = ft.textContent, fhTxt = fh.textContent;
+      var kb = function (n) { return n < 1048576 ? Math.round(n / 1024) + ' КБ' : (n / 1048576).toFixed(1).replace('.', ',') + ' МБ'; };
+      var showFile = function () { var x = file.files[0]; drop.classList.remove('err'); if (x && x.size > 5 * 1024 * 1024) { file.value = ''; drop.classList.add('err'); ft.textContent = 'Файл больше 5 МБ'; fh.textContent = 'Пришлите резюме в WhatsApp или сожмите PDF'; rm.hidden = true; return; } drop.classList.toggle('has', !!x); rm.hidden = !x; ft.textContent = x ? x.name : ftTxt; fh.textContent = x ? kb(x.size) + ' · ' + (/pdf$/i.test(x.name) ? 'PDF' : 'DOCX') : fhTxt; };
+      file.addEventListener('change', showFile);
+      rm.addEventListener('click', function (e) { e.preventDefault(); file.value = ''; showFile(); });
+      ['dragenter', 'dragover'].forEach(function (ev) { drop.addEventListener(ev, function (e) { e.preventDefault(); drop.classList.add('over'); }); });
+      ['dragleave', 'drop'].forEach(function (ev) { drop.addEventListener(ev, function (e) { e.preventDefault(); drop.classList.remove('over'); }); });
+      drop.addEventListener('drop', function (e) { var dt = e.dataTransfer; if (dt && dt.files && dt.files[0] && /\.(pdf|docx?)$/i.test(dt.files[0].name)) { file.files = dt.files; showFile(); } });
+      var toB64 = function (x) { return new Promise(function (res) { if (!x) return res(null); var r = new FileReader(); r.onload = function () { res({ name: x.name, type: x.type, data: String(r.result).split(',')[1] }); }; r.onerror = function () { res(null); }; r.readAsDataURL(x); }); };
+      f.addEventListener('submit', async function (e) {
+        e.preventDefault();
+        var name = $('#vName').value.trim(), phone = $('#vPhone').value.trim();
+        if (!$('#vAgree').checked) { $('#vAgree').focus(); $('#vAgree').parentElement.classList.add('err'); return; }
+        if (!name) { $('#vName').focus(); $('#vName').style.borderColor = '#B4342C'; return; }
+        if (!phone || !window.phoneOk(phone)) { $('#vPhone').focus(); $('#vPhone').style.borderColor = '#B4342C'; return; }
+        var utm = Object.fromEntries([].slice.call(new URLSearchParams(location.search)).filter(function (p) { return /^(utm_|gclid|yclid|ymclid|fbclid)/.test(p[0]); }));
+        var payload = Object.assign({ type: 'vacancy', name: name, phone: phone, service: $('#vPos').value || 'Вакансия', position: $('#vPos').value, message: $('#vMsg').value.trim(), resume: await toB64(file.files[0]), website: f.website.value, agree: true, page: location.pathname, referrer: document.referrer }, utm);
+        var api = window.SITE_API ? window.SITE_API.replace(/\/$/, '') + '/lead' : null;
+        $('#vSubmit').disabled = true;
+        var sent = await window.sendLead(api, payload);
+        $('#vSubmit').disabled = false;
+        if (!sent) { window.leadFail(f.querySelector('.note')); return; }
+        $('#vDoneTxt').textContent = name + ', мы получили ваш отклик' + (payload.position ? ' на позицию «' + payload.position + '»' : '') + '. Перезвоним на ' + phone + '.';
+        f.hidden = true; var d = $('#vDone'); d.hidden = false; d.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      });
+    })();
+  </script>
+</Base>

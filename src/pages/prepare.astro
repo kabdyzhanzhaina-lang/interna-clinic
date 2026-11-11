@@ -1,44 +1,50 @@
 ---
-// Подготовка к процедурам — памятки перенесены со старого сайта полностью (scripts/migrate-pages.mjs → src/data/prepare.json)
+// Памятки по подготовке (макет 18): чипы-фильтры по центру, оглавление списком, статьи с нумерацией серифом, заметка, кнопки печати/шаринга, аккордеон профессора, CTA
 import Base from '../layouts/Base.astro';
 import PageHero from '../components/PageHero.astro';
-import Cta from '../components/Cta.astro';
-import Faq from '../components/Faq.astro';
+import ItemToc from '../components/ItemToc.astro';
 import Body from '../components/Body.astro';
+import Note from '../components/Note.astro';
+import Accordion from '../components/Accordion.astro';
+import Cta from '../components/Cta.astro';
 import prep from '../data/prepare.json';
-import doctorsFile from '../data/doctors.json';
-const doctors = doctorsFile.items;
-import { img } from '../lib/site.js';
-const prof = doctors.find((d) => d.id === prep.professor.doc);
-const faq = [
-  ['Что будет, если подготовиться неправильно?', 'Врач может не рассмотреть слизистую полностью, и исследование придётся повторить. Поэтому при записи мы дублируем памятку в WhatsApp и отвечаем на вопросы по подготовке.'],
-  ['Можно ли пить воду перед ЭГДС и колоноскопией?', 'Прозрачную воду — до 2 часов до исследования без анестезии. При анестезии за 3 часа нужно прекратить приём любой жидкости.'],
-  ['Я принимаю лекарства постоянно. Что делать?', 'Скажите об этом при записи: антикоагулянты, препараты железа и от диабета требуют отдельных рекомендаций врача. Самостоятельно ничего не отменяйте.'],
-  ['Нужен ли сопровождающий?', 'Да, если исследование проводится под седацией: в день процедуры нельзя управлять автомобилем.'],
-];
-const TABS = [...prep.sections.map((s) => ({ id: s.id, t: s.title })), { id: 'nersesov', t: 'К приёму профессора Нерсесова' }];
+const chips = ['Все', 'УЗИ', 'Фиброскан', 'Колоноскопия', 'Гастроскопия', 'Видеокапсула', 'Седация'];
+const kw = (s) => (/^uzi/.test(s.id) ? 'УЗИ' : /fibro/.test(s.id) ? 'Фиброскан' : /kolono/.test(s.id) ? 'Колоноскопия' : /gastro/.test(s.id) ? 'Гастроскопия' : /video/.test(s.id) ? 'Видеокапсула' : /anest/.test(s.id) ? 'Седация' : 'Все');
+const simple = (s) => s.body.length === 1 && s.body[0][0] === 'ul' ? s.body[0][1] : null;
+const svcOf = (s) => s.title.replace(/\s*\(.*\)/, '');
+const notes = { fibroskan: 'Фиброскан не делают при беременности и с кардиостимулятором — предупредите врача при записи.', kolonoskopiya: 'Если принимаете препараты, разжижающие кровь, или инсулин — согласуйте схему с врачом до подготовки.', 'gastroskopiya-egds-fgds': 'После седации нельзя садиться за руль в течение дня — приходите с сопровождающим.' };
+const toc = [...prep.sections.map((s) => [s.title, `#${s.id}`]), [`Рекомендации профессора ${prep.professor.name.split(' ')[0]}`, '#professor']];
 ---
-<Base og="prepare" title="Подготовка к процедурам — Interna Clinic" description="Полные памятки по подготовке: УЗИ, фиброскан, колоноскопия, ЭГДС, видеокапсульная эндоскопия, анестезия. Перечень обследований к приёму профессора Нерсесова." active="patients">
-  <PageHero crumbs={[['Главная', '/'], ['Пациентам', '/faq'], ['Подготовка']]} title="Подготовка к процедурам" sub="От качества подготовки зависит точность исследования. Выберите процедуру — памятка ниже. При записи мы дублируем её в WhatsApp." chips={[`${prep.sections.length} памяток`, 'как на приёме у врача']} />
-  <section class="sec"><div class="shell">
-    <div class="chips rv" id="preptabs" role="tablist">{TABS.map((t, i) => <button class={`chip${i === 0 ? ' on' : ''}`} data-prep={t.id} role="tab" aria-selected={i === 0 ? 'true' : 'false'}>{t.t}</button>)}</div>
-    <div class="rv d2" style="margin-top:30px">
-      {prep.sections.map((s, i) => <div class="article prepset" data-prep-set={s.id} hidden={i !== 0}>
-        <article class="body card" style="padding:34px 38px"><h3 class="serif" style="font-size:26px;margin:0 0 18px">Подготовка: {s.title}</h3><Body body={s.body} /></article>
-        <aside class="side"><div class="card" style="padding:22px;background:var(--navy);border-color:transparent;color:#fff"><b style="font-size:15px;display:block;margin-bottom:6px">Остались вопросы по подготовке?</b><p style="margin:0 0 14px;font-size:13.5px;color:#9CC4DB;font-weight:400">Администратор ответит в WhatsApp в течение 10 минут и пришлёт памятку.</p><button class="btn btn-sky sm" data-book data-svc={s.title} style="width:100%">Записаться</button></div>
-          <div class="toc"><b style="font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--faint);display:block;margin-bottom:10px">Другие памятки</b>{prep.sections.filter((x) => x.id !== s.id).slice(0, 6).map((x) => <button type="button" class="toclink" data-prep-go={x.id}>{x.title}</button>)}</div></aside>
-      </div>)}
-      <div class="article prepset" data-prep-set="nersesov" hidden>
-        <article class="body card" style="padding:34px 38px">
-          <h3 class="serif" style="font-size:26px;margin:0 0 8px">Перечень обследований к приёму профессора Нерсесова А.В.</h3>
-          <p style="font-weight:400;color:var(--muted)">Базовый перечень обязателен для всех. Дополнительные — по вашему диагнозу. Все анализы можно сдать в Interna Clinic за один визит до приёма.</p>
-          {prep.professor.lists.map((l, i) => <details class="acc" open={i === 0}><summary><b>{l.title}</b><span class="cnt">{l.items.length}</span></summary><ol class="alist">{l.items.map((x) => <li>{x}</li>)}</ol></details>)}
+<Base og="patient" title="Памятки по подготовке к исследованиям — Interna Clinic" description="Как подготовиться к УЗИ, фиброскану, колоноскопии, гастроскопии, видеокапсульной эндоскопии и седации: памятки Interna Clinic и рекомендации профессора Нерсесова." active="patient">
+  <PageHero crumbs={[['Пациенту', '/patient'], ['Подготовка к исследованиям']]} title="Памятки по подготовке" sub="Точные инструкции к каждому исследованию. При записи администратор продублирует нужную памятку в WhatsApp." />
+
+  <section style="padding:0 0 40px"><div class="shell"><div class="chips center rise d3" id="prepChips">{chips.map((c, i) => <button type="button" class={`chip${i === 0 ? ' on' : ''}`} data-tag={c}>{c}</button>)}</div></div></section>
+
+  <section style="padding:24px 0 96px"><div class="shell"><div class="lay g64">
+    <ItemToc items={toc} card={{ title: 'Не нашли свою памятку?', text: 'Напишите название исследования — пришлём инструкцию в WhatsApp.', btn: 'Спросить в WhatsApp', wa: 'Здравствуйте! Подскажите, как подготовиться к исследованию.' }} />
+    <div class="main prep2" id="prepMain">
+      {prep.sections.map((s, i) => (
+        <article class="parts rv" id={s.id} data-tag={kw(s)}>
+          <div class="head"><div class="t"><p class="kicker">Памятка {String(i + 1).padStart(2, '0')}</p><h2>{s.title}</h2></div><div class="b"><button type="button" class="pill" data-print><span class="msr">print</span>Распечатать</button><button type="button" class="pill" data-share><span class="msr">share</span>Поделиться</button></div></div>
+          {simple(s) ? <div class="list">{simple(s).map((x, k) => <div class="li"><span class="n">{String(k + 1).padStart(2, '0')}</span><span>{x}</span></div>)}</div> : <div class="body pbody"><Body body={s.body} /></div>}
+          {notes[s.id] && <Note>{notes[s.id]}</Note>}
+          <div class="btns"><button type="button" class="btn btn-dark" data-book data-svc={svcOf(s)}>Записаться на {svcOf(s).replace(/^Фиброскан$/, 'фиброскан').replace(/^УЗИ/, 'УЗИ').replace(/^Колоноскопия$/, 'колоноскопию').replace(/^Гастроскопия$/, 'гастроскопию').replace(/^Видеокапсульная эндоскопия$/, 'видеокапсулу').replace(/^Анестезия и седация$/, 'приём с седацией')}</button><a class="btn btn-line" href="#">Скачать PDF</a></div>
         </article>
-        <aside class="side">{prof && <div class="card" style="padding:22px"><div style="display:flex;gap:14px;align-items:center"><div style="width:64px;height:64px;border-radius:50%;overflow:hidden;flex:none"><img src={img(prof.img)} alt="" style="width:100%;height:100%;object-fit:cover;object-position:top" /></div><div><b style="color:var(--ink);font-size:15px;display:block;line-height:1.3">{prof.n}</b><span style="font-size:12.5px;color:var(--faint);font-weight:600">{prof.r}</span></div></div><a class="btn btn-line sm" href={`/doctor/${prof.id}`} style="width:100%;margin-top:14px">О враче</a><button class="btn btn-primary" data-book data-svc="Приём профессора Нерсесова" style="width:100%;margin-top:10px">Записаться на приём</button></div>}</aside>
-      </div>
+      ))}
+      <article class="parts rv" id="professor" data-tag="Все">
+        <div class="head"><div class="t"><p class="kicker">Рекомендации профессора</p><h2>{prep.professor.name}</h2></div><div class="b"><button type="button" class="pill" data-print><span class="msr">print</span>Распечатать</button><button type="button" class="pill" data-share><span class="msr">share</span>Поделиться</button></div></div>
+        <p class="lead">Диеты и подготовка при заболеваниях печени, поджелудочной железы и кишечника — что можно, что нельзя, как есть до и после обследования.</p>
+        <Accordion items={prep.professor.lists.map((l) => ({ q: l.title, a: [], list: l.items }))} />
+        <div class="btns"><a class="btn btn-dark" href={`/doctor/${prep.professor.doc}`}>Записаться к профессору</a></div>
+      </article>
+      <p class="pempty" hidden>Памяток по этому фильтру нет.</p>
     </div>
-    <div class="warn rv d3" style="margin-top:22px"><i>!</i>Постоянно принимаете лекарства (антикоагулянты, препараты от диабета, железо)? Обязательно скажите об этом при записи — врач даст отдельные рекомендации. Самостоятельно ничего не отменяйте.</div>
-  </div></section>
-  <Faq items={faq} />
-  <Cta />
+  </div></div></section>
+
+  <Cta title="Запишитесь — памятку пришлём в WhatsApp" text="Администратор уточнит исследование и отправит точную инструкцию по подготовке сообщением." />
+  <script is:inline>
+    (function(){var ch=document.getElementById('prepChips'),m=document.getElementById('prepMain');if(!ch||!m)return;var arts=[].slice.call(m.querySelectorAll('.parts')),empty=m.querySelector('.pempty');
+      ch.addEventListener('click',function(e){var b=e.target.closest('.chip');if(!b)return;[].forEach.call(ch.children,function(c){c.classList.toggle('on',c===b);});var t=b.dataset.tag,n=0;arts.forEach(function(a){var on=t==='Все'||a.dataset.tag===t;a.hidden=!on;if(on)n++;});empty.hidden=n>0;});
+      m.addEventListener('click',function(e){var p=e.target.closest('[data-print]'),s=e.target.closest('[data-share]');if(p){window.print();}if(s){var art=s.closest('.parts'),url=location.origin+location.pathname+'#'+art.id,title=art.querySelector('h2').textContent;if(navigator.share){navigator.share({title:title,url:url}).catch(function(){});}else if(navigator.clipboard){navigator.clipboard.writeText(url);s.lastChild.textContent='Ссылка скопирована';}}});})();
+  </script>
 </Base>

@@ -1,27 +1,36 @@
 ---
-// Вопросы и ответы — перенесены со старого сайта (scripts/migrate-extras.mjs → src/data/faq.json)
+// Вопросы и ответы (макет 21): хиро с тёмным поиском, категории со счётчиками слева, аккордеон, CTA; JSON-LD FAQPage
 import Base from '../layouts/Base.astro';
 import PageHero from '../components/PageHero.astro';
+import SearchBar from '../components/SearchBar.astro';
+import Accordion from '../components/Accordion.astro';
 import Cta from '../components/Cta.astro';
-import faqFile from '../data/faq.json';
-const faq = faqFile.items;
-import { SITE } from '../lib/site.js';
-const plain = (q) => [...q.a, ...(q.list || [])].join(' ');
-const faqld = { '@context': 'https://schema.org', '@type': 'FAQPage', mainEntity: faq.map((q) => ({ '@type': 'Question', name: q.q, acceptedAnswer: { '@type': 'Answer', text: plain(q) } })) };
-const half = Math.ceil(faq.length / 2);
+import faq from '../data/faq.json';
+const catOf = (q) => (/запис|прием|приём/i.test(q.q) && !/дет/i.test(q.q) ? 'Запись и приём' : /цен|стоим|оплат/i.test(q.q) ? 'Цены и оплата' : /стационар|прожива/i.test(q.q) ? 'Стационар' : /дет/i.test(q.q) ? 'Interna KIDS' : /время|работ/i.test(q.q) ? 'Время работы' : 'Услуги и процедуры');
+const items = faq.items.map((q) => ({ ...q, cat: catOf(q) }));
+const names = ['Запись и приём', 'Услуги и процедуры', 'Цены и оплата', 'Стационар', 'Interna KIDS', 'Время работы'];
+const cats = [['Все вопросы', String(items.length)], ...names.map((n) => [n, String(items.filter((q) => q.cat === n).length)])];
+const jsonld = { '@context': 'https://schema.org', '@type': 'FAQPage', mainEntity: faq.items.map((q) => ({ '@type': 'Question', name: q.q, acceptedAnswer: { '@type': 'Answer', text: [...q.a, ...(q.list || [])].join(' ') } })) };
 ---
-<Base og="patient" title="Вопросы и ответы — Interna Clinic" description="Услуги, запись, время работы, цены, обследования до приёма, стационар и детское отделение — ответы на частые вопросы пациентов клиники." jsonld={faqld} active="patients">
-  <PageHero crumbs={[['Главная', '/'], ['Вопросы и ответы']]} title="Вопросы и ответы" sub={`Собрали всё, что спрашивают чаще всего. Не нашли своё — напишите в WhatsApp или позвоните ${SITE.phone}, администратор ответит в течение 10 минут.`} chips={[`${faq.length} вопросов`, 'ответы врачей и администраторов']} />
-  <section class="sec"><div class="shell">
-    <div class="grid2 rv" style="gap:40px;align-items:start">
-      {[faq.slice(0, half), faq.slice(half)].map((col, c) => (
-        <div class="accordion" data-acc>{col.map((q, i) => <div class={`acc-item${i === 0 && c === 0 ? ' open' : ''}`}><button class="acc-q">{q.q}<span class="acc-ic"></span></button><div class="acc-a" style={i === 0 && c === 0 ? 'height:auto' : ''}>
-          {q.a.map((p) => <p>{p}</p>)}
-          {q.list && <ul class="alist" style="margin-top:6px">{q.list.map((x) => <li>{x}</li>)}</ul>}
-          {/обследования необходимы/i.test(q.q) && <p class="small" style="margin-top:10px"><a href="/prepare" style="color:var(--blue-600);font-weight:600">Памятки по подготовке <span class="msr ai">arrow_forward</span></a></p>}
-        </div></div>)}</div>
-      ))}
+<Base og="patient" title="Частые вопросы — Interna Clinic" description="Ответы на частые вопросы пациентов Interna Clinic: как записаться, какие обследования нужны до приёма, цены, стационар, детское отделение и время работы." active="patient" jsonld={jsonld}>
+  <PageHero crumbs={[['Пациенту', '/patient'], ['Вопросы и ответы']]} title="Частые вопросы" sub="Собрали то, о чём пациенты спрашивают администраторов чаще всего. Если ответа нет — напишите, ответим за несколько минут.">
+    <div class="sbar rise d3"><SearchBar dark placeholder="Например: нужно ли направление на фиброскан" /></div>
+  </PageHero>
+
+  <section style="padding:40px 0 96px"><div class="shell"><div class="lay g64">
+    <aside class="itoc fcats rv" id="faqCats">
+      {cats.map((c, i) => <a href="#" class={i === 0 ? 'on' : ''} data-cat={c[0]}><span>{c[0]}</span><span class="cnt">{c[1]}</span></a>)}
+      <div class="wacard ice"><b>Остался вопрос?</b><p>Напишите администратору — ответим в WhatsApp в рабочее время за 10 минут.</p><a class="btn btn-wa" href="#" data-wa="Здравствуйте! У меня вопрос, которого нет в разделе «Частые вопросы»."><span class="msr">chat</span>Написать в WhatsApp</a></div>
+    </aside>
+    <div class="main rv d2" id="faqMain">
+      <Accordion faq items={items} />
+      <p class="fempty" hidden>В этой категории пока нет вопросов.</p>
     </div>
-  </div></section>
-  <Cta title="Не нашли <em>ответ</em>?" text="Напишите в WhatsApp или позвоните — администратор ответит за 10 минут в рабочее время." />
+  </div></div></section>
+
+  <Cta title="Не нашли ответ? Спросите администратора" text="Позвоните или напишите в WhatsApp — подскажем по записи, подготовке и ценам, а памятку пришлём сообщением." btn="Написать в WhatsApp" />
+  <script is:inline define:vars={{ cats: items.map((q) => q.cat) }}>
+    (function(){var side=document.getElementById('faqCats'),main=document.getElementById('faqMain');if(!side||!main)return;var rows=[].slice.call(main.querySelectorAll('.acc-item')),empty=main.querySelector('.fempty');rows.forEach(function(r,i){r.dataset.cat=cats[i]||'';});
+      side.addEventListener('click',function(e){var a=e.target.closest('a[data-cat]');if(!a)return;e.preventDefault();[].forEach.call(side.querySelectorAll('a[data-cat]'),function(x){x.classList.toggle('on',x===a);});var c=a.dataset.cat,n=0;rows.forEach(function(r){var on=c==='Все вопросы'||r.dataset.cat===c;r.hidden=!on;if(on)n++;});empty.hidden=n>0;});})();
+  </script>
 </Base>

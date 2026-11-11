@@ -1,0 +1,10 @@
+---
+// Оглавление списком (макеты 18/21/23): строки с линией, активная — синяя со стрелкой; карточка WhatsApp снизу
+interface Props { items: [string, string, string?][]; active?: number; card?: { title: string; text: string; btn: string; wa?: string; ice?: boolean }; }
+const { items, active = 0, card } = Astro.props;
+---
+<aside class="itoc rv" data-toc>
+  {items.map((it, i) => <a href={it[1]} class={i === active ? 'on' : ''}><span>{it[0]}</span>{it[2] ? <span class="cnt">{it[2]}</span> : <span class="msr">arrow_forward</span>}</a>)}
+  <slot />
+  {card && <div class={`wacard${card.ice ? ' ice' : ''}`}><b>{card.title}</b><p>{card.text}</p><a class="btn btn-wa" href="#" data-wa={card.wa || 'Здравствуйте! Пишу с сайта Interna Clinic.'}><span class="msr">chat</span>{card.btn}</a></div>}
+</aside>

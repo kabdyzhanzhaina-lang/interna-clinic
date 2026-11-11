@@ -1,0 +1,9 @@
+---
+// Шапка секции (макет SecHead): айбрау + H2 слева, ссылка справа
+interface Props { eyebrow: string; title: string; link?: [string, string]; white?: boolean; }
+const { eyebrow, title, link, white = false } = Astro.props;
+---
+<div class="sec-head rv">
+  <div><p class={`kicker${white ? ' on-dark' : ''}`}>{eyebrow}</p><h2 class="h" set:html={title} /></div>
+  {link && <a class={`link${white ? ' w' : ''}`} href={link[1]}>{link[0]} <span class="msr">arrow_forward</span></a>}
+</div>

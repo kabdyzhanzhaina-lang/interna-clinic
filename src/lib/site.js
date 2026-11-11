@@ -11,8 +11,8 @@ export const SITE = {
   social: [['Instagram', 'https://www.instagram.com/interna.clinic/', 'photo_camera'], ['YouTube', 'https://youtube.com/@InternaClinic', 'play_circle'], ['TikTok', 'https://www.tiktok.com/@interna.clinic', 'music_note']],   // карточка клиники в 2ГИС (ссылка со старого сайта)
   email: 'info@internaclinic.kz',
   address: 'Алматы, ул. Богенбай батыра, 248',
-  hours: [['Пн — Пт', '08:00 – 22:00'], ['Суббота', '09:00 – 17:00'], ['Воскресенье', '09:00 – 17:00']],
-  hoursShort: 'Пн–Пт 08:00–22:00 · Сб–Вс 09:00–17:00',
+  hours: [['Пн — Пт', '08:00 – 20:00'], ['Суббота', '09:00 – 17:00'], ['Воскресенье', '09:00 – 17:00']],
+  hoursShort: 'Пн–Пт 08:00–20:00 · Сб–Вс 09:00–17:00',
 };
 
 /** Ключ картинки из данных прототипа → путь в public/images */
@@ -24,5 +24,10 @@ export const CATS = { all: 'Все', gastro: 'Гастроэнтерологи',
 
 export const NAV = [
   ['/services', 'Услуги'], ['/doctors', 'Врачи'], ['/checkup', 'Check-up'], ['/prices', 'Цены'],
-  ['/about', 'О клинике'], ['/media', 'Медиа'], ['/contacts', 'Контакты'],
+  ['/patient', 'Пациенту'], ['/about', 'О клинике'], ['/media', 'Блог'],
 ];
+
+/** Акции: активны, пока не наступил день после даты `until` (YYYY-MM-DD); без даты — бессрочно */
+const GEN = ['января', 'февраля', 'марта', 'апреля', 'мая', 'июня', 'июля', 'августа', 'сентября', 'октября', 'ноября', 'декабря'];
+export const activePromos = (items) => { const today = new Date().toISOString().slice(0, 10); return (items || []).filter((p) => !p.hidden && (!p.until || p.until >= today)); };
+export const untilLabel = (p) => { const m = /^(\d{4})-(\d{2})-(\d{2})/.exec(p?.until || ''); return m ? `До ${+m[3]} ${GEN[+m[2] - 1]}` : 'Акция'; };

@@ -1,40 +1,45 @@
 ---
-// Interna KIDS — детская клиника: 17 услуг и 20 врачей перенесены из каталога старого сайта (scripts/migrate-kids-promo.mjs → src/data/kids.json)
+// Interna KIDS (макет 13): фотохиро, подменю, «Почему KIDS» шагами, 17 направлений строками, детские врачи, баннер школы диабета, CTA
 import Base from '../layouts/Base.astro';
-import DoctorCard from '../components/DoctorCard.astro';
+import PhotoHero from '../components/PhotoHero.astro';
+import SubNav from '../components/SubNav.astro';
+import SecHead from '../components/SecHead.astro';
+import Steps from '../components/Steps.astro';
+import DocRow from '../components/DocRow.astro';
 import Cta from '../components/Cta.astro';
 import kids from '../data/kids.json';
 import doctorsFile from '../data/doctors.json';
-const doctors = doctorsFile.items;
-import { img } from '../lib/site.js';
-const kidsDocs = doctors.filter((d) => d.kids).sort((a, b) => (/педиатр/i.test(a.kidsRole) ? -1 : 0) - (/педиатр/i.test(b.kidsRole) ? -1 : 0));
-const ICONS = ['child_care', 'handshake', 'biotech', 'medical_services'];
+const docs = doctorsFile.items.filter((d) => !d.hidden).filter((d) => d.kids).slice(0, 4); // макет 13: четыре врача, остальные — по ссылке «Все врачи KIDS»
 const jsonld = { '@context': 'https://schema.org', '@type': 'MedicalClinic', name: 'Interna KIDS', description: kids.welcome, medicalSpecialty: 'Pediatric', parentOrganization: { '@type': 'MedicalClinic', name: 'Interna Clinic' } };
 ---
-<Base og="kids" title="Interna KIDS — детская клиника в Алматы" description={`Детское отделение Interna Clinic: ${kids.services.length} направлений — педиатр, детский гастроэнтеролог, эндокринолог, эндоскопия и фиброскан детям. ${kids.welcome}`} theme="kids" active="kids" jsonld={jsonld}>
-  <section class="phero kidshero">
-    <span class="blob b2" style="opacity:.35;right:-100px"></span>
-    <span class="kid-shape" style="width:120px;height:120px;background:#FFC845;left:6%;top:18%;opacity:.9" data-rotate="0.06"></span>
-    <span class="kid-shape" style="width:54px;height:54px;background:#5ED4B0;left:14%;bottom:14%;animation-delay:1.5s"></span>
-    <span class="kid-shape" style="width:80px;height:80px;background:#FF8A6B;right:9%;bottom:10%;animation-delay:.8s" data-rotate="-0.08"></span>
-    <span class="kid-shape" style="width:36px;height:36px;background:#fff;right:30%;top:16%;opacity:.7;animation-delay:2.2s"></span>
-    <div class="shell"><div class="phero-grid">
-      <div><nav class="crumbs rise d1"><a href="/">Главная</a><span>/</span><b>Interna KIDS</b></nav><span class="kidtag rise d1">Interna KIDS · детская клиника</span><h1 class="rise d1">Детям тут <em style="font-style:normal">не страшно</em></h1><p class="sub rise d2">{kids.welcome} Педиатр, узкие детские специалисты, эндоскопия и фиброскан для детей — в одном месте, без очередей.</p>
-        <div class="rise d3" style="display:flex;gap:12px;flex-wrap:wrap;margin-top:22px"><button class="btn btn-primary" data-book data-svc="Interna KIDS · педиатр">Записать ребёнка</button><a class="btn btn-line" href="#kservices" style="background:transparent;color:#fff;border-color:rgba(255,255,255,.4)">Все направления <span class="msr ai">arrow_downward</span></a></div></div>
-      <div class="phero-img rise d2"><img src={img('kids')} alt="Детский врач Interna KIDS" /></div>
-    </div></div>
-  </section>
+<Base og="kids" title="Interna KIDS — детская клиника в Алматы" description={`Детское отделение Interna Clinic: ${kids.services.length} направлений — педиатр, детский гастроэнтеролог, эндокринолог, эндоскопия и фиброскан детям. ${kids.welcome}`} active="kids" jsonld={jsonld}>
+  <PhotoHero image="heart" eyebrow="Interna KIDS" title="Детское отделение" sub={kids.welcome}>
+    <a class="btn btn-ghost" href="#" data-book data-svc="Interna KIDS">Записать ребёнка</a>
+    <a class="btn btn-ghost" href="#services">Все направления</a>
+  </PhotoHero>
+  <SubNav items={[['О KIDS', '#features'], ['Направления', '#services'], ['Врачи', '#docs'], ['Школа диабета', '#school'], ['Подготовка', '/prepare'], ['Цены', '/prices']]} />
 
-  <section class="sec"><div class="shell">
-    <div class="sec-head rv"><div><p class="kicker">Особенности лечения</p><h2 class="h">Как устроен приём <em>в Interna KIDS</em></h2></div></div>
-    <div class="kfeat rv d2">{kids.features.map((f, i) => <div class="card"><div class="ic"><span class="msr">{ICONS[i]}</span></div><h3>{f.t}</h3><p>{f.d}</p></div>)}</div>
+  <section id="features" style="padding:96px 0 0"><div class="shell">
+    <SecHead eyebrow="Почему Interna KIDS" title="Ребёнку спокойно, родителям понятно" />
+    <Steps items={kids.features.map((f) => [f.t, f.d])} />
   </div></section>
 
-  <section class="sec" id="kservices" style="padding-top:0"><div class="shell">
-    <div class="sec-head rv"><div><p class="kicker">Направления</p><h2 class="h">{kids.services.length} детских <em>направлений</em></h2></div><p class="lede" style="max-width:46ch;margin:0">Консультации, обследования и школа диабета. Приём только очно в клинике.</p></div>
-    <div class="kidsvc rv d2">{kids.services.map((s) => <a class="card ks" href={`/kids/${s.id}`}><div class="kicon">{s.icon && <img src={s.icon} alt="" loading="lazy" />}</div><h3>{s.t}</h3><p style="font-size:13px;line-height:1.5;color:var(--muted);font-weight:400;margin:0">{(s.body.find((b) => b[0] === 'p') || ['', ''])[1].slice(0, 90)}…</p>{s.price ? <span class="kp">{s.price}</span> : <span class="more">Подробнее <span class="msr ai">arrow_forward</span></span>}</a>)}</div>
+  <section id="services" style="padding:96px 0 0"><div class="shell">
+    <SecHead eyebrow="Направления" title={`${kids.services.length} детских направлений`} link={['Все направления', '/services']} />
+    <div class="ksvc">{kids.services.map((s, i) => <a class={`ks rv d${(i % 4) + 1}`} href={`/kids/${s.id}`}><img src={s.icon} alt="" width="44" height="44" loading="lazy" /><b>{s.t}</b><span class="msr">arrow_forward</span></a>)}</div>
   </div></section>
 
-  <section class="sec" style="padding-top:0"><div class="shell"><div class="sec-head rv"><div><p class="kicker">Детские врачи</p><h2 class="h">Кто принимает <em>в KIDS</em></h2></div><a class="btn btn-line" href="/doctors">Все врачи <span class="msr ai">arrow_forward</span></a></div><div class="grid4">{kidsDocs.map((d, i) => <DoctorCard d={{ ...d, r: d.kidsRole || d.r }} delay={(i % 4) + 1} />)}</div></div></section>
-  <Cta title="Запишите <em>ребёнка</em>" text="Подберём врача и удобное время — утром или после школы." />
+  <section id="docs" style="padding:96px 0 0"><div class="shell">
+    <SecHead eyebrow="Врачи" title="Детские специалисты" link={['Все врачи KIDS', '/doctors']} />
+    <div class="cols2">{docs.map((d) => <DocRow d={d} role={d.kidsRole} cat="kids" />)}</div>
+  </div></section>
+
+  <section id="school" style="padding:96px 0 0"><div class="shell">
+    <div class="banner lav rv">
+      <div class="in"><p class="kicker">Школа диабета</p><h2 class="h">Для детей и родителей</h2><p>Как считать углеводы, подбирать дозу инсулина, жить со школой, спортом и праздниками. Занятия ведут детские эндокринологи в небольших группах, можно всей семьёй.</p><div class="btns"><a class="btn btn-dark" href="#" data-book data-svc="Школа диабета">Записаться в группу</a><a class="link" href="/kids/shkola-diabeta-dlya-detei-i-roditelei">Подробнее о школе <span class="msr">arrow_forward</span></a></div></div>
+      <div class="img" style="background-image:url(/images/heart.webp)" role="img" aria-label="Interna KIDS"></div>
+    </div>
+  </div></section>
+
+  <Cta title="Записать ребёнка на приём" text="Администратор подберёт детского врача и время без ожидания, а памятку по подготовке пришлёт в WhatsApp." svc="Interna KIDS" />
 </Base>

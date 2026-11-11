@@ -1,0 +1,8 @@
+---
+// Факты в четыре колонки (макет Facts): число + подпись над чёрной линией; serif — курсивное число (макеты 20/22)
+interface Props { items: [string, string][]; serif?: boolean; md?: boolean; class?: string; }
+const { items, serif = false, md = false, class: cls = '' } = Astro.props;
+---
+<div class={`dfacts${serif ? ' serif' : ''}${md ? ' md' : ''} ${cls}`}>
+  {items.map((f, i) => <div class={`dfact rv d${i + 1}`}><b>{f[0]}</b><span>{f[1]}</span></div>)}
+</div>

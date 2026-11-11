@@ -1,42 +1,59 @@
 ---
+// О клинике (макет 09): фото-хиро, подменю, факты, миссия, история, оборудование, команда, лицензии, CTA
 import Base from '../layouts/Base.astro';
-import PageHero from '../components/PageHero.astro';
+import PhotoHero from '../components/PhotoHero.astro';
+import SubNav from '../components/SubNav.astro';
+import Facts from '../components/Facts.astro';
+import SecHead from '../components/SecHead.astro';
 import Cta from '../components/Cta.astro';
 import doctorsFile from '../data/doctors.json';
-const doctors = doctorsFile.items;
-import { SITE, img } from '../lib/site.js';
 import equipment from '../data/equipment.json';
-import about from '../data/about.json';
-const ICONS = ['school', 'biotech', 'stethoscope', 'checklist'];
-const mm = (sec) => `${Math.floor(sec / 60)}:${String(sec % 60).padStart(2, '0')}`;
+import prices from '../data/prices.json';
+import { SITE, img } from '../lib/site.js';
+const doctors = doctorsFile.items.filter((d) => !d.hidden);
+const total = Object.values(prices).reduce((a, v) => a + v.length, 0);
+const timeline = [
+  ['2022', 'Открытие Interna Clinic', 'Первая клиника доказательной медицины в области внутренних заболеваний в Центральной Азии: все необходимые специалисты и обследования в одном здании.'],
+  ['2023–2024', 'Оборудование экспертного класса', 'Японское, корейское и европейское оборудование 2023–2024 годов выпуска: Olympus EVIS X1, GE LOGIQ E10s, FibroScan 630 Expert.'],
+];
+const eq = ['evis-x1', 'fibroscan-630-exp', 'ge-logiq-e10s', 'inbody770', 'sudoscan', 'ge-versana-premier'].map((id) => equipment.items.find((e) => e.id === id)).filter(Boolean);
+const eqDesc = { 'evis-x1': 'Эндоскопическая видеосистема с режимами NBI и TXI', 'fibroscan-630-exp': 'Эластометрия печени без прокола за несколько минут', 'ge-logiq-e10s': 'УЗИ экспертного класса с поддержкой ИИ', inbody770: 'Анализ состава тела: жир, мышцы, вода', sudoscan: 'Ранняя диагностика диабетической нейропатии', 'ge-versana-premier': 'УЗИ для рутинной и детской диагностики' };
 ---
 <Base og="about" title="О клинике — Interna Clinic, институт гастроэнтерологии, гепатологии и метаболизма" description="Первая клиника доказательной медицины внутренних болезней в Центральной Азии. Оборудование экспертного класса, профессура, лицензия." active="about">
-  <PageHero crumbs={[['Главная', '/'], ['О клинике']]} title="Первая клиника доказательной медицины в Центральной Азии" sub="Interna Clinic — институт гастроэнтерологии, гепатологии и метаболизма. Мы лечим по международным протоколам: только те назначения, эффективность которых доказана исследованиями." image="team" />
-  <section class="sec"><div class="shell">
-    <p class="lede rv" style="max-width:70ch;font-size:18px;margin:0 0 30px">{about.intro}</p>
-    <div class="grid4">{about.blocks[0].items.map((f, i) => <div class={`card bcard rv d${i + 1}`}><div class="ic"><span class="msr">{ICONS[i]}</span></div><h3 style="font-size:17px">{f.t}</h3><p>{f.d || 'Соответствие международным протоколам и стандартам'}</p></div>)}</div>
+  <PhotoHero image="building" eyebrow="Институт гастроэнтерологии, гепатологии и метаболизма" title="О клинике" sub="Первая клиника доказательной медицины внутренних болезней в Центральной Азии. Приём, обследование и стационар — в одном здании на Богенбай батыра, 248.">
+    <a class="btn btn-ghost" href="/doctors">Наши врачи</a><a class="btn btn-ghost" href="#equip">Оборудование</a>
+  </PhotoHero>
+  <SubNav items={[['История', '#history'], ['Миссия', '#mission'], ['Команда', '#team'], ['Оборудование', '#equip'], ['Стационар', '/uslugi/station'], ['Лицензии', '#license'], ['Вакансии', '/vacancies']]} />
+
+  <section style="padding:48px 0 0"><div class="shell">
+    <Facts items={[['2022', 'год открытия клиники'], [`${doctors.length}`, 'врача, 18 направлений'], [`${total}`, 'услуги в одном здании'], ['10 мин', 'ответ администратора в рабочее время']]} />
   </div></section>
-  <section class="sec" style="padding-top:0"><div class="shell">
-    <div class="sec-head rv"><div><p class="kicker">Видео</p><h2 class="h">Клиника <em>изнутри</em></h2></div><a class="btn btn-line" href="https://youtube.com/@InternaClinic" target="_blank" rel="noopener">YouTube-канал <span class="msr ai">open_in_new</span></a></div>
-    <div class="vgrid rv d2">{about.videos.map((v) => <button type="button" class="vcard" data-yt={v.id} aria-label={`Смотреть: ${v.title}`}><img src={`https://i.ytimg.com/vi/${v.id}/hqdefault.jpg`} alt="" loading="lazy" /><span class="vplay"><span class="material-symbols-rounded">play_arrow</span></span><span class="vmeta"><b>{v.title}</b><small>{mm(v.sec)}</small></span></button>)}</div>
-  </div></section>
-  <section class="sec" style="padding-top:0"><div class="shell"><div class="why">
-    <div class="about-img rv"><img src={img('building')} alt="Здание Interna Clinic" loading="lazy" /></div>
-    <div class="rv d2"><p class="kicker">Клиника</p><h2 class="h">Богенбай батыра, 248 — <em>всё под одной крышей</em></h2><p class="lede">Приём врачей, эндоскопия, УЗИ, лаборатория, дневной и круглосуточный стационар — в одном здании. Парковка для пациентов бесплатная.</p>
-      <div class="hero-meta" style="border-color:var(--line);margin-top:28px"><div><b style="color:var(--blue-700)" data-count={doctors.length}>{doctors.length}</b><span style="color:var(--faint)">врачей</span></div><div><b style="color:var(--blue-700)">7/7</b><span style="color:var(--faint)">дней в неделю</span></div><div><b style="color:var(--blue-700)">2</b><span style="color:var(--faint)">языка приёма</span></div></div></div>
+
+  <section id="mission" style="padding:96px 0 0"><div class="shell"><div class="mission">
+    <div class="rv"><p class="kicker">Миссия</p><blockquote class="q">«Первая клиника доказательной медицины в области внутренних заболеваний в Центральной Азии: все необходимые специалисты и обследования, соответствие международным протоколам и стандартам»</blockquote><p class="who">Принципы Interna Clinic</p></div>
+    <div class="im rv d2"><img src={img('coats')} alt="Врачи Interna Clinic" loading="lazy" /></div>
   </div></div></section>
-  <section class="sec" style="padding-top:0"><div class="shell">
-    <div class="sec-head rv"><div><p class="kicker">{about.blocks[2].title}</p><h2 class="h">Врачи, которым <em>доверяют</em></h2></div><p class="lede" style="max-width:52ch;margin:0">{about.blocks[2].lead}</p></div>
-    <div class="grid4">{about.blocks[2].items.map((f, i) => <div class={`card rv d${i + 1}`} style="padding:22px"><h3 style="font-size:15.5px;margin:0 0 8px">{f.t}</h3><p style="font-size:13.5px;line-height:1.6;color:var(--muted);font-weight:400;margin:0">{f.d}</p></div>)}</div>
+
+  <section id="history" style="padding:96px 0 0"><div class="shell">
+    <SecHead eyebrow="История" title="Как развивается клиника" />
+    <div class="tline">{timeline.map((t, i) => <div class={`y rv d${i + 1}`}><span class="yr">{t[0]}</span><b>{t[1]}</b><p>{t[2]}</p></div>)}</div>
   </div></section>
-  <section class="sec" id="equip" style="padding-top:0"><div class="shell">
-    <div class="sec-head rv"><div><p class="kicker">Оборудование</p><h2 class="h">Техника уровня <em>университетских клиник</em></h2></div><p class="lede" style="max-width:52ch;margin:0">{equipment.intro[0]}</p></div>
-    <div class="grid4 eqgrid">{equipment.items.map((e, i) => <div class={`card svc eq rv d${(i % 4) + 1}`}><div class="img" style="background:#fff;aspect-ratio:1.25"><img src={e.img} alt={e.name} style="object-fit:contain;padding:18px" loading="lazy" /></div><div class="bd"><span class="kicker" style="margin-bottom:6px;font-size:10px">{e.cat} · {e.kind}</span><h3 style="font-size:17px">{e.name}</h3><p class="eqdesc">{e.desc}</p></div></div>)}</div>
+
+  <section id="equip" style="padding:96px 0 0"><div class="shell">
+    <SecHead eyebrow="Оборудование" title="Экспертный класс в каждом кабинете" link={['Всё оборудование', '/services']} />
+    <div class="eqgrid2">{eq.map((e, i) => <div class={`eq rv d${(i % 3) + 1}`}><div class="im"><img src={e.img} alt={e.name} loading="lazy" /></div><b>{e.name}</b><p>{eqDesc[e.id] || e.kind}</p></div>)}</div>
   </div></section>
-  <section class="sec" style="padding-top:0"><div class="shell"><div class="card rv" style="display:flex;gap:20px;align-items:center;padding:26px 28px;background:var(--ice-50);border-color:transparent;flex-wrap:wrap">
-    <div style="width:54px;height:54px;border-radius:4px;background:#fff;display:grid;place-items:center;font-size:24px">🛡️</div>
-    <div style="flex:1;min-width:260px"><b style="font-size:16px;color:var(--ink)">Лицензия на медицинскую деятельность {SITE.license}</b><p style="margin:3px 0 0;font-size:13px;font-weight:600">{SITE.legalName} · БИН {SITE.bin}</p></div>
-    <a class="btn btn-white sm" href="/legal">Документы</a>
+
+  <section id="team" style="padding:96px 0 0"><div class="shell">
+    <div class="teamcard rv"><div class="bg" style={`background-image:url(${img('team')})`}></div>
+      <p class="kicker on-dark">Команда</p><h2>{doctors.length} врача: кандидаты и доктора наук, профессура</h2><p>Команда узких специалистов с многолетним стажем, индивидуальный разбор каждого случая. Личный координатор сопровождает пациента на каждом этапе обследования.</p><a class="link w" href="/doctors">Все врачи <span class="msr">arrow_forward</span></a></div>
+  </div></section>
+
+  <section id="license" style="padding:48px 0 96px"><div class="shell"><div class="grid3">
+    <div class="icard rv d1"><span class="msr">verified</span><b>Лицензия {SITE.license}</b><p>Лицензия на медицинскую деятельность. {SITE.legalName} · БИН {SITE.bin}.</p></div>
+    <div class="icard rv d2"><span class="msr">apartment</span><b>Одно здание — все услуги</b><p>Приём, эндоскопия, УЗИ, лаборатория, дневной и круглосуточный стационар. Удобные подъездные пути, рядом остановки общественного транспорта.</p></div>
+    <a class="icard rv d3" href="/vacancies"><span class="msr">work</span><b>Вакансии</b><p>Ищем врачей, медсестёр и координаторов, разделяющих принципы доказательной медицины. Открытые позиции и форма отклика — на странице вакансий.</p><span class="link">Смотреть вакансии <span class="msr">arrow_forward</span></span></a>
   </div></div></section>
-  <Cta />
+
+  <Cta title="Приходите познакомиться" text="Запишитесь на первичный приём — врач разберёт жалобы, назначит только нужные обследования и объяснит результаты в тот же день." />
 </Base>

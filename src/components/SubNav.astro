@@ -1,0 +1,8 @@
+---
+// Подменю раздела (макет SubNav): тёмная полоса 60px, активная вкладка с белой линией снизу
+interface Props { items: [string, string][]; active?: number; }
+const { items, active = 0 } = Astro.props;
+---
+<nav class="subnav" aria-label="Разделы страницы"><div class="shell">
+  {items.map((it, i) => <a href={it[1]} class={i === active ? 'on' : ''} data-subnav>{it[0]}</a>)}
+</div></nav>
