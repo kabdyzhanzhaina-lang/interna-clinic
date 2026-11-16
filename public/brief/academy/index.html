@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>Бриф на платформу курсов — Interna Academy</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600&display=swap">
+<style>
+:root{--ink:#0F1F33;--mut:#5F7288;--line:#DDE5EE;--b:#1F62B8;--bd:#123E7A;--bb:#E8F0FB;--sky:#8FC6F2;--bg:#F3F6FA}
+*{box-sizing:border-box}
+html{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.55 "Manrope",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;font-weight:400}
+.wrap{max-width:820px;margin:0 auto;padding:24px 18px 130px}
+header{background:radial-gradient(circle at 85% 10%,#2E7BD6 0,#0E2A4F 62%);color:#fff;border-radius:20px;padding:32px 32px 28px;position:relative;overflow:hidden}
+header::after{content:"";position:absolute;right:-90px;top:-90px;width:260px;height:260px;border:1.5px solid rgba(255,255,255,.14);border-radius:50%}
+header .k{font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--sky);font-weight:600}
+header h1{margin:10px 0 8px;font-size:32px;line-height:1.12;font-weight:600;letter-spacing:-.02em}
+header .sub{color:#CFE2F6;font-size:15px;margin:0 0 14px}
+header p{margin:0 0 10px;color:#E3EEF9}
+header a{color:#fff}
+header .meta{display:flex;gap:8px;flex-wrap:wrap;margin-top:16px}
+header .meta span{background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.18);border-radius:999px;padding:6px 12px;font-size:13px}
+.bar{position:sticky;top:0;z-index:5;background:var(--bg);padding:12px 0 8px}
+.prog{height:8px;background:#DCE5EF;border-radius:9px;overflow:hidden}
+.prog i{display:block;height:100%;width:0;background:var(--b);transition:width .3s}
+.pt{font-size:13px;color:var(--mut);margin-top:5px;display:flex;justify-content:space-between}
+section{background:#fff;border:1px solid var(--line);border-radius:18px;padding:22px 24px;margin-top:14px}
+section h2{margin:0 0 4px;font-size:20px;font-weight:600;letter-spacing:-.01em}
+section h2 span{display:inline-block;background:var(--bb);color:var(--bd);border-radius:8px;font-size:13px;padding:2px 9px;margin-right:8px;vertical-align:3px}
+section .d{color:var(--mut);font-size:14px;margin:0 0 8px}
+.q{padding:14px 0;border-top:1px solid #EEF2F7}
+.q:first-of-type{border-top:0}
+.q label.t{display:block;font-weight:600;margin-bottom:4px}
+.q .h{font-size:13px;color:var(--mut);margin-bottom:8px}
+textarea,input[type=text]{width:100%;border:1px solid #CBD7E4;border-radius:10px;padding:10px 12px;font:inherit;resize:vertical;background:#FBFDFF;color:var(--ink)}
+textarea{min-height:64px}
+textarea:focus,input:focus{outline:2px solid var(--sky);border-color:var(--b);background:#fff}
+.opts{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:8px}
+.opts label{border:1px solid #CBD7E4;border-radius:999px;padding:6px 13px;font-size:14px;cursor:pointer;user-select:none;background:#fff}
+.opts input{display:none}
+.opts label:has(input:checked){background:var(--b);border-color:var(--b);color:#fff}
+.opts + textarea{min-height:44px}
+.check .opts label{border-radius:10px}
+.check .opts label::before{content:"☐ ";color:var(--mut)}
+.check .opts label:has(input:checked)::before{content:"☑ ";color:#fff}
+.next{margin-top:14px;background:var(--bb);border-radius:18px;padding:20px 24px;color:var(--bd);font-size:15px}
+.next b{font-weight:600}
+.actions{position:fixed;left:0;right:0;bottom:0;background:rgba(255,255,255,.96);backdrop-filter:blur(8px);border-top:1px solid var(--line);padding:12px;display:flex;gap:10px;justify-content:center;flex-wrap:wrap;z-index:9}
+.actions button{border:0;border-radius:999px;padding:11px 18px;font-weight:600;font-size:14px;cursor:pointer;background:var(--bb);color:var(--bd);font-family:inherit}
+.actions button.main{background:var(--b);color:#fff}
+.toast{position:fixed;left:50%;bottom:76px;transform:translateX(-50%);background:#0E2A4F;color:#fff;padding:9px 16px;border-radius:10px;font-size:14px;opacity:0;transition:.25s;pointer-events:none;z-index:10;max-width:90vw;text-align:center}
+.toast.on{opacity:1}
+@media (max-width:600px){header{padding:24px 20px}header h1{font-size:26px}section{padding:18px 16px}.wrap{padding-bottom:150px}}
+@media print{body{background:#fff}.bar,.actions,.toast{display:none}section{break-inside:avoid;border-color:#CBD7E4}.opts label{display:none}.opts label:has(input:checked){display:inline-block}header{-webkit-print-color-adjust:exact}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="k">Бриф · Interna Academy · medskills.kz</div>
+    <h1>Бриф на платформу онлайн-курсов</h1>
+    <p class="sub">Регистрация, каталог, оплата, просмотр курсов — и два доп. модуля: прямые эфиры и мобильное приложение</p>
+    <p>Бриф нужен, чтобы точно оценить объём, сроки и стоимость. Большинство вопросов — с вариантами: отметьте подходящие и, если нужно, допишите комментарий. Файлы — ссылкой на папку (Google Drive / Яндекс.Диск). Можно заполнять в несколько подходов: ответы сохраняются в браузере. Когда закончите — нажмите «Отправить ответы» внизу.</p>
+    <p>Если не знаете ответа — отметьте «Посоветуйте» или оставьте пустым, обсудим на созвоне.</p>
+    <div class="meta"><span>≈ 30 минут</span><span>Разделы 8 и 9 — доп. модули, считаются отдельно</span><span>Вопросы — design@yume.business</span></div>
+    <p id="savedInfo" style="display:none;margin-top:14px;background:rgba(255,255,255,.14);border-radius:10px;padding:8px 12px"></p>
+  </header>
+  <div class="bar"><div class="prog"><i id="pg"></i></div><div class="pt"><span id="pc">Заполнено 0 из 0</span><span id="sv"></span></div></div>
+  <form id="f"></form>
+  <div class="next"><b>Что дальше.</b> Нажмите «Отправить ответы» внизу — они придут на design@yume.business. Ссылки на папку с материалами вставьте в чек-лист. По ответам мы подготовим коммерческое предложение: базовая платформа и отдельно — модуль прямых эфиров и мобильное приложение для iOS и Android, с этапами и сроками. Чем полнее ответы — тем точнее оценка.</div>
+</div>
+
+<div class="actions">
+  <button type="button" class="main" id="sendBtn" onclick="send()">Отправить ответы</button>
+  <button type="button" onclick="download()">Скачать копию</button>
+  <button type="button" onclick="window.print()">Печать / PDF</button>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+/* Тип: t — строка, a — абзац, c — несколько вариантов (+ комментарий), r — один вариант (+ комментарий), k — чек-лист */
+const B=[
+ ["Кто заполняет","Чтобы мы знали, с кем связаться по ответам",[
+  ["t","Имя, должность и телефон / почта"]
+ ]],
+ ["Чек-лист материалов","Отметьте, что уже готово, и вставьте ссылку на папку",[
+  ["k","Материалы",["Логотип и брендбук Interna Academy","Список курсов (программа, часы, ЗЕ, цены)","Видео-превью или первые уроки курсов","Фото и регалии спикеров","Доступ к базе Airtable (чтение)","Название текущей LMS и выгрузка учеников","Договор эквайринга с банком","Доступы: домен medskills.kz, Tilda","Оферта и политика конфиденциальности","Контакт согласующего"],"Ссылка на папку с материалами и комментарий"]
+ ]],
+ ["Цели и аудитория","Для кого делаем платформу и что она должна решать",[
+  ["r","Главная цель новой платформы?",["Продажи курсов без участия менеджера","Удобство для врачей: всё в одном месте","Уйти с текущей LMS и Tilda","Рост аудитории по Казахстану и СНГ"],"Если целей несколько — допишите, какая важнее"],
+  ["c","Кто ваши ученики?",["Терапевты и ВОП","Гастроэнтерологи","Эндокринологи","Кардиологи","Педиатры","Гинекологи","Медсёстры","Ординаторы и студенты"]],
+  ["r","Сколько учеников сейчас в базе?",["До 500","500–2 000","2 000–10 000","Больше 10 000","Не знаем точно"],"И примерно сколько покупок в месяц"],
+  ["c","С каких устройств ученики чаще смотрят курсы?",["Смартфон","Компьютер","Планшет","Не знаем"]],
+  ["c","На что ученики чаще всего жалуются сейчас?",["Сложно зарегистрироваться или войти","Забывают пароль","Сложно оплатить","Не могут найти купленный курс","Видео тормозит или не грузится","Долго ждут сертификат","Жалоб почти нет"],"Основная аудитория — врачи 30–50 лет, поэтому делаем крупный текст, минимум шагов и вход без пароля. Опишите, кому и с чем чаще всего приходится помогать"],
+  ["a","Есть ли платформы или сайты курсов, которые вам нравятся? Ссылки и одной фразой — что именно.","Например: Coursera, Skillbox, Stepik, GetCourse-школы, медицинские порталы"]
+ ]],
+ ["Регистрация и личный кабинет","Как врач входит на платформу и что видит в кабинете",[
+  ["r","Как ученику входить на платформу?",["По номеру телефона + код в SMS","По номеру телефона + код в WhatsApp","Почта и пароль","Через Google / Apple","Несколько способов","Посоветуйте"],"Для аудитории 30–50 удобнее всего вход по номеру телефона и коду — без пароля"],
+  ["c","Какие данные спрашиваем при регистрации?",["ФИО","Телефон","Email","ИИН (для сертификата)","Специальность","Место работы","Город","Стаж"],"Чем меньше полей — тем больше людей доходят до покупки. Остальное можно спросить потом, перед выдачей сертификата"],
+  ["c","Что должно быть в личном кабинете?",["Мои курсы и прогресс просмотра","История покупок и чеки","Сертификаты для скачивания","Сумма набранных ЗЕ и часов","Избранное","Уведомления о новых курсах","Вопросы спикеру / поддержка"]],
+  ["r","Нужно ли подтверждать, что ученик — врач?",["Не нужно","Загрузка диплома или сертификата","Проверка менеджером вручную"]],
+  ["r","Ограничивать ли передачу доступа (один аккаунт смотрят несколько человек)?",["Без ограничений","Не больше 2 устройств","Только один просмотр одновременно","Посоветуйте"]]
+ ]],
+ ["Каталог, курсы и превью","Как ученик выбирает курс и что получает после покупки",[
+  ["c","По каким параметрам искать и фильтровать курсы?",["Специальность","Формат: запись или эфир","Ближайшие даты","ЗЕ и часы","Цена","Спикер","Язык","Поиск по названию"]],
+  ["c","Что ученик видит до покупки?",["Видео-превью курса","Первый урок бесплатно","Программа по модулям","Спикеры","Отзывы","Пример сертификата","ЗЕ и часы"]],
+  ["c","Из чего состоит курс?",["Видеолекции","Презентации и PDF","Тест после модуля","Итоговый тест","Разборы клинических случаев","Вопросы спикеру","Домашние задания"]],
+  ["r","На какой срок открывается доступ после покупки?",["5 месяцев, как сейчас","Бессрочно","Разный для каждого курса"]],
+  ["c","Как выдаётся сертификат?",["Автоматически после итогового теста","Автоматически после просмотра всех уроков","Вручную менеджером","PDF с QR-кодом для проверки","С указанием ЗЕ и часов","На казахском и русском"]],
+  ["c","На каких языках платформа и курсы?",["Русский","Казахский","Английский"]],
+  ["r","Где хранить видео?",["Kinescope","Vimeo","YouTube (скрытые ссылки)","Своё хранилище","Посоветуйте"],"От этого зависит защита от скачивания и стоимость в месяц. Сколько сейчас часов видео — примерно?"]
+ ]],
+ ["Оплата","Карта, Kaspi, пакеты и документы",[
+  ["c","Какие способы оплаты нужны?",["Банковская карта (эквайринг)","Kaspi Pay","Kaspi рассрочка 0-0-12","Счёт для юрлица (клиника платит за врача)","Apple Pay / Google Pay"],"Интеграция Kaspi Pay у нас готова — подключим быстро"],
+  ["r","Есть ли договор интернет-эквайринга с банком?",["Да","Нет — поможете выбрать","Не знаем"],"Если да — какой банк"],
+  ["c","Как продаёте курсы?",["Отдельные курсы","Пакеты (3 и 6 курсов, как сейчас)","Подписка на все курсы","Промокоды","Скидка за раннюю запись","Корпоративные покупки для клиник"]],
+  ["c","Какие документы нужны после оплаты?",["Электронный чек на почту","Фискальный чек (ОФД)","Договор-оферта при покупке","Счёт и акт для юрлиц"]],
+  ["a","Как сейчас оформляются возвраты и как часто их просят?"]
+ ]],
+ ["Данные и админка","Airtable, текущая LMS и кто чем управляет",[
+  ["a","Что сейчас хранится в Airtable и кто с ней работает?","Курсы, ученики, оплаты, сертификаты, спикеры, рассылки — что из этого"],
+  ["r","Что делаем с базой?",["Airtable остаётся основной базой","Свой сервер и база, Airtable — для отчётов","Полностью свой бэкенд","Посоветуйте"],"Airtable быстрее на старте, но у неё лимиты на число записей и запросов. А персональные данные граждан РК (ИИН, телефоны) по закону должны храниться на серверах в Казахстане"],
+  ["a","Какая LMS сейчас? Сколько учеников и покупок нужно перенести, есть ли выгрузка?"],
+  ["c","С чем нужна интеграция?",["Битрикс24","amoCRM","1С","Google Analytics / GTM","Facebook Pixel","Яндекс.Метрика","Email-рассылки","WhatsApp-рассылки"]],
+  ["c","Что сотрудники делают в админке?",["Добавляют курсы и уроки","Загружают видео","Видят продажи и отчёты","Выдают доступ вручную","Выдают сертификаты","Создают промокоды","Отвечают на вопросы учеников","Выгружают учеников в Excel"],"И сколько человек будет работать в админке"]
+ ]],
+ ["Прямые эфиры — доп. модуль","Эфиры на самой платформе, запись автоматически становится курсом. Считается отдельно",[
+  ["r","Нужны ли эфиры на платформе?",["Да, в первой версии","Да, вторым этапом","Нет, хватает Zoom"]],
+  ["a","Как проводите эфиры сейчас?","Сервис (Zoom и т. п.), сколько эфиров в месяц, длительность, максимум зрителей одновременно"],
+  ["c","Что нужно во время эфира?",["Чат","Вопросы спикеру","Опросы","Показ презентации","Несколько спикеров одновременно","Учёт присутствия (для ЗЕ)","Доступ только купившим"]],
+  ["c","Что происходит после эфира?",["Запись сама появляется в курсе","Запись продаётся как отдельный курс","Нарезка на уроки","Таймкоды","Монтаж перед публикацией"]]
+ ]],
+ ["Мобильное приложение — доп. модуль","Приложение для iOS и Android. Считается отдельно",[
+  ["r","Нужно ли мобильное приложение?",["Да, iOS и Android","Только одна платформа","Хватит удобной мобильной версии сайта","Позже"],"Мобильная версия сайта входит в базовую платформу в любом случае"],
+  ["c","Что должно быть в приложении?",["Просмотр купленных курсов","Скачивание видео для офлайн-просмотра","Push-уведомления","Покупка курсов","Прямые эфиры","Сертификаты"],"Apple и Google берут 15–30% с покупок внутри приложения, поэтому покупку часто оставляют на сайте"],
+  ["r","Есть ли аккаунты разработчика в App Store и Google Play?",["Да, оба","Только один","Нет — нужно создать"]]
+ ]],
+ ["Сроки и запуск","Когда, в каком объёме и кто принимает решения",[
+  ["r","Как запускаем?",["Сразу всё","Сначала базовая платформа (≈ 1 месяц), затем модули","Посоветуйте"]],
+  ["a","Есть ли дата, к которой платформа должна заработать?","Например, старт набора на ближайший курс"],
+  ["r","Есть ли ориентир по бюджету?",["Да, фиксированный","Хотим увидеть варианты","Обсудим на созвоне"],"Если есть — укажите сумму или диапазон"],
+  ["a","Кто принимает решения по дизайну и функционалу, кто отвечает за контент курсов? Имена и контакты."],
+  ["r","Домен оставляем medskills.kz?",["Да","Нужен новый","Подумаем"]]
+ ]]
+];
+
+/* SAVED — для копии с ответами, если понадобится */
+const SAVED=null;
+const SAVED_AT="";
+const KEY="interna-academy-brief-v1",f=document.getElementById('f');let N=0,Q=0;
+const esc=s=>s.replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+B.forEach(([title,desc,qs],si)=>{
+  let h=`<section${qs[0][0]==="k"?' class="check"':''}><h2><span>${si+1}</span>${esc(title)}</h2><p class="d">${esc(desc)}</p>`;
+  qs.forEach(([type,text,x,hint])=>{
+    const id="q"+(++N); const num=(type==="k"||si===0)?"":`${++Q}. `;
+    h+=`<div class="q" data-q="${id}" data-text="${esc(text)}" data-sec="${esc(title)}"><label class="t" for="${id}">${num}${esc(text)}</label>`;
+    if((type==="a"||type==="t")&&x) h+=`<div class="h">${esc(x)}</div>`;
+    if((type==="c"||type==="r"||type==="k")&&hint) h+=`<div class="h">${esc(hint)}</div>`;
+    if(type==="c"||type==="r"||type==="k"){
+      h+=`<div class="opts">`+x.map(o=>`<label><input type="${type==="r"?"radio":"checkbox"}" name="${id}o" value="${esc(o)}">${esc(o)}</label>`).join("")+`</div>`;
+      h+=`<textarea id="${id}" rows="1" placeholder="${type==="k"?"Ссылка на папку / комментарий":"Комментарий или свой вариант"}"></textarea>`;
+    } else if(type==="t") h+=`<input type="text" id="${id}" placeholder="Ответ">`;
+    else h+=`<textarea id="${id}" placeholder="Ответ"></textarea>`;
+    h+=`</div>`;
+  });
+  f.insertAdjacentHTML("beforeend",h+"</section>");
+});
+
+function collect(){
+  return [...document.querySelectorAll('.q')].map(q=>{
+    const id=q.dataset.q, opts=[...q.querySelectorAll('input:checked')].map(i=>i.value);
+    return {id,sec:q.dataset.sec,q:q.dataset.text,opts,text:document.getElementById(id).value.trim()};
+  });
+}
+function save(){
+  const d=collect();try{localStorage.setItem(KEY,JSON.stringify(d))}catch(e){}
+  const done=d.filter(x=>x.opts.length||x.text).length;
+  document.getElementById('pg').style.width=(done/d.length*100)+"%";
+  document.getElementById('pc').textContent=`Заполнено ${done} из ${d.length}`;
+  document.getElementById('sv').textContent="Сохранено "+new Date().toLocaleTimeString("ru",{hour:"2-digit",minute:"2-digit"});
+}
+function load(){
+  if(SAVED){const i=document.getElementById('savedInfo');i.style.display="block";i.textContent="Ответы сохранены "+SAVED_AT}
+  try{(SAVED||JSON.parse(localStorage.getItem(KEY))||[]).forEach(x=>{
+    const el=document.getElementById(x.id);if(!el)return;el.value=x.text||"";
+    document.querySelectorAll(`[name="${x.id}o"]`).forEach(i=>i.checked=(x.opts||[]).includes(i.value));
+  })}catch(e){}
+  save();document.getElementById('sv').textContent="";
+}
+f.addEventListener('input',save);f.addEventListener('change',save);
+function asText(){
+  let out="БРИФ INTERNA ACADEMY — платформа онлайн-курсов\n"+new Date().toLocaleString("ru")+"\n",last="",n=0;
+  collect().forEach(x=>{
+    if(x.sec!==last){out+=`\n=== ${x.sec.toUpperCase()} ===\n`;last=x.sec}
+    const a=[x.opts.join(", "),x.text].filter(Boolean).join(" — ");
+    const num=(x.sec.startsWith("Чек-лист")||x.sec==="Кто заполняет")?"":`${++n}. `;
+    out+=`\n${num}${x.q}\n→ ${a||"—"}\n`;
+  });
+  return out;
+}
+function toast(m){const t=document.getElementById('toast');t.textContent=m;t.classList.add('on');setTimeout(()=>t.classList.remove('on'),2600)}
+const ENDPOINT="https://formsubmit.co/ajax/design@yume.business";
+async function send(){
+  const d=collect(); const who=(d[0].text||"").trim();
+  if(!who){toast("Укажите, кто заполняет бриф — первое поле");document.getElementById('q1').focus();return}
+  const done=d.filter(x=>x.opts.length||x.text).length;
+  if(done<4&&!confirm("Заполнено всего "+done+" из "+d.length+". Отправить как есть?"))return;
+  const btn=document.getElementById('sendBtn');btn.disabled=true;btn.textContent="Отправляем…";
+  const body={_subject:"Бриф на платформу Interna Academy — "+who,_template:"table",_captcha:"false",_replyto:(who.match(/[\w.+-]+@[\w-]+\.[\w.]+/)||[""])[0]};
+  d.forEach((x,i)=>{body[(i?i+". ":"")+x.q]=[x.opts.join(", "),x.text].filter(Boolean).join(" — ")||"—"});
+  body["Текст целиком"]=asText();
+  try{
+    const r=await fetch(ENDPOINT,{method:"POST",headers:{"Content-Type":"application/json",Accept:"application/json"},body:JSON.stringify(body)});
+    const j=await r.json().catch(()=>({}));
+    if(!r.ok||String(j.success)==="false")throw new Error(j.message||r.status);
+    btn.textContent="Отправлено ✓";
+    document.getElementById('sv').textContent="Отправлено "+new Date().toLocaleTimeString("ru",{hour:"2-digit",minute:"2-digit"});
+    toast("Спасибо! Ответы отправлены на design@yume.business");
+  }catch(e){
+    btn.disabled=false;btn.textContent="Отправить ответы";
+    toast("Не удалось отправить автоматически — открываем письмо");
+    location.href="mailto:design@yume.business?subject="+encodeURIComponent("Бриф на платформу Interna Academy — "+who)+"&body="+encodeURIComponent(asText().slice(0,1800)+"\n\n(полный текст — во вложении: кнопка «Скачать копию»)");
+  }
+}
+function download(){
+  const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([asText()],{type:"text/plain;charset=utf-8"}));
+  a.download="Бриф-платформа-Interna-Academy.txt";a.click();toast("Файл скачан");
+}
+load();
+</script>
+</body>
+</html>
