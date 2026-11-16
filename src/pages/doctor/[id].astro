@@ -20,7 +20,8 @@ const dative = /ов$|ев$|ин$|ын$|ек$|ар$/.test(surname) ? surname + '
 const isProf = /профессор/i.test(d.r);
 // позиции прайса, где в подписи указан этот врач
 const key = d.n.toLowerCase().split(' ').slice(0, 2).join(' ');
-const rows = []; for (const k in prices) for (const r of prices[k]) if ((r[1] || '').toLowerCase().includes(key) && !rows.some((x) => x[0] === r[0])) rows.push(r);
+const keyIni = new RegExp(`\\b${surname.toLowerCase()}\\s+${(rest[0] || '').slice(0, 1).toLowerCase()}\\.`); // «исмаилова ш.» — так врачи подписаны в прайсе клиники
+const rows = []; for (const k in prices) for (const r of prices[k]) { const d1 = (r[1] || '').toLowerCase(); if ((d1.includes(key) || keyIni.test(d1)) && !rows.some((x) => x[0] === r[0])) rows.push(r); }
 const priceRows = rows.length ? rows.slice(0, 4).map((r) => [r[0], r[2]]) : [['Первичный приём', d.price || 'по запросу'], ['Повторный приём', 'по прайсу']];
 const expLabel = d.exp ? (/^практика/.test(d.exp) ? d.exp.replace('практика с ', 'с ') : d.exp) : '—';
 const degree = d.tags.find((t) => /д\.м\.н|к\.м\.н|phd|профессор|доцент/i.test(t)) || (isProf ? 'профессор' : 'врач');
