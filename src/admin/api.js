@@ -56,6 +56,7 @@ const github = {
     const head = await (await gh(`/repos/${REPO}/git/commits/${ref.object.sha}`)).json();
     const tree = [];
     for (const f of files) {
+      if (f.delete) { tree.push({ path: f.path, mode: '100644', type: 'blob', sha: null }); continue; } // sha: null — удалить файл
       const blob = await (await gh(`/repos/${REPO}/git/blobs`, { method: 'POST', body: JSON.stringify({ content: f.encoding === 'base64' ? f.content : utf8ToB64(f.content), encoding: 'base64' }) })).json();
       tree.push({ path: f.path, mode: '100644', type: 'blob', sha: blob.sha });
     }
@@ -70,7 +71,7 @@ const github = {
   },
   async commitFiles(sha) {
     const c = await (await gh(`/repos/${REPO}/commits/${sha}`)).json();
-    return { files: c.files.map((f) => f.filename).filter((p) => p.startsWith('src/data/')), parent: c.parents[0]?.sha || null };
+    return { files: c.files.map((f) => f.filename).filter((p) => p.startsWith('src/data/') || p.startsWith('src/i18n/')), parent: c.parents[0]?.sha || null };
   },
 };
 

@@ -2,8 +2,10 @@
 import { useEffect, useState } from 'preact/hooks';
 import { api } from './api.js';
 import { COLLECTIONS, PRICES_FILE, diffCollection, diffPrices, slugify } from './collections.js';
+import { buildRedirectMap, vercelRedirects } from '../lib/redirects-core.js';
+import { merge3 } from './merge.js';
 
-export const KEYS = ['doctors', 'prices', 'promos', 'news', 'events', 'media', 'reviews', 'faq', 'vacancies', 'services', 'equipment'];
+export const KEYS = ['doctors', 'prices', 'checkups', 'promos', 'news', 'events', 'media', 'reviews', 'faq', 'vacancies', 'services', 'equipment', 'extra', 'kids', 'free', 'prepare', 'legal', 'site', 'kk', 'kkskip', 'access'];
 export const fileOf = (k) => (k === 'prices' ? PRICES_FILE : COLLECTIONS[k].file);
 const DRAFT_KEY = 'interna-admin-draft';
 
@@ -47,10 +49,18 @@ export async function loadAll() {
   });
   // черновик из прошлого визита — только если файл с тех пор не менялся
   let images = {}, savedAt = null, stale = 0;
+  const mergedKeys = [], clash = [];
   try {
     const d = JSON.parse(localStorage.getItem(DRAFT_KEY) || 'null');
     if (d) {
-      for (const [k, v] of Object.entries(d.data || {})) { if (files[k] && d.base?.[k] === files[k].hash) data[k] = v; else stale++; }
+      for (const [k, v] of Object.entries(d.data || {})) {
+        if (!files[k]) continue;
+        if (d.base?.[k] === files[k].hash) { data[k] = v; continue; }
+        // файл изменили, пока черновик лежал: сливаем; в спорных местах остаётся вариант из черновика
+        if (!d.orig?.[k]) { stale++; continue; }
+        const r = merge3(d.orig[k], v, files[k].data, { idKey: COLLECTIONS[k]?.idKey || 'id', name: where(k, [v, files[k].data]) });
+        data[k] = r.value; mergedKeys.push(k); clash.push(...r.conflicts);
+      }
       images = Object.fromEntries(Object.entries(d.images || {}).map(([p, b64]) => [p, { b64, url: `data:image/webp;base64,${b64}` }]));
       savedAt = d.savedAt || null;
     }
@@ -58,13 +68,15 @@ export async function loadAll() {
   set({ files, data, images, savedAt });
   try { if (sessionStorage.getItem('interna-admin-published')) { sessionStorage.removeItem('interna-admin-published'); if (!S.toasts.length) toast({ kind: 'ok', title: 'Опубликовано', text: S.user?.local ? 'Файлы сохранены в проект' : 'Сайт обновится через 1–2 минуты', href: '/' }); } } catch {}
   if (stale) toast({ kind: 'err', title: 'Часть черновика устарела', text: 'Эти файлы уже изменили на сайте — правки к ним сброшены' });
+  if (clash.length) toast({ kind: 'err', sticky: true, title: 'Проверьте спорные места', text: `Коллега менял то же, что и вы. Сейчас там ваш вариант — опубликуете, и он заменит правку коллеги: ${clash.slice(0, 5).join('; ')}${clash.length > 5 ? ` и ещё ${clash.length - 5}` : ''}` });
+  else if (mergedKeys.length) toast({ kind: 'ok', title: 'Черновик объединён', text: `Пока черновик ждал, коллега опубликовал правки в разделе «${mergedKeys.map(labelOf).join('», «')}». Ваши правки сохранены поверх` });
   loadHistory();
 }
 export async function loadHistory() { try { set({ history: await api.history() }); } catch { set({ history: [] }); } }
 
 /* ── Правки ── */
 export const isDirty = (k) => S.files[k] && JSON.stringify(S.data[k]) !== JSON.stringify(S.files[k].data);
-export const dirtyKeys = () => KEYS.filter(isDirty);
+export const dirtyKeys = () => KEYS.filter((k) => isDirty(k) && can(k));
 export function changes(keys = dirtyKeys()) {
   return keys.flatMap((k) => (k === 'prices' ? diffPrices(S.files[k].data, S.data[k]) : diffCollection(k, S.files[k].data, S.data[k])));
 }
@@ -76,17 +88,41 @@ function persist() {
     const keys = dirtyKeys();
     const savedAt = keys.length || Object.keys(S.images).length ? new Date().toISOString() : null;
     const draft = { base: Object.fromEntries(keys.map((k) => [k, S.files[k].hash])), data: Object.fromEntries(keys.map((k) => [k, S.data[k]])), savedAt };
+    // orig — файл, от которого начали правки: если его успеют изменить, черновик сольётся с новой версией, а не пропадёт
+    const orig = Object.fromEntries(keys.map((k) => [k, S.files[k].data]));
+    const images = Object.fromEntries(Object.entries(S.images).map(([p, v]) => [p, v.b64]));
     try {
       if (!keys.length) localStorage.removeItem(DRAFT_KEY);
       else {
-        try { localStorage.setItem(DRAFT_KEY, JSON.stringify({ ...draft, images: Object.fromEntries(Object.entries(S.images).map(([p, v]) => [p, v.b64])) })); }
-        catch { localStorage.setItem(DRAFT_KEY, JSON.stringify(draft)); } // фото не влезли — сохраняем только тексты
+        // не влезает в хранилище браузера — жертвуем сначала фото, потом исходниками для слияния
+        const tries = [{ ...draft, orig, images }, { ...draft, orig }, draft];
+        for (const d of tries) { try { localStorage.setItem(DRAFT_KEY, JSON.stringify(d)); break; } catch {} }
       }
     } catch {}
     set({ savedAt });
   }, 400);
 }
 export function setData(k, v) { set((s) => ({ data: { ...s.data, [k]: v } })); persist(); }
+/* ── Доступ: по опубликованному файлу admin-roles.json (черновик раздела «Доступ» на права не влияет) ── */
+const roles = () => {
+  const u = S.user, r = S.files.access?.data;
+  if (!u || u.local || !r) return { admin: true };
+  const me = (u.login || '').toLowerCase(), has = (l) => l.some((x) => String(x).trim().toLowerCase() === me);
+  if (!r.admins.length || has(r.admins)) return { admin: true };
+  const ed = r.editors.find((e) => e.login.trim().toLowerCase() === me);
+  return { admin: false, only: ed ? new Set(ed.sections) : null };
+};
+const PAIRS = { kk: ['kkskip'] }; // служебные файлы, которые правятся вместе с разделом
+export function can(k) {
+  if (k === '' || k == null) return true;
+  const r = roles();
+  if (r.admin) return true;
+  if (k === 'access') return false;
+  if (!r.only) return true;
+  return r.only.has(k) || Object.entries(PAIRS).some(([main, l]) => l.includes(k) && r.only.has(main));
+}
+export const isAdmin = () => roles().admin;
+
 export const items = (k) => S.data[k]?.items || [];
 export function setItems(k, list) { setData(k, { ...S.data[k], items: list }); }
 export function patchItem(k, idx, patch) { const list = items(k).slice(); list[idx] = { ...list[idx], ...patch }; setItems(k, list); }
@@ -115,6 +151,48 @@ export function imgSrc(v) {
 }
 
 /* ── Публикация ── */
+const labelOf = (k) => (k === 'prices' ? 'Прайс' : COLLECTIONS[k]?.label || k);
+const clip = (t) => { t = String(t); return t.length > 40 ? t.slice(0, 38) + '…' : t; };
+// подпись спорного места: запись по названию, раздел прайса, строка перевода
+const where = (k, srcs = [S.data[k], S.files[k]?.data]) => (path) => {
+  const c = COLLECTIONS[k];
+  if (k === 'prices') return `Прайс, «${path[0]}»`;
+  if (k === 'kk') return `перевод «${clip(path[1] ?? '')}»`;
+  if (path[0] === 'items' && path[1] != null && c) {
+    const all = srcs.filter(Boolean).flatMap((d) => d.items || []);
+    const it = c.idKey ? all.find((x) => String(x[c.idKey]) === path[1]) : all[path[1]];
+    return `${c.label}, «${clip((it && c.title?.(it)) || path[1])}»`;
+  }
+  return `${labelOf(k)}${path.length && path[0] !== 'items' ? `, ${path[0]}` : ''}`;
+};
+
+// Редиректы со старого сайта зависят от адресов страниц услуг, статей и KIDS — пересобираем vercel.json вместе с ними
+const REDIRECT_KEYS = ['extra', 'media', 'kids'];
+async function redirectsFile(data) {
+  const fresh = Object.fromEntries(await Promise.all(REDIRECT_KEYS.filter((k) => !data[k]).map(async (k) => [k, parseFile(k, await api.read(fileOf(k)))])));
+  const raw = (k) => { const d = data[k] || fresh[k], c = COLLECTIONS[k]; return c.fromData ? c.fromData(d) : d; };
+  const [base, cfgText] = await Promise.all([api.read('src/data/redirects.json'), api.read('vercel.json')]);
+  if (base == null || cfgText == null) return null;
+  const cfg = JSON.parse(cfgText);
+  cfg.redirects = vercelRedirects(buildRedirectMap({ base: JSON.parse(base), extra: raw('extra'), media: raw('media').items, kids: raw('kids') }));
+  const text = JSON.stringify(cfg, null, 2) + '\n';
+  return text === cfgText ? null : { path: 'vercel.json', content: text };
+}
+
+// Фото, которые убрали или заменили: были в опубликованных данных, а после публикации не упоминаются ни в одном файле — удаляем из репозитория.
+// Только папки, куда фото загружает админка; путь в данных бывает «doctors/имя» (это .webp) или «/images/kids/имя.svg».
+const IMG_RE = /(?:(?<=")|\/images\/)(doctors|media|equip|services|kids)\/([\w.-]+?)(\.(?:webp|svg|png|jpe?g))?(?=["'\s),]|$)/g;
+const imgRefs = (text) => new Set([...text.matchAll(IMG_RE)].map((m) => `public/images/${m[1]}/${m[2]}${m[3] || '.webp'}`));
+async function unusedImages(keys, files) {
+  const before = new Set(keys.flatMap((k) => [...imgRefs(S.files[k].text)]));
+  if (!before.size) return [];
+  const after = new Set(KEYS.flatMap((k) => [...imgRefs(files.find((f) => f.path === fileOf(k))?.content ?? S.files[k].text)]));
+  const cand = [...before].filter((p) => !after.has(p));
+  // удаляем только то, что действительно лежит в репозитории
+  const exists = await Promise.all(cand.map((p) => api.read(p).then((t) => t != null, () => false)));
+  return cand.filter((p, i) => exists[i]);
+}
+
 function finalizeIds(k, data) {
   const c = COLLECTIONS[k];
   if (!c?.idKey || !data.items) return data;
@@ -148,14 +226,24 @@ export async function publish() {
   const tId = toast({ kind: 'busy', title: 'Публикуем…', text: 'Сохраняем правки', sticky: true, replace: 'pub' });
   try {
     // кто-то мог опубликовать раньше нас — не затираем чужие правки
+    // если файл успели опубликовать — объединяем: их правки берём, свои кладём сверху; спорные места не трогаем
     const now = await Promise.all(keys.map((k) => api.read(fileOf(k))));
-    const conflict = keys.filter((k, i) => now[i] !== S.files[k].text);
-    if (conflict.length) throw Object.assign(new Error(`Пока вы правили, файл «${conflict.map((k) => (COLLECTIONS[k]?.label || 'Прайс')).join('», «')}» изменили. Обновите страницу — ваш черновик пропадёт, если не скопировать текст`), { conflict: true });
-    const data = Object.fromEntries(keys.map((k) => [k, finalizeIds(k, S.data[k])]));
+    const merged = {}, clash = [];
+    keys.forEach((k, i) => {
+      if (now[i] == null || now[i] === S.files[k].text) return;
+      const r = merge3(S.files[k].data, S.data[k], parseFile(k, now[i]), { idKey: COLLECTIONS[k]?.idKey || 'id', name: where(k) });
+      if (r.conflicts.length) clash.push(...r.conflicts);
+      else merged[k] = { text: now[i], data: r.value };
+    });
+    if (clash.length) throw Object.assign(new Error(`Пока вы правили, коллега опубликовал правки в тех же местах: ${clash.slice(0, 5).join('; ')}${clash.length > 5 ? ` и ещё ${clash.length - 5}` : ''}. Обновите страницу: черновик сохранится и сольётся с новой версией, а в спорных местах останется ваш вариант`), { conflict: true });
+    const data = Object.fromEntries(keys.map((k) => [k, finalizeIds(k, merged[k]?.data ?? S.data[k])]));
     const files = [
       ...keys.map((k) => ({ path: fileOf(k), content: serialize(k, data[k]) })),
       ...imgs.map(([path, v]) => ({ path, content: v.b64, encoding: 'base64' })),
     ];
+    if (keys.some((k) => REDIRECT_KEYS.includes(k))) { const r = await redirectsFile(data); if (r) files.push(r); }
+    const gone = await unusedImages(keys, files);
+    files.push(...gone.map((path) => ({ path, delete: true })));
     // локально dev-сервер перезагрузит страницу после записи файлов — уведомление покажем после загрузки
     try { sessionStorage.setItem('interna-admin-published', '1'); localStorage.removeItem(DRAFT_KEY); } catch {}
     await api.commit(files, commitMessage(list.length ? list : [{ what: 'новые фото', old: '', new: '' }]));
@@ -166,14 +254,15 @@ export async function publish() {
     set({ savedAt: null });
     dismiss(tId);
     try { sessionStorage.removeItem('interna-admin-published'); } catch {}
-    toast({ kind: 'ok', title: 'Опубликовано', text: S.user?.local ? 'Файлы сохранены в проект' : 'Сайт обновится через 1–2 минуты', href: '/' });
+    const mk = Object.keys(merged);
+    toast({ kind: 'ok', title: 'Опубликовано', text: (mk.length ? `Объединили с правками коллеги в разделе «${mk.map(labelOf).join('», «')}». ` : '') + (S.user?.local ? 'Файлы сохранены в проект' : 'Сайт обновится через 1–2 минуты'), href: '/' });
     loadHistory();
   } catch (e) {
     try { sessionStorage.removeItem('interna-admin-published'); } catch {}
     persist();
     set({ publishing: false });
     dismiss(tId);
-    toast({ kind: 'err', title: 'Не удалось опубликовать', text: e.message, sticky: !!e.conflict, action: e.conflict ? null : { label: 'Повторить', fn: publish } });
+    toast({ kind: 'err', title: 'Не удалось опубликовать', text: e.message, sticky: !!e.conflict, action: e.conflict ? { label: 'Обновить страницу', fn: () => { persist(); setTimeout(() => location.reload(), 600); } } : { label: 'Повторить', fn: publish } });
   }
 }
 

@@ -2,21 +2,21 @@
 import { html } from 'htm/preact';
 import { useEffect, useRef, useState } from 'preact/hooks';
 import { RichText, wordCount } from './blocks.js';
-import { CATS, COLLECTIONS, fmtDay, issues, plural, shortName, slugify } from './collections.js';
-import { changes, closeModal, dirtyKeys, get, imgSrc, isDirty, items, loadHistory, openModal, origItem, patchItem, rollback, setData, setItems, toast } from './store.js';
+import { CATS, COLLECTIONS, KK_SOURCES, fmtDay, issues, missingKk, plural, rawOf, shortName, slugify, stringsOf } from './collections.js';
+import { can, changes, isAdmin, closeModal, dirtyKeys, get, imgSrc, isDirty, items, loadHistory, openModal, origItem, patchItem, rollback, setData, setItems, toast } from './store.js';
 import { Empty, Field, Icon, ImagePick, PublishBtn, Toggle, Topbar, Unsaved, askPublish, askText, confirmDelete } from './ui.js';
 
 const go = (h) => { location.hash = h; };
 const same = (a, b) => JSON.stringify(a ?? null) === JSON.stringify(b ?? null);
-const ADD_AT_END = ['doctors', 'faq', 'equipment'];
+const ADD_AT_END = ['doctors', 'faq', 'equipment', 'checkups'];
 const keyOf = (k, it, i) => (COLLECTIONS[k].idKey ? it[COLLECTIONS[k].idKey] : String(i));
 
 export function addItem(k, extra = {}) {
   const c = COLLECTIONS[k];
-  const it = { ...c.blank(), ...extra };
+  const it = { ...c.blank(items(k)), ...extra };
   if (c.idKey) it[c.idKey] = 'new-' + Date.now().toString(36);
   const list = items(k);
-  const next = ADD_AT_END.includes(k) ? [...list, it] : [it, ...list];
+  const next = ADD_AT_END.includes(k) || c.addAt === 'end' ? [...list, it] : [it, ...list];
   setItems(k, next);
   go(`#/${k}/${c.idKey ? it[c.idKey] : next.indexOf(it)}`);
 }
@@ -38,7 +38,7 @@ const Head = ({ title, cnt, sub, noPub, children }) => html`<div class=${'head' 
   <div class=${'titles' + (sub ? ' v' : '')}><h1>${title}</h1>${cnt && html`<span class="cnt">${cnt}</span>`}${sub && html`<span class="sub">${sub}</span>`}</div>
   <div class="actions">${!noPub && changes().length ? html`<${Unsaved} /><${PublishBtn} />` : ''}${children}</div>
 </div>`;
-const Search = ({ value, onInput, placeholder, w }) => html`<label class="search" style=${w ? `width:${w}px` : ''}><${Icon} n="search" /><input placeholder=${placeholder} value=${value} onInput=${onInput} /></label>`;
+const Search = ({ value, onInput, placeholder, w }) => html`<label class="search" style=${w ? `width:min(${w}px, 100%)` : ''}><${Icon} n="search" /><input placeholder=${placeholder} value=${value} onInput=${onInput} /></label>`;
 
 /* ── Обзор ── */
 const ago = (iso) => {
@@ -58,13 +58,13 @@ export function Overview() {
   const nSecs = Object.keys(s.data.prices).length;
   const nDocs = items('doctors').filter((d) => !d.hidden).length;
   const nPromos = items('promos').length;
-  const found = issues(s.data);
+  const found = issues(s.data).filter((x) => can(x.href.split('/')[1]));
   const quick = [
     ['#/prices', 'payments', 'var(--ice50)', 'Изменить цену', `${nPrices} ${plural(nPrices, 'позиция', 'позиции', 'позиций')} в ${nSecs} ${plural(nSecs, 'разделе', 'разделах', 'разделах')}`],
     [() => addItem('news'), 'campaign', 'var(--peach)', 'Добавить новость', 'Объявления, ОСМС, график'],
     [() => addItem('promos'), 'sell', 'var(--mint)', 'Запустить акцию', `Сейчас идёт ${nPromos} ${plural(nPromos, 'акция', 'акции', 'акций')}`],
     [() => addItem('doctors'), 'person_add', 'var(--lav)', 'Добавить врача', `${nDocs} ${plural(nDocs, 'врач', 'врача', 'врачей')} на сайте`],
-  ];
+  ].filter((q, i) => can(['prices', 'news', 'promos', 'doctors'][i]));
   const doRollback = (c) => openModal(() => html`<div class="modal sm">
     <div class="mic blue"><${Icon} n="history" /></div>
     <h2>Откатить правку?</h2>
@@ -100,7 +100,7 @@ export function Overview() {
         ${s.history == null ? html`<div class="change"><span class="small">Загружаем…</span></div>` : !s.history.length ? html`<div class="change"><span class="small">Правок пока не было</span></div>` : s.history.slice(0, 12).map((c) => html`<div class="change">
           <span class="iw"><${Icon} n=${histIcon(c.message)} /></span>
           <div class="t"><b title=${c.message}>${c.message.replace(/^Админка: /, '')}</b><span>${c.author} · ${ago(c.date)}</span></div>
-          <button onClick=${() => doRollback(c)}>Откатить</button>
+          ${isAdmin() && html`<button onClick=${() => doRollback(c)}>Откатить</button>`}
         </div>`)}
       </div>
       <div class="card attn">
@@ -132,7 +132,7 @@ export function Doctors() {
       <button class=${'chip' + (!cat ? ' on' : '')} onClick=${() => setCat('')}>Все<b>${all.length}</b></button>
       ${Object.entries(CATS).map(([k, l]) => html`<button class=${'chip' + (cat === k ? ' on' : '')} onClick=${() => setCat(k)}>${l}<b>${all.filter((d) => d.cat === k).length}</b></button>`)}
     </div>
-    <div class="table">
+    <div class="table docs">
       <div class="tr th" style=${DOC_G}><span>Врач</span><span>Направление</span><span>Стаж</span><span>Приём</span><span>На сайте</span><span></span></div>
       ${list.map((d) => { const [cls, st] = docStatus(d); const o = origItem('doctors', d); return html`<a class="tr" href=${'#/doctors/' + d.id} style=${DOC_G}>
         <span class="who">${d.img ? html`<img src=${imgSrc(d.img)} alt="" loading="lazy" />` : html`<span class="noimg"><${Icon} n="person" /></span>`}
@@ -387,12 +387,16 @@ export function List({ k }) {
   const move = (i, d) => { const j = i + d; if (j < 0 || j >= all.length) return; const l = all.slice(); [l[i], l[j]] = [l[j], l[i]]; setItems(k, l); };
   const thumb = k === 'equipment';
   const G = 'grid-template-columns:24px minmax(0,1fr) 24px';
+  // общие поля файла: короткие — одной карточкой над списком, длинные списки — под ним
+  const fileField = (f) => html`<${Field} f=${f} item=${s.data[k]} set=${(p) => setData(k, { ...get().data[k], ...p })} />`;
+  const isBig = (f) => f.type === 'list' || f.type === 'rows';
+  const small = (c.fileFields || []).filter((f) => !isBig(f)), big = (c.fileFields || []).filter(isBig);
   return html`<div class="page">
-    <${Head} title=${c.label} cnt=${`${all.length} на сайте`}>
-      ${!c.noAdd && html`<button class="btn btn-primary" onClick=${() => addItem(k)}><${Icon} n="add" />Добавить ${c.one}</button>`}
+    <${Head} title=${c.label} cnt=${c.single ? '' : `${all.length} на сайте`}>
+      ${!c.noAdd && !c.single && html`<button class="btn btn-primary" onClick=${() => addItem(k)}><${Icon} n="add" />Добавить ${c.one}</button>`}
     </${Head}>
-    ${(c.fileFields || []).map((f) => html`<div class="card"><${Field} f=${f} item=${s.data[k]} set=${(p) => setData(k, { ...get().data[k], ...p })} /></div>`)}
-    ${all.length ? html`<div class="table">
+    ${small.length > 0 && html`<div class="card">${small.map((f) => fileField(f))}</div>`}
+    ${c.single ? '' : all.length ? html`<div class="table">
       ${all.map((it, i) => html`<div class="tr" style=${G}>
         <span class="reorder"><button title="Выше" onClick=${() => move(i, -1)}><${Icon} n="keyboard_arrow_up" /></button><button title="Ниже" onClick=${() => move(i, 1)}><${Icon} n="keyboard_arrow_down" /></button></span>
         <a class="who" href=${`#/${k}/${keyOf(k, it, i)}`}>${thumb && (it.img ? html`<img class="cover" src=${imgSrc(it.img)} alt="" />` : html`<span class="cover"></span>`)}
@@ -400,6 +404,8 @@ export function List({ k }) {
         <a class="more" href=${`#/${k}/${keyOf(k, it, i)}`}><${Icon} n="edit" /></a>
       </div>`)}
     </div>` : html`<div class="table"><${Empty} icon=${c.icon} title=${`${c.label}: пока пусто`} text="Когда добавите первую запись, она появится на сайте после публикации" action=${html`<button class="btn btn-primary" onClick=${() => addItem(k)}><${Icon} n="add" />Добавить ${c.one}</button>`} /></div>`}
+    ${k === 'checkups' && html`<${DirTable} />`}
+    ${big.map((f) => html`<div class="card" style=${c.single ? '' : 'margin-top:24px'}>${fileField(f)}</div>`)}
   </div>`;
 }
 
@@ -409,7 +415,12 @@ export function ItemEdit({ k, param }) {
   if (idx < 0) return html`<${NotFound} k=${k} />`;
   const it = items(k)[idx];
   const o = c.idKey ? origItem(k, it) : get().files[k].data.items[idx];
-  const set = (p) => patchItem(k, idx, p);
+  // поле с only: true (например, «открыта по умолчанию») может быть включено только у одной записи
+  const set = (p) => {
+    const only = c.fields.find((f) => f.only && p[f.key]);
+    if (!only) return patchItem(k, idx, p);
+    setItems(k, items(k).map((x, i) => (i === idx ? { ...x, ...p } : x[only.key] ? (({ [only.key]: _, ...r }) => r)(x) : x)));
+  };
   return html`<div>
     <${Topbar} crumbs=${[[c.label, '#/' + k], [c.title(it)]]} onCancel=${() => revertItem(k, idx)} cancelDisabled=${!!o && same(o, it)} />
     <div class="body one">
@@ -418,5 +429,107 @@ export function ItemEdit({ k, param }) {
         ${!c.noAdd && html`<button class="danger-link" onClick=${() => confirmDelete({ title: `Удалить ${c.one}?`, text: `«${c.title(it)}» пропадёт с сайта после публикации.`, onDelete: () => removeItem(k, idx) })}><${Icon} n="delete" />Удалить ${c.one}</button>`}
       </div>
     </div>
+  </div>`;
+}
+
+/* ── Чек-апы: профильные программы (аккордеон внизу /checkup) ── */
+const dirs = () => get().data.checkups.directions || [];
+const setDirs = (list) => setData('checkups', { ...get().data.checkups, directions: list });
+
+function DirTable() {
+  const o = get().files.checkups.data.directions || [];
+  return html`<div class="card-h" style="margin:32px 0 12px"><h2>Профильные программы</h2><span class="sub">Раскрывающиеся блоки внизу страницы /checkup: гастро, кардио, гормоны…</span></div>
+    <div class="table">${dirs().map((d) => html`<div class="tr" style="grid-template-columns:minmax(0,1fr) 24px">
+      <a class="who" href=${'#/checkups/dir:' + d.id}><div><b>${d.name}${!same(o.find((x) => x.id === d.id), d) && html`<i class="changed-mark"></i>`}</b><span>${d.programs.map((p) => p.name).join(' · ')}</span></div></a>
+      <a class="more" href=${'#/checkups/dir:' + d.id}><${Icon} n="edit" /></a>
+    </div>`)}</div>`;
+}
+
+const LINES = { to: (v) => (v || []).join('\n'), from: (t) => t.split('\n').map((x) => x.trim()).filter(Boolean) };
+const PARAS = { to: (v) => (v || []).join('\n\n'), from: (t) => t.split(/\n\s*\n/).map((x) => x.trim()).filter(Boolean) };
+// textarea со списком: храним текст локально, чтобы пустая строка не пропадала при наборе
+function ListArea({ value, onChange, model, rows = 5 }) {
+  const [txt, setTxt] = useState(() => model.to(value));
+  const own = useRef(JSON.stringify(value || []));
+  useEffect(() => { const j = JSON.stringify(value || []); if (j !== own.current) { own.current = j; setTxt(model.to(value)); } }, [value]); // «Отменить» и откат
+  return html`<textarea class="inp" rows=${rows} value=${txt} onInput=${(e) => { const v = model.from(e.target.value); own.current = JSON.stringify(v); setTxt(e.target.value); onChange(v); }}></textarea>`;
+}
+
+export function DirEdit({ id }) {
+  const list = dirs();
+  const idx = list.findIndex((d) => d.id === id);
+  if (idx < 0) return html`<${NotFound} k="checkups" />`;
+  const d = list[idx];
+  const o = (get().files.checkups.data.directions || []).find((x) => x.id === id);
+  const set = (p) => setDirs(dirs().map((x, i) => (i === idx ? { ...x, ...p } : x)));
+  const setProg = (pi, p) => set({ programs: d.programs.map((x, i) => (i === pi ? { ...x, ...p } : x)) });
+  return html`<div>
+    <${Topbar} crumbs=${[['Чек-апы', '#/checkups'], [d.name]]} onCancel=${() => set(o)} cancelDisabled=${same(o, d)} />
+    <div class="body one">
+      <div class="form" key=${id}>
+        <div class="card">
+          <div class="f"><label>Название</label><input class="inp" value=${d.name} onInput=${(e) => set({ name: e.target.value })} /></div>
+          <div class="f"><label>Вступление</label><${ListArea} value=${d.intro} onChange=${(v) => set({ intro: v })} model=${PARAS} rows="6" /><div class="hint">абзацы разделяйте пустой строкой</div></div>
+          <div class="f"><label>Кому показано</label><${ListArea} value=${d.indications} onChange=${(v) => set({ indications: v })} model=${LINES} rows="6" /><div class="hint">каждый пункт с новой строки</div></div>
+        </div>
+        ${d.programs.map((p, pi) => html`<div class="card" key=${pi}>
+          <div class="card-h"><h2>Программа ${pi + 1}</h2><span class="sub">${(p.items || []).length} пунктов</span>
+            <button type="button" class="icon-btn danger" title="Удалить программу" onClick=${() => set({ programs: d.programs.filter((_, i) => i !== pi) })}><${Icon} n="delete" /></button></div>
+          <div class="f"><label>Название</label><input class="inp" value=${p.name} onInput=${(e) => setProg(pi, { name: e.target.value })} /></div>
+          <div class="f"><label>Что входит</label><${ListArea} value=${p.items} onChange=${(v) => setProg(pi, { items: v })} model=${LINES} rows="8" /><div class="hint">каждый пункт с новой строки</div></div>
+          <div class="f"><label>Примечание<em>необязательно</em></label><input class="inp" value=${p.note || ''} onInput=${(e) => { const { note, ...r } = p; set({ programs: d.programs.map((x, i) => (i === pi ? (e.target.value ? { ...r, note: e.target.value } : r) : x)) }); }} /></div>
+        </div>`)}
+        <button class="btn btn-line" style="justify-self:start" onClick=${() => set({ programs: [...d.programs, { name: '', items: [] }] })}><${Icon} n="add" />Добавить программу</button>
+      </div>
+    </div>
+  </div>`;
+}
+
+/* ── Переводы на казахский ── */
+const label = (k) => (k === 'prices' ? 'Прайс' : COLLECTIONS[k]?.label || k);
+// строка по пути «/items/3/t» в данных раздела — чтобы подсказать прежний перевод изменённого текста
+const at = (v, path) => path.split('/').slice(1).reduce((x, p) => (x == null ? x : x[p]), v);
+
+function KkArea({ value, onChange, placeholder }) {
+  const ref = useRef();
+  useEffect(() => { const t = ref.current; t.style.height = 'auto'; t.style.height = t.scrollHeight + 2 + 'px'; }, [value]);
+  return html`<textarea ref=${ref} class="inp" rows="1" placeholder=${placeholder} value=${value} onInput=${(e) => onChange(e.target.value)}></textarea>`;
+}
+
+export function Translations() {
+  const s = get();
+  const dict = s.data.kk.dict, skip = s.data.kkskip.list;
+  const [q, setQ] = useState('');
+  // строки, которые показали в этот визит, не прячем сразу после перевода — иначе поле исчезнет посреди набора
+  const shown = useRef(new Map());
+  for (const m of missingKk(s.data)) if (!shown.current.has(m.t)) shown.current.set(m.t, m);
+  const list = [...shown.current.values()];
+  const left = list.filter((m) => dict[m.t] == null && !skip.includes(m.t)).length;
+  const setKk = (t, v) => { const d = { ...get().data.kk.dict }; if (v.trim()) d[t] = v; else delete d[t]; setData('kk', { ...get().data.kk, dict: d }); };
+  const setSkip = (t, on) => { const l = get().data.kkskip.list.filter((x) => x !== t); setData('kkskip', { ...get().data.kkskip, list: on ? [...l, t] : l }); };
+  const hint = (m) => {
+    const before = s.files[m.k] && rawOf(m.k, s.files[m.k].data);
+    const old = before && at(before, m.path);
+    return typeof old === 'string' && old !== m.t && dict[old.replace(/\s+/g, ' ').trim()];
+  };
+  const ql = q.trim().toLowerCase();
+  const found = ql.length > 1 ? Object.keys(dict).filter((k) => k.toLowerCase().includes(ql) || String(dict[k]).toLowerCase().includes(ql)).slice(0, 40) : [];
+  return html`<div class="page kk">
+    <${Head} title="Переводы" cnt=${left ? `${left} без перевода` : 'всё переведено'} />
+    <div class="card note-card"><${Icon} n="translate" /><span>Казахская версия сайта (/kk/…) собирается из этого словаря. Когда меняете текст в других разделах, новая строка появится здесь — переведите её или отметьте «Не переводить», если это имя, название или код.</span></div>
+    ${list.length ? html`<div class="table">${list.map((m) => { const v = dict[m.t] ?? '', sk = skip.includes(m.t), h = !v && hint(m); return html`<div class=${'kkrow' + (sk ? ' off' : v ? ' done' : '')} key=${m.t}>
+      <div class="ru"><span class="src">${label(m.k)}</span><p>${m.t}</p></div>
+      <div class="kz">${sk ? html`<span class="small">Остаётся по-русски</span>` : html`<${KkArea} value=${v} onChange=${(x) => setKk(m.t, x)} placeholder="Перевод на казахский" />`}
+        ${h && html`<button class="link" onClick=${() => setKk(m.t, h)}>Взять прежний перевод: «${h.length > 80 ? h.slice(0, 78) + '…' : h}»</button>`}
+        <button class="text-btn" onClick=${() => setSkip(m.t, !sk)}>${sk ? 'Всё-таки перевести' : 'Не переводить'}</button></div>
+    </div>`; })}</div>`
+      : html`<div class="table"><${Empty} icon="translate" title="Всё переведено" text="Новые строки появятся здесь, когда поменяете тексты в других разделах" /></div>`}
+    <div class="card-h" style="margin-top:16px"><h2>Найти перевод</h2><span class="sub">${Object.keys(dict).length} строк в словаре — поиск по русскому или казахскому тексту</span></div>
+    <${Search} w=${420} value=${q} onInput=${(e) => setQ(e.target.value)} placeholder="Например, «колоноскопия»" />
+    ${found.length > 0 && html`<div class="table">${found.map((t) => html`<div class="kkrow" key=${t}>
+      <div class="ru"><p>${t}</p></div>
+      <div class="kz"><${KkArea} value=${dict[t] ?? ''} onChange=${(x) => setKk(t, x)} placeholder="Пусто — строка останется по-русски" />${s.files.kk.data.dict[t] !== dict[t] && html`<button class="text-btn" onClick=${() => setKk(t, s.files.kk.data.dict[t] ?? '')}><${Icon} n="undo" />Вернуть</button>`}</div>
+    </div>`)}</div>`}
+    ${ql.length > 1 && !found.length && html`<div class="small" style="padding:0 4px">Ничего не нашли</div>`}
   </div>`;
 }

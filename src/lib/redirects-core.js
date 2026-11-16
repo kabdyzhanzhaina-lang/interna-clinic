@@ -26,3 +26,20 @@ export function buildRedirectMap({ base, extra, media, kids }) {
   return m;
 }
 
+
+/** Карта → список редиректов для vercel.json (общий для scripts/make-vercel-redirects.mjs и админки) */
+export function vercelRedirects(map) {
+  // адрес назначения со слэшем (trailingSlash: true), якорь — после него
+  const dest = (to) => { const [path, hash] = to.split('#'); return (path.endsWith('/') ? path : path + '/') + (hash ? '#' + hash : ''); };
+  const esc = (p) => p.replace(/([()[\]{}:*+?.])/g, '\\$1');   // спецсимволы path-to-regexp в старых адресах
+  const redirects = [];
+  for (const [from, to] of map) {
+    const d = dest(to);
+    if (`/${from}/` === d.split('#')[0]) continue;
+    redirects.push({ source: '/' + esc(from), destination: d, statusCode: 301 });
+    if (!/\.[a-z0-9]+$/i.test(from)) redirects.push({ source: '/' + esc(from) + '/', destination: d, statusCode: 301 });
+  }
+  // www → без www (после привязки домена)
+  redirects.unshift({ source: '/:path*', has: [{ type: 'host', value: 'www.internaclinic.kz' }], destination: 'https://internaclinic.kz/:path*', statusCode: 301 });
+  return redirects;
+}

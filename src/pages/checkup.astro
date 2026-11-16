@@ -11,10 +11,9 @@ import Cta from '../components/Cta.astro';
 import data from '../data/checkups.json';
 import { img } from '../lib/site.js';
 const { programs, directions } = data;
-const hot = 'gastrologicheskiy-standart';
+const hot = (programs.find((p) => p.hot) || programs[0])?.id;
 const count = (p) => p.groups.reduce((n, g) => n + g.items.filter((i) => i.in).length, 0);
 const groupsOf = (p) => p.groups.map((g) => ({ title: g.title, items: g.items.filter((i) => i.in).map((i) => i.n) })).filter((g) => g.items.length).slice(0, 3);
-const desc = { bazovyy: 'Базовая проверка основных систем организма: лаборатория, УЗИ, ЭКГ и консультация терапевта.', 'gastrologicheskiy-standart': 'Стандартная проверка желудочно-кишечного тракта: лаборатория, УЗИ, гастроскопия и консультация гастроэнтеролога.', 'gastrologicheskiy-rasshirennyy': 'Расширенная проверка ЖКТ: к стандарту добавляются колоноскопия, фиброскан и расширенная лаборатория.', 'premium-muzhskoy': 'Полное обследование для мужчин: все системы организма, эндоскопия, консультации профильных специалистов.', 'premium-zhenskiy': 'Полное обследование для женщин: все системы организма, эндоскопия, женское здоровье, консультации специалистов.' };
 const steps = [['Заявка', 'Оставляете заявку на сайте или в WhatsApp — координатор уточняет жалобы и цели и подбирает программу.'], ['Подготовка', 'Присылаем памятку: что взять с собой, как подготовиться к анализам, УЗИ и эндоскопии.'], ['Обследование', 'Утром натощак — анализы, УЗИ, функциональная диагностика и эндоскопия во сне. Всё в одном здании, без очередей.'], ['Заключение', 'Вечером или на следующий день — разбор результатов с профильным врачом и план наблюдения.']];
 const faq = [
   ['Сколько времени занимает check-up?', 'Большинство программ проходят за 1–2 дня. В первый день — анализы, УЗИ, функциональная диагностика и эндоскопия при необходимости; во второй — консультации специалистов и разбор результатов.'],
@@ -35,7 +34,7 @@ const dirItems = directions.map((d) => ({ q: d.name, a: [...d.intro, ...d.progra
     <div class="cupick rv d2" id="cuPick">
       <div class="vtabs">{programs.map((p) => <button type="button" class={`vtab${p.id === hot ? ' on' : ''}`} data-prog={p.id}><span class="n">{p.title}</span><span class="p">{p.price}</span><span class="msr">chevron_right</span></button>)}</div>
       {programs.map((p) => <div class="cudet" data-det={p.id} hidden={p.id !== hot}>
-        <div class="dh"><p class="kicker">{p.sub || 'Самая востребованная'}</p><h3>{p.title}</h3><p class="d">{desc[p.id] || `${count(p)} исследований и консультаций.`}</p></div>
+        <div class="dh"><p class="kicker">{p.sub || 'Самая востребованная'}</p><h3>{p.title}</h3><p class="d">{p.desc || `${count(p)} исследований и консультаций.`}</p></div>
         <div class="dp"><b>{p.price}</b><span>амбулаторно, от</span></div>
         <div class="dg">{groupsOf(p).map((g) => <div class="g"><span class="t">{g.title}</span>{g.items.slice(0, 4).map((x) => <span class="r"><span class="msr">check</span>{x}</span>)}</div>)}</div>
         <div class="db"><a class="btn btn-primary" href="/checkup-request">Оставить заявку</a><button type="button" class="btn btn-line" data-book data-svc={`Check-up · ${p.title}`}>Полный состав программы</button><span class="nt">{count(p)} исследований и консультаций · точный состав пришлёт координатор</span></div>

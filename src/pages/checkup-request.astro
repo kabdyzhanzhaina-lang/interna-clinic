@@ -9,14 +9,7 @@ import Accordion from '../components/Accordion.astro';
 import data from '../data/checkups.json';
 import { SITE } from '../lib/site.js';
 const { programs } = data;
-const hot = 'gastrologicheskiy-standart';
-const desc = {
-  bazovyy: 'Анализы, УЗИ, терапевт · 4 часа',
-  'gastrologicheskiy-standart': 'ЖКТ, печень, гастроскопия во сне · 1 день',
-  'gastrologicheskiy-rasshirennyy': 'Стандарт + колоноскопия во сне и онкомаркеры · 1–2 дня',
-  'premium-muzhskoy': 'Все системы + кардио, гормоны, уролог · 1–2 дня',
-  'premium-zhenskiy': 'Все системы + кардио, гормоны, гинеколог · 1–2 дня',
-};
+const hot = (programs.find((p) => p.hot) || programs[0])?.id;
 const goals = [['Профилактика, жалоб нет', 'ЖКТ: боли, вздутие, изжога', 'Печень: анализы, гепатит'], ['Сердце и сосуды', 'Гормоны и щитовидная железа', 'Вес и обмен веществ'], ['Наследственность: онкология', 'Перед операцией или беременностью']];
 const steps = ['Программа', 'Формат', 'Что проверить', 'Когда', 'Контакты'];
 const faq = [
@@ -44,7 +37,7 @@ const g5 = C('channel', 'Как с вами связаться', '', ['WhatsApp'
       <div class="cq-step" data-step="1">
         <div class="h"><span class="n">1</span><div><h3>Какая программа интересует</h3><p>Выберите одну. Не уверены — нажмите «Не знаю», координатор подберёт по жалобам и возрасту.</p></div></div>
         <div class="pick progs" data-pick="program" data-single>
-          {programs.map((p) => <button type="button" class={p.id === hot ? 'on' : ''} data-v={p.title}><span class="top"><b>{p.title}</b><span class="msr ic" aria-hidden="true">{p.id === hot ? 'check_circle' : 'radio_button_unchecked'}</span></span><span class="pz">{p.price}</span><small>{desc[p.id] || p.sub}</small></button>)}
+          {programs.map((p) => <button type="button" class={p.id === hot ? 'on' : ''} data-v={p.title}><span class="top"><b>{p.title}</b><span class="msr ic" aria-hidden="true">{p.id === hot ? 'check_circle' : 'radio_button_unchecked'}</span></span><span class="pz">{p.price}</span><small>{p.brief || p.sub}</small></button>)}
           <button type="button" class="unk" data-v="Не знаю — подобрать"><span class="top"><b>Не знаю</b><span class="msr ic" aria-hidden="true">help</span></span><span class="pz">помогите подобрать</span><small>Координатор предложит программу после звонка</small></button>
         </div>
       </div>
