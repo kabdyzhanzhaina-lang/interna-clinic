@@ -1462,3 +1462,43 @@ footer .fsoc .msr{font-size:20px}
 a.icard{text-decoration:none;transition:border-color .2s,transform .2s}
 a.icard:hover{border-color:var(--blue);transform:translateY(-2px)}
 .icard .link{margin-top:auto;padding-top:4px;font-size:14px}
+
+/* ── Check-up: профильные программы карточками (как на старом сайте) ── */
+.dseg{display:inline-flex;max-width:100%;margin-top:32px}
+.dseg button{white-space:nowrap}
+.dirpanel{margin-top:32px;display:flex;flex-direction:column;gap:36px;animation:fadeUp .5s var(--ease)}
+.dirpanel[hidden]{display:none}
+.dirintro{display:grid;grid-template-columns:1.25fr 1fr;gap:48px;align-items:start}
+.dirintro .t p{margin:0 0 12px;font-size:16px;line-height:1.6;color:var(--g600)}
+.dirintro .ind{background:var(--ice50);border-radius:20px;padding:24px 28px}
+.dirintro .ind b{display:block;font-size:17px;font-weight:600;margin-bottom:12px;color:var(--black)}
+.dirintro .ind ul{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:8px}
+.dirintro .ind li{display:flex;gap:10px;font-size:15px;line-height:1.45;color:var(--g600)}
+.dirintro .ind li .msr{font-size:18px;color:var(--blue);flex:none}
+.dircards{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;align-items:start}
+.dcard{display:flex;flex-direction:column;align-items:stretch;text-align:left;gap:10px;padding:28px;border-radius:22px;background:#fff;border:1px solid var(--g200)}
+.dcard .kicker{margin:0}
+.dcard .t{font-size:22px;font-weight:600;line-height:1.2;color:var(--black)}
+.dcard .n{font-family:var(--serif);font-style:italic;font-size:17px;color:var(--blue)}
+.dcard details{border-top:1px solid var(--g200);padding-top:14px;margin-top:6px}
+.dcard summary{list-style:none;display:flex;justify-content:space-between;align-items:center;cursor:pointer;font-size:15px;font-weight:600;color:var(--black)}
+.dcard summary::-webkit-details-marker{display:none}
+.dcard summary .msr{font-size:22px;transition:transform .3s var(--ease)}
+.dcard details[open] summary .msr{transform:rotate(180deg)}
+.dcard details ul{list-style:none;margin:14px 0 0;padding:0;display:flex;flex-direction:column;gap:8px}
+.dcard details li{display:flex;gap:10px;font-size:14px;line-height:1.45;color:var(--g600)}
+.dcard details li .msr{font-size:16px;color:var(--blue);flex:none;margin-top:2px}
+.dcard .note{margin:12px 0 0;font-size:13px;color:var(--g600)}
+.dcard .btn{align-self:flex-start;margin-top:8px}
+@media(max-width:1000px){.dircards{grid-template-columns:repeat(2,1fr)}.dirintro{grid-template-columns:1fr;gap:24px}}
+@media(max-width:700px){
+.dseg{display:flex;flex-wrap:wrap;gap:8px;padding:0;background:transparent;margin-top:24px}.dseg button{background:var(--ice50);padding:10px 16px}.dseg button.on{background:var(--black);color:#fff;box-shadow:none}
+.dirpanel{margin-top:24px;gap:24px}.dirintro .t p{font-size:15px}.dirintro .ind{padding:20px;border-radius:18px}
+.dircards{grid-template-columns:1fr;gap:14px}.dcard{padding:22px;border-radius:18px}.dcard .t{font-size:19px}
+/* главная на телефоне: сильные стороны и отзывы — горизонтальная лента, новости — отступ до CTA */
+.bcards,.revcards{display:flex;gap:12px;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;margin:0 -18px;padding:0 18px 4px;scroll-padding:0 18px}
+.bcards::-webkit-scrollbar,.revcards::-webkit-scrollbar{display:none}
+.bcard{flex:0 0 78vw;max-width:320px;scroll-snap-align:start}
+.revcards .rev{flex:0 0 82vw;max-width:340px;scroll-snap-align:start;padding:22px;border-radius:18px}.revcards .rev .q{font-size:16px}
+.newssec{padding-bottom:48px}
+}

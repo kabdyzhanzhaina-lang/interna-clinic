@@ -33,12 +33,12 @@ const isMore = (d) => doctors.indexOf(d) >= SHOW;
 
   <section style="padding:72px 0 96px"><div class="shell">
     <div class="getcard rv">
-      <div class="l"><p class="kicker">Не знаете, к кому?</p><h2>Опишите жалобы — подберём врача за 10 минут</h2><p>Администратор уточнит симптомы, подскажет специалиста и свободное время. Если нужны обследования до приёма — объясним, какие.</p></div>
+      <div class="l"><p class="kicker">Не знаете, к кому?</p><h2>Опишите жалобы — подберём врача</h2><p>Администратор уточнит симптомы, подскажет специалиста и свободное время. Если нужны обследования до приёма — объясним, какие.</p></div>
       <div class="b"><button class="btn btn-primary" data-book data-svc="Подобрать врача">Подобрать врача</button><a class="btn btn-wa" href="#" data-wa="Здравствуйте! Помогите подобрать врача."><span class="msr">chat</span>Написать в WhatsApp</a></div>
     </div>
   </div></section>
 
-  <Cta title="Запишитесь на приём уже сегодня" text="Свободные окна есть в день обращения. Позвоните или оставьте заявку — подтвердим время за 10 минут." />
+  <Cta title="Запишитесь на приём уже сегодня" text="Свободные окна есть в день обращения. Позвоните или оставьте заявку — подтвердим время." />
   <script is:inline>
     (function(){var btn=document.getElementById('docmoreBtn'),wrap=document.getElementById('docmore');if(!btn)return;
       var showAll=function(){document.querySelectorAll('#docgrid [data-more]').forEach(function(e){e.hidden=false;e.removeAttribute('data-more');});wrap.hidden=true;};

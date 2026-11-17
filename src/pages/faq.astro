@@ -20,7 +20,7 @@ const jsonld = { '@context': 'https://schema.org', '@type': 'FAQPage', mainEntit
   <section style="padding:40px 0 96px"><div class="shell"><div class="lay g64">
     <aside class="itoc fcats rv" id="faqCats">
       {cats.map((c, i) => <a href="#" class={i === 0 ? 'on' : ''} data-cat={c[0]}><span>{c[0]}</span><span class="cnt">{c[1]}</span></a>)}
-      <div class="wacard ice"><b>Остался вопрос?</b><p>Напишите администратору — ответим в WhatsApp в рабочее время за 10 минут.</p><a class="btn btn-wa" href="#" data-wa="Здравствуйте! У меня вопрос, которого нет в разделе «Частые вопросы»."><span class="msr">chat</span>Написать в WhatsApp</a></div>
+      <div class="wacard ice"><b>Остался вопрос?</b><p>Напишите администратору — ответим в WhatsApp в рабочее время.</p><a class="btn btn-wa" href="#" data-wa="Здравствуйте! У меня вопрос, которого нет в разделе «Частые вопросы»."><span class="msr">chat</span>Написать в WhatsApp</a></div>
     </aside>
     <div class="main rv d2" id="faqMain">
       <Accordion faq items={items} />

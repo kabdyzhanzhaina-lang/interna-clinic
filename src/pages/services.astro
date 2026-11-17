@@ -53,7 +53,7 @@ const plural = (n) => (n % 10 === 1 && n % 100 !== 11 ? 'услуга' : [2, 3, 
   </div></div></section>
 
   <section id="catalog" style="padding:72px 0 96px"><div class="shell"><div class="lay">
-    <SideToc items={groups.map((g) => [g.title, `#${g.id}`])} card={{ title: 'Не знаете, к кому записаться?', text: 'Опишите жалобы — администратор подберёт врача и обследования за 10 минут.', btn: 'Написать в WhatsApp', wa: 'Здравствуйте! Не знаю, к какому врачу записаться. Помогите подобрать.' }} />
+    <SideToc items={groups.map((g) => [g.title, `#${g.id}`])} card={{ title: 'Не знаете, к кому записаться?', text: 'Опишите жалобы — администратор подберёт врача и обследования.', btn: 'Написать в WhatsApp', wa: 'Здравствуйте! Не знаю, к какому врачу записаться. Помогите подобрать.' }} />
     <div class="main svcgroups">
       {groups.map((g) => (
         <div class="svcgroup" id={g.id}>

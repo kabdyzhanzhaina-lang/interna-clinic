@@ -70,6 +70,6 @@ const fact = factSrc ? [factSrc[0], 'из текста статьи — чтоб
     <div class="rgrid">{others.map((x, i) => <a class={`item rv d${i + 1}`} href={`/article/${x.id}`}><span class="img"><img src={img(x.img)} alt="" loading="lazy" /></span><span class="mcat">{x.tag.split(' · ').reverse().join(' • ')}</span><b class="t">{x.t}</b></a>)}</div>
   </div></section>
 
-  <div class="stickycta" id="stickycta"><span><b>Записаться на приём</b><small>ответ в WhatsApp за 10 минут</small></span><button class="btn btn-primary sm" data-book>Записаться</button></div>
+  <div class="stickycta" id="stickycta"><span><b>Записаться на приём</b><small>ответим в WhatsApp в рабочее время</small></span><button class="btn btn-primary sm" data-book>Записаться</button></div>
   <Cta kicker="Вопрос врачу" title="Есть вопрос <em>к врачу</em>?" text="Задайте его на приёме — запишитесь онлайн или по телефону." />
 </Base>

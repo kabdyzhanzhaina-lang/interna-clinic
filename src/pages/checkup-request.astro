@@ -13,7 +13,7 @@ const hot = (programs.find((p) => p.hot) || programs[0])?.id;
 const goals = [['Профилактика, жалоб нет', 'ЖКТ: боли, вздутие, изжога', 'Печень: анализы, гепатит'], ['Сердце и сосуды', 'Гормоны и щитовидная железа', 'Вес и обмен веществ'], ['Наследственность: онкология', 'Перед операцией или беременностью']];
 const steps = ['Программа', 'Формат', 'Что проверить', 'Когда', 'Контакты'];
 const faq = [
-  ['Что будет после отправки заявки?', 'В течение 10 минут в рабочее время координатор напишет в WhatsApp или позвонит: уточнит жалобы, предложит программу и день, пришлёт памятку по подготовке и точную стоимость.'],
+  ['Что будет после отправки заявки?', 'В рабочее время координатор напишет в WhatsApp или позвонит: уточнит жалобы, предложит программу и день, пришлёт памятку по подготовке и точную стоимость.'],
   ['Можно ли собрать программу под себя?', 'Да. Программы — отправная точка. Координатор убирает лишнее и добавляет нужные панели после разговора с вами и врачом.'],
   ['Сколько это займёт времени?', 'Амбулаторно — один день с 08:00, обычно 4–6 часов. В стационаре — 1–2 дня с палатой. Заключение врача — на очной консультации после готовности анализов.'],
   ['Нужно ли платить при заявке?', 'Нет. Оплата — в клинике в день обследования. Kaspi Red и рассрочка доступны для программ от 300 000 ₸.'],
@@ -24,8 +24,8 @@ const g2 = [C('format', 'Формат', '', ['Амбулаторно · 1 ден
 const g4 = C('time', 'Время', '', ['Утро 08:00–12:00', 'День 12:00–17:00', 'Любое'], 0);
 const g5 = C('channel', 'Как с вами связаться', '', ['WhatsApp', 'Звонок', 'Telegram'], 0);
 ---
-<Base og="checkup" active="checkup" title="Заявка на check-up — подобрать программу обследования | Interna Clinic" description="Заявка на check-up в Interna Clinic: программа, формат, что проверить и удобные даты. Координатор ответит за 10 минут и соберёт маршрут обследования.">
-  <PageHero cta={false} crumbs={[['Check-up', '/checkup'], ['Заявка']]} title="Заявка на check-up" sub="Расскажите, что для вас важно — координатор соберёт программу, предложит день и пришлёт памятку. Ответ в течение 10 минут в рабочее время." />
+<Base og="checkup" active="checkup" title="Заявка на check-up — подобрать программу обследования | Interna Clinic" description="Заявка на check-up в Interna Clinic: программа, формат, что проверить и удобные даты. Координатор соберёт маршрут обследования.">
+  <PageHero cta={false} crumbs={[['Check-up', '/checkup'], ['Заявка']]} title="Заявка на check-up" sub="Расскажите, что для вас важно — координатор соберёт программу, предложит день и пришлёт памятку. Ответим в рабочее время." />
 
   <section class="cq"><div class="shell"><div class="cq-wrap">
     <form class="cq-form rv" id="cuReq" novalidate>
@@ -60,7 +60,7 @@ const g5 = C('channel', 'Как с вами связаться', '', ['WhatsApp'
       </div>
 
       <div class="cq-step last" data-step="5">
-        <div class="h"><span class="n">5</span><div><h3>Контакты</h3><p>Координатор свяжется в течение 10 минут в рабочее время: Пн–Пт 08:00–20:00, Сб–Вс 09:00–17:00.</p></div></div>
+        <div class="h"><span class="n">5</span><div><h3>Контакты</h3><p>Координатор свяжется в рабочее время: Пн–Пт 08:00–20:00, Сб–Вс 09:00–17:00.</p></div></div>
         <div class="r2">
           <div class="g"><label class="lr" for="cuName"><b>Имя</b><small>обязательно</small></label><span class="inp"><input id="cuName" placeholder="Как к вам обращаться" autocomplete="name" required /></span></div>
           <div class="g"><label class="lr" for="cuPhone"><b>Телефон</b><small>обязательно</small></label><span class="inp"><input id="cuPhone" placeholder="+7 ___ ___ __ __" inputmode="tel" autocomplete="tel" required /><span class="msr">call</span></span></div>
@@ -83,18 +83,18 @@ const g5 = C('channel', 'Как с вами связаться', '', ['WhatsApp'
       <span class="ok"><span class="msr">check</span></span>
       <h3>Заявка принята</h3>
       <p class="sub" id="cuDoneTxt"></p>
-      <p>Координатор check-up ответит в течение 10 минут в рабочее время: уточнит детали, назовёт точную стоимость и пришлёт памятку.</p>
+      <p>Координатор check-up ответит в рабочее время: уточнит детали, назовёт точную стоимость и пришлёт памятку.</p>
       <div class="cq-btns"><a class="btn btn-primary" href="#" id="cuDoneWa" rel="noopener">Продублировать в WhatsApp</a><a class="btn btn-line" href="/checkup">К программам</a></div>
     </div>
 
     <aside class="cq-side">
       <div class="cq-next rv d1"><b class="t">Что будет после отправки</b>
-        <div class="r"><span class="ci"><span class="msr">schedule</span></span><span class="i"><b>10 минут</b><small>координатор пишет в WhatsApp или звонит</small></span></div>
+        <div class="r"><span class="ci"><span class="msr">schedule</span></span><span class="i"><b>Связь</b><small>координатор пишет в WhatsApp или звонит в рабочее время</small></span></div>
         <div class="r"><span class="ci"><span class="msr">checklist</span></span><span class="i"><b>Уточняем</b><small>жалобы, программу и день — без лишних анализов</small></span></div>
         <div class="r"><span class="ci"><span class="msr">description</span></span><span class="i"><b>Памятка</b><small>подготовка и точная стоимость приходят в мессенджер</small></span></div>
       </div>
       <div class="cq-how rv d2"><p class="kicker">Как это работает</p>
-        {[['10 минут', 'координатор связывается и уточняет запрос'], ['Маршрут', 'программа, день и подготовка — в WhatsApp'], ['Обследование', 'всё в одном здании, без очередей'], ['Консультация', 'врач объясняет результаты и даёт план']].map((r) => <div class="r"><span class="msr">arrow_forward</span><span class="i"><b>{r[0]}</b><small>{r[1]}</small></span></div>)}
+        {[['Заявка', 'координатор связывается и уточняет запрос'], ['Маршрут', 'программа, день и подготовка — в WhatsApp'], ['Обследование', 'всё в одном здании, без очередей'], ['Консультация', 'врач объясняет результаты и даёт план']].map((r) => <div class="r"><span class="msr">arrow_forward</span><span class="i"><b>{r[0]}</b><small>{r[1]}</small></span></div>)}
       </div>
       <div class="cq-coord rv d3"><p class="kicker">Личный координатор</p><b class="t">Один контакт на всё время обследования</b><p>Записывает, напоминает о подготовке, встречает в клинике и собирает заключения врачей в одну папку.</p><a class="btn btn-ghost" href={SITE.phoneHref}>{SITE.phone}</a></div>
       <div class="cq-corp rv d4"><p class="kicker">Корпоративным клиентам</p><p>Обследование сотрудников по графику компании, единый договор и отчёт для HR. Укажите название компании в заявке.</p><a class="link" href="#" data-wa="Здравствуйте! Интересует корпоративный check-up для сотрудников.">Обсудить в WhatsApp <span class="msr">arrow_forward</span></a></div>

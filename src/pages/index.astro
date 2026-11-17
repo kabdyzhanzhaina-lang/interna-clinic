@@ -121,7 +121,7 @@ const revs = reviewsFile.items.slice(0, 3);
     </aside>
   </div></div></section>
 
-  <Cta title="Запишитесь на приём уже сегодня" text="Администратор ответит в течение 10 минут в рабочее время, подберёт врача и пришлёт памятку по подготовке." />
+  <Cta title="Запишитесь на приём уже сегодня" text="Администратор ответит в рабочее время, подберёт врача и пришлёт памятку по подготовке." />
   <script is:inline>
     // вкладки в карточке поиска: меняют подсказку в поле
     (function(){var t=document.querySelector('[data-stabs]');if(!t)return;var inp=t.parentElement.querySelector('input');t.addEventListener('click',function(e){var b=e.target.closest('button');if(!b)return;t.querySelectorAll('button').forEach(function(x){x.classList.toggle('on',x===b);});if(inp){inp.placeholder=b.dataset.ph;inp.focus();}});})();
