@@ -275,7 +275,14 @@
     const a = w.querySelector("a");
     const setOpen = (on) => { w.classList.toggle("open", on); document.body.classList.toggle("dd-open", on); a.setAttribute("aria-expanded", on ? "true" : "false"); };
     a.setAttribute("aria-haspopup", "true");
-    a.addEventListener("click", (e) => { e.preventDefault(); setOpen(!w.classList.contains("open")); });
+    // десктоп (мышь): меню раскрывается по наведению, клик по «Услуги» ведёт на страницу услуг; тач — клик открывает/закрывает
+    const hoverable = matchMedia("(hover:hover) and (pointer:fine)").matches;
+    if (hoverable) {
+      let timer = 0;
+      w.addEventListener("mouseenter", () => { clearTimeout(timer); setOpen(true); });
+      w.addEventListener("mouseleave", () => { clearTimeout(timer); timer = setTimeout(() => setOpen(false), 260); });
+      a.addEventListener("focus", () => setOpen(true));
+    } else a.addEventListener("click", (e) => { e.preventDefault(); setOpen(!w.classList.contains("open")); });
     document.addEventListener("click", (e) => { if (!w.contains(e.target)) setOpen(false); });
     document.addEventListener("keydown", (e) => { if (e.key === "Escape") setOpen(false); });
     $$(".dd a", w).forEach((l) => l.addEventListener("click", () => setOpen(false)));
