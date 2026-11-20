@@ -11,14 +11,14 @@ import prices from '../data/prices.json';
 import { img } from '../lib/site.js';
 
 const total = Object.values(prices).reduce((a, v) => a + v.length, 0);
-const chipMap = [['Приёмы', 'Приёмы врачей'], ['Комплексы', 'Комплексы «Приём + обследование»'], ['Эндоскопия', 'Эндоскопия'], ['УЗИ и УЗДГ', 'УЗИ и УЗДГ'], ['Диагностика', 'Функциональная диагностика'], ['Анализы', 'Анализы'], ['Стационар', 'Стационар'], ['Процедурный', 'Процедурный кабинет'], ['KIDS', 'Interna KIDS'], ['ОСМС', 'ОСМС и бесплатные программы']];
+const chipMap = [['Приёмы', 'Приёмы врачей'], ['Комплексы', 'Комплексы «Приём + обследование»'], ['Эндоскопия', 'Эндоскопия'], ['УЗИ и УЗДГ', 'УЗИ и УЗДГ'], ['Диагностика', 'Функциональная диагностика'], ['Анализы', 'Анализы'], ['Стационар', 'Стационар'], ['Процедурный', 'Процедурный кабинет'], ['KIDS', 'Interna KIDS']];
 const chips = [['Все', total, '#catalog'], ...chipMap.map(([l, k]) => [l, prices[k]?.length || 0, `/prices#${encodeURIComponent(k)}`])];
 
 const featured = ['colonoscopy', 'fgds', 'fibroscan', 'ultrasound'].map((k) => [k, services[k]]);
-const featTitle = { colonoscopy: 'Колоноскопия во сне', fgds: 'ЭГДС (гастроскопия)', fibroscan: 'Фиброскан печени', ultrasound: 'УЗИ и ЭхоКГ' };
+const featTitle = { colonoscopy: 'Видеоколоноскопия во сне', fgds: 'ЭГДС (гастроскопия)', fibroscan: 'Фиброскан печени', ultrasound: 'УЗИ и ЭхоКГ' };
 
-// группы каталога: основные услуги + перенесённые с описанием
-const all = [...Object.entries(services).map(([k, s]) => ({ href: `/service/${k}`, t: s.t, d: s.short, price: s.price, cat: s.cat })), ...Object.entries(extra).map(([k, s]) => ({ href: `/uslugi/${k}`, t: s.t, d: (s.lead || '').split(/(?<=\.)\s/)[0].slice(0, 110), price: '', cat: s.cat }))];
+// группы каталога: основные услуги (с коротким описанием) + перенесённые страницы и позиции прайса (только название и цена)
+const all = [...Object.entries(services).map(([k, s]) => ({ href: `/service/${k}`, t: s.t, d: s.short, price: s.price, cat: s.cat })), ...Object.entries(extra).map(([k, s]) => ({ href: `/uslugi/${k}`, t: s.t, d: '', price: '', cat: s.cat }))];
 const groupDefs = [
   ['reception', 'Приёмы врачей', ['Приём', 'Приём врача'], 'Приёмы врачей'],
   ['checkup', 'Комплексы и check-up', [], 'Комплексы «Приём + обследование»'],
@@ -30,20 +30,19 @@ const groupDefs = [
   ['proc', 'Процедурный кабинет', [], 'Процедурный кабинет'],
   ['surg', 'Хирургия и проктология', [], 'Хирургия и проктология'],
   ['kids', 'Interna KIDS', ['Interna KIDS'], 'Interna KIDS'],
-  ['osms', 'ОСМС и ГОБМП', [], 'ОСМС и бесплатные программы'],
 ];
 const groups = groupDefs.map(([id, title, cats, pk]) => {
   const items = all.filter((x) => cats.includes(x.cat));
   const priceRows = prices[pk] || [];
   // добавляем позиции прайса, если в группе мало страниц услуг
-  const fromPrice = items.length < 4 ? priceRows.filter((r) => !items.some((i) => i.t.toLowerCase() === r[0].toLowerCase())).slice(0, 5 - items.length).map((r) => ({ href: `/prices#${encodeURIComponent(pk)}`, t: r[0], d: r[1] || '', price: r[2], cat: pk })) : [];
+  const fromPrice = items.length < 4 ? priceRows.filter((r) => !items.some((i) => i.t.toLowerCase() === r[0].toLowerCase())).slice(0, 5 - items.length).map((r) => ({ href: `/prices#${encodeURIComponent(pk)}`, t: r[0], d: '', price: r[2], cat: pk })) : [];
   const rows = [...items, ...fromPrice].map((x) => { if (!x.price) { const r = priceRows.find((p) => p[0].toLowerCase().includes(x.t.toLowerCase().split(' ')[0].slice(0, 6))); x.price = r ? r[2] : ''; } return x; });
   return { id, title, count: priceRows.length || rows.length, rows, pk };
 }).filter((g) => g.rows.length);
 const plural = (n) => (n % 10 === 1 && n % 100 !== 11 ? 'услуга' : [2, 3, 4].includes(n % 10) && ![12, 13, 14].includes(n % 100) ? 'услуги' : 'услуг');
 ---
 <Base og="services" title="Услуги и направления — Interna Clinic" description="Все услуги клиники: приёмы врачей, эндоскопия, УЗИ, функциональная диагностика, стационар, check-up. Приём и обследования в один визит в Алматы." active="services">
-  <PageHero crumbs={[['Услуги']]} title="Услуги и направления" sub="Диагностика и лечение заболеваний ЖКТ, печени и эндокринной системы. Приём и обследования — в один визит, в одном здании.">
+  <PageHero crumbs={[['Услуги']]} title="Услуги и направления" sub="Диагностика и лечение заболеваний ЖКТ, печени и эндокринной системы.">
     <div class="rise d2" style="width:100%;display:flex;justify-content:center"><SearchBar dark placeholder="Найти услугу, симптом или врача…" /></div>
     <div class="chips rise d3">{chips.map(([l, n, href], i) => <a class={`chip${i === 0 ? ' on' : ''}`} href={href}>{l} {n}</a>)}</div>
   </PageHero>
@@ -65,8 +64,8 @@ const plural = (n) => (n % 10 === 1 && n % 100 !== 11 ? 'услуга' : [2, 3, 
   </div></div></section>
 
   <section style="padding:0 0 96px"><div class="shell">
-    <div class="banner rv"><div class="in"><p class="kicker">Interna KIDS</p><h3>Детское отделение в том же здании</h3><p>Педиатр, детские гастроэнтеролог и эндокринолог, эндоскопия и фиброскан детям, школа диабета — без очередей и стресса.</p><div class="btns"><a class="btn btn-dark" href="/kids">Детские направления</a><a class="btn btn-line" href="/kids/shkola-diabeta-dlya-detei-i-roditelei">Школа диабета</a></div></div><div class="img" style={`background-image:url(${img('heart')})`}></div></div>
+    <div class="banner rv"><div class="in"><p class="kicker">Interna KIDS</p><h3>Детское отделение в том же здании</h3><p>Педиатр, детские гастроэнтеролог и эндокринолог, эндоскопия и фиброскан детям.</p><div class="btns"><a class="btn btn-dark" href="/kids">Детские направления</a><a class="btn btn-line" href="/kids/shkola-diabeta-dlya-detei-i-roditelei">Школа диабета</a></div></div><div class="img" style={`background-image:url(${img('heart')})`}></div></div>
   </div></section>
 
-  <Cta title="Не нашли нужную услугу?" text="Позвоните или напишите — администратор подскажет, есть ли услуга в клинике, и подберёт врача и время." />
+  <Cta title="Не нашли нужную услугу?" text="Позвоните или напишите — администратор подскажет, есть ли услуга в клинике." />
 </Base>

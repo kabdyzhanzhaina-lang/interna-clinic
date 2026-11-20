@@ -16,6 +16,12 @@
       "port": 4321
     },
     {
+      "name": "crm",
+      "runtimeExecutable": "node",
+      "runtimeArgs": ["scripts/serve-crm.mjs", "4600"],
+      "port": 4600
+    },
+    {
       "name": "review",
       "runtimeExecutable": "node",
       "runtimeArgs": [

@@ -177,32 +177,32 @@
     },
     {
       "source": "/free",
-      "destination": "/promo/#osms",
+      "destination": "/services/",
       "statusCode": 301
     },
     {
       "source": "/free/",
-      "destination": "/promo/#osms",
+      "destination": "/services/",
       "statusCode": 301
     },
     {
       "source": "/fibrofree",
-      "destination": "/promo/#osms",
+      "destination": "/service/fibroscan/",
       "statusCode": 301
     },
     {
       "source": "/fibrofree/",
-      "destination": "/promo/#osms",
+      "destination": "/service/fibroscan/",
       "statusCode": 301
     },
     {
       "source": "/procfree",
-      "destination": "/promo/#osms",
+      "destination": "/services/",
       "statusCode": 301
     },
     {
       "source": "/procfree/",
-      "destination": "/promo/#osms",
+      "destination": "/services/",
       "statusCode": 301
     },
     {

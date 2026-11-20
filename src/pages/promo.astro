@@ -1,57 +1,32 @@
 ---
-// ОСМС и акции (макет 19): фото-хиро, две карточки ГОБМП/ОСМС, бесплатные услуги со списком, четыре шага, акция, CTA
+// Акции (макет 19 без блоков ОСМС/ГОБМП — клиника попросила убрать их с сайта): фото-хиро, действующие акции, CTA
 import Base from '../layouts/Base.astro';
 import PhotoHero from '../components/PhotoHero.astro';
 import SecHead from '../components/SecHead.astro';
-import Steps from '../components/Steps.astro';
-import Body from '../components/Body.astro';
 import Cta from '../components/Cta.astro';
 import promosFile from '../data/promos.json';
-import free from '../data/free.json';
-import { SITE, img, activePromos, untilLabel } from '../lib/site.js';
+import { img, activePromos, untilLabel } from '../lib/site.js';
 const promos = activePromos(promosFile.items);
-const promo = promos[0];
-const what = [['ГОБМП', 'Гарантированный объём бесплатной медицинской помощи', free.intro[1], 'ice', 'local_hospital'], ['ОСМС', 'Обязательное социальное медицинское страхование', free.intro[2], 'mint', 'health_and_safety']];
-const steps = [['Направление', 'Возьмите направление у врача поликлиники по месту прикрепления — терапевта или профильного специалиста.'], ['Страховка', 'Проверьте статус ОСМС в приложении Damumed или на fms.kz. Для ГОБМП достаточно прикрепления.'], ['Запись', 'Позвоните или напишите в WhatsApp — администратор проверит направление и подберёт время.'], ['Приём', 'Приходите с удостоверением и направлением. Услуга по программе — без оплаты в клинике.']];
 ---
-<Base og="news" title="Услуги по ОСМС и ГОБМП — бесплатно по страховке | Interna Clinic" description="Что можно получить в Interna Clinic бесплатно по ОСМС и ГОБМП: фиброскан печени, процедурный кабинет, госпитализация в стационар. Как получить направление и действующие акции." active="patient">
-  <PhotoHero wide image="winter" eyebrow="Бесплатно по страховке" title="Услуги по ОСМС и ГОБМП" sub="Фиброскан печени, процедурный кабинет и госпитализация в стационар — по направлению из поликлиники, без оплаты в клинике.">
-    <a class="btn btn-ghost" href="#how">Как получить направление</a><a class="btn btn-ghost" href="https://fms.kz" target="_blank" rel="noopener">Проверить статус в ОСМС</a>
+<Base og="news" title="Акции Interna Clinic — специальные цены на обследования | Interna Clinic" description="Действующие акции Interna Clinic: специальные цены на эндоскопию, обследования и приёмы врачей." active="patient">
+  <PhotoHero wide image="winter" eyebrow="Акции" title="Специальные цены клиники" sub="Действующие акции на обследования и приёмы врачей. Условия уточнит администратор при записи.">
+    {promos.length > 0 && <a class="btn btn-ghost" href="#promo">Смотреть акции</a>}
   </PhotoHero>
 
-  <section id="what" style="padding:96px 0 0"><div class="shell">
-    <SecHead eyebrow="Что это" title="Две государственные программы" />
-    <div class="what2">{what.map(([ab, t, text, bg, ic], i) => <div class={`whatcard ${bg} rv d${i + 1}`}><span class="msr">{ic}</span><span class="ab">{ab}</span><b>{t}</b><p>{text}</p></div>)}</div>
-  </div></section>
-
-  <section id="services" class="ice50" style="padding:96px 0;margin-top:96px"><div class="shell">
-    <SecHead eyebrow="Бесплатные услуги" title="Что можно получить в Interna Clinic" link={['Все услуги', '/services']} />
-    <div class="freelist">{free.items.map((it, i) => (
-      <div class={`freerow rv d${i + 1}`} id={`osms-${it.id}`}>
-        <div class="top"><div class="i"><b>{it.t}</b><p>{it.lead}</p></div><span class="badge">Бесплатно</span><a class="arr" href={it.link} aria-label={it.t}><span class="msr">arrow_outward</span></a></div>
-        <div class="accordion acc2" data-acc><div class="acc-item"><button class="acc-q" type="button">Условия и подробности<span class="acc-ic msr">add</span></button><div class="acc-a"><div class="body ov-body"><Body body={it.body.filter((b) => b[0] !== 'h')} /></div></div></div></div>
-        <a class="link" href={it.link}>Страница услуги <span class="msr">arrow_forward</span></a>
+  <section id="promo" style="padding:96px 0 96px"><div class="shell">
+    <SecHead eyebrow="Акции" title={promos.length ? 'Действующие предложения' : 'Сейчас акций нет'} />
+    {promos.length === 0 && <p class="lede">Новые акции появятся здесь. Узнать о специальных ценах можно у администратора по телефону или в WhatsApp.</p>}
+    {promos.map((promo, i) => (
+      <div class="promocard rv" style={i ? 'margin-top:24px' : undefined}>
+        <div class="in"><span class="badge dark">{promo.off}</span><p class="kicker">{untilLabel(promo)}</p><h3>{promo.t}</h3><p>{promo.d}</p>
+          <div class="pp"><span class="new">{promo.p}</span>{promo.old && <s>{promo.old}</s>}</div>
+          <div class="btns"><button class="btn btn-dark" data-book data-svc={promo.t}>Записаться</button>{promo.link && <a class="btn btn-line" href={promo.link}>Об услуге <span class="msr ai">arrow_forward</span></a>}</div>
+          <small>Скидки не суммируются. Имеются противопоказания, необходима консультация специалиста.</small>
+        </div>
+        <div class="img" style={`background-image:url(${img('sedation')})`}></div>
       </div>
-    ))}</div>
-    <p class="pnote" style="margin-top:28px">Проверить прикрепление и статус страховки можно в приложении Damumed или у администратора по телефону {SITE.phone}.</p>
+    ))}
   </div></section>
 
-  <section id="how" style="padding:96px 0 0"><div class="shell">
-    <SecHead eyebrow="Как получить" title="Четыре шага до бесплатной услуги" />
-    <Steps items={steps} dark />
-  </div></section>
-
-  {promo && <section id="promo" style="padding:96px 0 96px"><div class="shell">
-    <SecHead eyebrow="Акция" title="Специальная цена клиники" />
-    <div class="promocard rv">
-      <div class="in"><span class="badge dark">{promo.off}</span><p class="kicker">{untilLabel(promo)}</p><h3>{promo.t}</h3><p>{promo.d}</p>
-        <div class="pp"><span class="new">{promo.p}</span><s>{promo.old}</s></div>
-        <div class="btns"><button class="btn btn-dark" data-book data-svc={promo.t}>Записаться</button><a class="btn btn-line" href={promo.link}>Об услуге <span class="msr ai">arrow_forward</span></a></div>
-        <small>Скидки не суммируются. Имеются противопоказания, необходима консультация специалиста.</small>
-      </div>
-      <div class="img" style={`background-image:url(${img('sedation')})`}></div>
-    </div>
-  </div></section>}
-
-  <Cta title="Есть направление? Запишитесь на фиброскан" text="Администратор проверит направление и статус страховки, подберёт время — обследование займёт 15 минут." svc="Фиброскан по ОСМС" />
+  <Cta />
 </Base>

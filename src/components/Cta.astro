@@ -2,7 +2,7 @@
 // CTA (макет CTA): по центру, айбрау «Спланируйте визит», H2 46, текст, Button/Primary + Button/Line с телефоном; фон — один тон $ice50
 import { SITE } from '../lib/site.js';
 interface Props { kicker?: string; title?: string; text?: string; btn?: string; svc?: string; }
-const { kicker = 'Спланируйте визит', title = 'Запишитесь на приём', text = 'Позвоните или оставьте заявку — администратор ответит в рабочее время и подберёт удобное время.', btn = 'Записаться на приём', svc } = Astro.props;
+const { kicker = 'Спланируйте визит', title = 'Запишитесь на приём', text = 'Администратор ответит в рабочее время и подберёт удобное время.', btn = 'Записаться на приём', svc } = Astro.props;
 ---
 <section class="cta rv">
   <div class="shell">

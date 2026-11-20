@@ -24,7 +24,7 @@ const half = Math.ceil(rel.length / 2);
 const steps = s.steps.length > 4 ? [s.steps[0], s.steps[2], s.steps[3], s.steps[4]] : s.steps;
 const t = s.t.toLowerCase();
 // Падежи для заголовков: [зачем нужна…, кто проводит…, запишитесь на…]
-const w = { colonoscopy: ['Зачем нужна колоноскопия', 'Кто проводит колоноскопию', 'Запишитесь на колоноскопию'], fgds: ['Зачем нужна ЭГДС', 'Кто проводит ЭГДС', 'Запишитесь на ЭГДС'], fibroscan: ['Зачем нужен фиброскан', 'Кто проводит фиброскан', 'Запишитесь на фиброскан'], ultrasound: ['Зачем нужно УЗИ', 'Кто проводит УЗИ', 'Запишитесь на УЗИ'], gastro: ['Зачем нужен приём гастроэнтеролога', 'Кто принимает', 'Запишитесь на приём'], endo: ['Зачем нужен приём эндокринолога', 'Кто принимает', 'Запишитесь на приём'] }[slug] || [`Зачем нужна ${t}`, 'Кто проводит', 'Запишитесь на приём'];
+const w = { colonoscopy: ['Зачем нужна видеоколоноскопия', 'Кто проводит видеоколоноскопию', 'Запишитесь на видеоколоноскопию'], fgds: ['Зачем нужна ЭГДС', 'Кто проводит ЭГДС', 'Запишитесь на ЭГДС'], fibroscan: ['Зачем нужен фиброскан', 'Кто проводит фиброскан', 'Запишитесь на фиброскан'], ultrasound: ['Зачем нужно УЗИ', 'Кто проводит УЗИ', 'Запишитесь на УЗИ'], gastro: ['Зачем нужен приём гастроэнтеролога', 'Кто принимает', 'Запишитесь на приём'], endo: ['Зачем нужен приём эндокринолога', 'Кто принимает', 'Запишитесь на приём'] }[slug] || [`Зачем нужна ${t}`, 'Кто проводит', 'Запишитесь на приём'];
 const jsonld = { '@context': 'https://schema.org', '@type': 'MedicalProcedure', name: s.t, description: s.sub, offers: s.prices.map((p) => ({ '@type': 'Offer', name: p[0], price: p[2].replace(/[^\d]/g, ''), priceCurrency: 'KZT' })) };
 const whyP = s.why.split(/(?<=\.)\s+(?=[А-ЯA-Z])/);
 const specs = s.equip.specs || [];
@@ -44,7 +44,7 @@ const catShort = { 'Эндоскопия': 'Эндоскопия', 'Диагно
 
   <section id="overview" style="padding:80px 0 0"><div class="shell"><div class="lay ov">
     <div class="main rv"><p class="kicker">Зачем</p><h2 class="h ov-h">{w[0]}</h2>{whyP.map((p) => <p class="ov-p">{p}</p>)}<a class="link" href="/about#equip">Подробнее об оборудовании <span class="msr">arrow_forward</span></a></div>
-    <div class="imgcap rv d2"><div class="im"><img src={img(s.equip.img)} alt={s.equip.n} loading="lazy" /></div><span class="cap">{s.equip.n} — {s.equip.d.split(/(?<=\.)\s/)[0]}</span></div>
+    <div class="imgcap rv d2"><div class="im"><img src={img(s.equip.img)} alt={s.equip.n} loading="lazy" /></div><span class="cap">{s.equip.n}</span></div>
   </div></div></section>
 
   <section id="indications" style="padding:80px 0 0"><div class="shell">
@@ -61,7 +61,7 @@ const catShort = { 'Эндоскопия': 'Эндоскопия', 'Диагно
     <SecHead eyebrow="Подготовка" title={prep.h} link={['Все памятки', '/prepare']} />
     <div class="prep">
       <ol class="plist rv">{prep.steps.map((st, i) => <li><span class="n">{String(i + 1).padStart(2, '0')}</span><span class="t">{st}</span></li>)}</ol>
-      <aside class="pside rv d2"><p class="kicker">Важно</p><b>Администратор пришлёт памятку в WhatsApp при записи и ответит на вопросы по подготовке.</b><p>{prep.note}</p>
+      <aside class="pside rv d2"><p class="kicker">Важно</p><b>Администратор пришлёт памятку в WhatsApp при записи.</b>{prep.note && <p>{prep.note}</p>}
         <div class="b"><a class="btn btn-line" href={`/prepare#${prep.memo}`}>Полная памятка</a><a class="btn btn-wa" href="#" data-wa={`Здравствуйте! Вопрос по подготовке: ${s.t}.`}><span class="msr">chat</span>Написать в WhatsApp</a></div>
       </aside>
     </div>
@@ -89,5 +89,5 @@ const catShort = { 'Эндоскопия': 'Эндоскопия', 'Диагно
     </a>)}</div>
   </div></section>}
 
-  <Cta title={w[2]} text="Позвоните или оставьте заявку — администратор подберёт время, пришлёт памятку по подготовке и ответит на вопросы." svc={s.t} />
+  <Cta title={w[2]} text="Позвоните или оставьте заявку — администратор подберёт время." svc={s.t} />
 </Base>

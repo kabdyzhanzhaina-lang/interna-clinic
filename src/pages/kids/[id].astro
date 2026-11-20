@@ -25,6 +25,14 @@ const first = (s.body.find((b) => b[0] === 'p') || ['', ''])[1];
 const lead = first.split(/(?<=\.)\s+/).reduce((acc, sent) => (acc.length + sent.length <= 220 || !acc ? (acc ? acc + ' ' + sent : sent) : acc), '');
 const ul = (s.body.find((b) => b[0] === 'ul') || ['', []])[1];
 const reasons = ul.slice(0, 4);
+// описание без повторов: начало первого абзаца уже стоит в хиро (lead), а первый список (до 4 пунктов) — карточками «С чем приходят»
+const body = s.body.flatMap((b, i, all) => {
+  if (b === s.body.find((x) => x[0] === 'p')) { const restP = b[1].slice(lead.length).trim(); return restP ? [['p', restP]] : []; }
+  if (b[0] === 'ul' && b[1] === ul && ul.length <= 4) return [];
+  const next = all[i + 1];
+  if (next && next[0] === 'ul' && next[1] === ul && ul.length <= 4 && (b[0] === 'h3' || (b[0] === 'p' && /:\s*$/.test(b[1])))) return [];
+  return [b];
+});
 const icons = ['height', 'endocrinology', 'monitor_heart', 'child_care'];
 const ini = (n) => n.split(' ').slice(0, 2).map((w) => w[0]).join('');
 const nav = [['Interna KIDS', '/kids'], ...others.slice(0, 5).map((o) => [o.t, `/kids/${o.id}`]), [s.t, `/kids/${s.id}`]];
@@ -51,12 +59,12 @@ const isSchool = /школ/i.test(s.t);
   <section id="about" style="padding:96px 0 0"><div class="shell"><div class="lay g64">
     <div class="main">
       <SecHead eyebrow="Описание" title={s.full} />
-      <div class="body kbody rv"><Body body={s.body} /></div>
+      <div class="body kbody rv"><Body body={body} /></div>
     </div>
   </div></div></section>
 
   {reasons.length > 0 && <section style="padding:96px 0 0"><div class="shell">
-    <SecHead eyebrow="Когда записаться" title={`С чем приходят к ${isSchool ? 'нам в школу' : s.t.toLowerCase().replace(/^детский /, 'детскому ').replace(/лог$/, 'логу').replace(/педиатр$/, 'педиатру')}`} />
+    <SecHead eyebrow={isSchool ? 'Программа' : 'Когда записаться'} title={isSchool ? 'Что вы узнаете' : /(лог|иатр|ист)$/.test(s.t) ? `С чем приходят к ${s.t.toLowerCase().replace(/^детский /, 'детскому ').replace(/лог$/, 'логу').replace(/педиатр$/, 'педиатру').replace(/ист$/, 'исту')}` : 'Показания'} />
     <div class="grid4">{reasons.map((r, i) => <div class={`icard big rv d${i + 1}`}><span class="msr">{icons[i]}</span><p>{r}</p></div>)}</div>
   </div></section>}
 
@@ -72,7 +80,7 @@ const isSchool = /школ/i.test(s.t);
 
   <section style="padding:96px 0 0"><div class="shell">
     <SecHead eyebrow="Как проходит приём" title="Три шага за один визит" />
-    <Steps dark cols={3} items={[['Разговор с родителями', 'Врач расспрашивает о жалобах, питании, сне и росте, смотрит прежние анализы и выписки.'], ['Осмотр и обследование', 'При необходимости — УЗИ, анализы или фиброскан в тот же день, без направлений в другие центры.'], ['План и памятка', 'Понятное заключение, схема лечения и питания; напоминание о контроле пришлём в WhatsApp.']]} />
+    <Steps dark cols={3} items={[['Разговор с родителями', 'Жалобы, питание, сон и рост, прежние анализы и выписки.'], ['Осмотр и обследование', 'При необходимости — УЗИ, анализы или фиброскан в тот же день.'], ['План и памятка', 'Понятное заключение, схема лечения и питания.']]} />
   </div></section>
 
   <section style="padding:96px 0 0"><div class="shell">
@@ -80,5 +88,5 @@ const isSchool = /школ/i.test(s.t);
     <div class="grid4">{others.slice(0, 4).map((o, i) => <a class={`kcard ${bgs[i]} rv d${i + 1}`} href={`/kids/${o.id}`}><img src={o.icon} alt="" width="72" height="72" loading="lazy" /><b>{o.t}</b><small>{o.price ? `от ${o.price}` : 'цена по запросу'}</small><span class="link">Подробнее <span class="msr">arrow_forward</span></span></a>)}</div>
   </div></section>
 
-  <Cta title={`Запишите ребёнка к ${isSchool ? 'нам в школу диабета' : 'детскому специалисту'}`} text="Администратор подберёт время без ожидания и пришлёт памятку по подготовке в WhatsApp." svc={s.t} />
+  <Cta title={`Запишите ребёнка к ${isSchool ? 'нам в школу диабета' : 'детскому специалисту'}`} text="Администратор подберёт время и пришлёт памятку по подготовке в WhatsApp." svc={s.t} />
 </Base>

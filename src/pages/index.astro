@@ -1,5 +1,5 @@
 ---
-// Главная (макет 01 Главная / 16 Главная·Mobile): хиро с карточкой поиска, три карточки «В чём мы сильны»,
+// Главная (макет 01 Главная / 16 Главная·Mobile): хиро с карточками главных услуг, три карточки «В чём мы сильны»,
 // направления списком, врачи в две колонки, новости + события, CTA. Анимации: Ken Burns + параллакс фона, rise/rv-reveal.
 import Base from '../layouts/Base.astro';
 import SecHead from '../components/SecHead.astro';
@@ -8,6 +8,7 @@ import Cta from '../components/Cta.astro';
 import doctorsFile from '../data/doctors.json';
 import newsFile from '../data/news.json';
 import checkupsFile from '../data/checkups.json';
+import services from '../data/services.json';
 import reviewsFile from '../data/reviews.json';
 import { img, SITE } from '../lib/site.js';
 import { fmtDate } from '../lib/media.js';
@@ -16,29 +17,33 @@ const all = doctorsFile.items.filter((d) => !d.hidden);
 const byId = (id) => all.find((d) => d.id === id);
 const cols = [[byId('nersesov'), byId('shamshidinova')], [byId('raisova'), byId('kontorshchikov')]].map((c) => c.filter(Boolean));
 const cap = (s) => s.charAt(0).toUpperCase() + s.slice(1);
+const docWord = (n) => { const m = n % 100, k = n % 10; return m > 10 && m < 20 ? 'врачей' : k === 1 ? 'врач' : k > 1 && k < 5 ? 'врача' : 'врачей'; };
 const news = (newsFile.items || newsFile).slice(0, 4);
 
 const best = [
-  ['Эндоскопия', 'Колоноскопия и ЭГДС во сне', 'Olympus EVIS X1 экспертного класса. Биопсия и удаление полипов во время исследования, заключение — сразу после процедуры.', '/service/colonoscopy', 'sedation'],
-  ['Гепатология', 'Печень под контролем профессора', 'Фиброскан, УЗИ и анализы за один визит. Лечение гепатитов и НАЖБП по международным протоколам.', '/service/fibroscan', 'fibroscan'],
-  ['Check-up', 'Полное обследование за 1–2 дня', '5 программ: от базового до расширенного. Личный координатор на каждом этапе.', '/checkup', 'team'],
+  ['Эндоскопия', 'Видеоколоноскопия и ЭГДС во сне', 'Olympus EVIS X1, заключение — сразу после процедуры.', '/service/colonoscopy', 'sedation'],
+  ['Гепатология', 'Печень под контролем профессора', 'Фиброскан, УЗИ и анализы за один визит.', '/service/fibroscan', 'fibroscan'],
+  ['Check-up', 'Полное обследование за 1–2 дня', 'Личный координатор на каждом этапе.', '/checkup', 'team'],
 ];
 const dirs = [
   ['gastroenterology', 'Гастроэнтерология', 'Боли, вздутие, изжога, СРК, болезнь Крона', '/service/gastro'],
   ['water_drop', 'Гепатология', 'Гепатиты B и C, жировая болезнь печени, цирроз', '/service/fibroscan'],
-  ['biotech', 'Эндоскопия', 'Колоноскопия, ЭГДС, видеокапсула, pH-метрия', '/service/colonoscopy'],
+  ['biotech', 'Эндоскопия', 'Видеоколоноскопия, ЭГДС, видеокапсула, pH-метрия', '/service/colonoscopy'],
   ['radiology', 'УЗИ и диагностика', 'Эластометрия, ЭхоКГ, УЗДГ, InBody, Sudoscan', '/service/ultrasound'],
   ['endocrinology', 'Эндокринология', 'Щитовидная железа, диабет, вес и обмен веществ', '/service/endo'],
   ['child_care', 'Interna KIDS', '17 детских направлений в том же здании', '/kids'],
 ];
-const popular = ['Колоноскопия во сне', 'Гастроэнтеролог', 'Фиброскан', 'Check-up', 'ОСМС'];
+// главные услуги карточками в хиро (вместо поиска): название, цена «от» и иконка — из services.json, check-up — минимальная цена программ
+const svc = (k, t) => ({ t: t || services[k].t, price: services[k].price, icon: services[k].icon, href: `/service/${k}` });
+const cuMin = checkupsFile.programs.map((p) => p.price).filter(Boolean).sort((a, b) => parseInt(a.replace(/\D/g, '')) - parseInt(b.replace(/\D/g, '')))[0];
+const hsvc = [svc('colonoscopy', 'Видеоколоноскопия'), svc('fgds'), svc('fibroscan'), svc('gastro'), { t: 'Check-up', price: cuMin, icon: 'checklist', href: '/checkup' }];
 // Программы check-up (макет CheckupSec): три карточки — название и цена из данных, три главных пункта программы
 // на главной — программы с заполненной карточкой «home» (eb — надпись сверху, hi — 3 пункта)
 const cuProgs = checkupsFile.programs.filter((p) => p.home?.hi?.length).slice(0, 3).map((p) => ({ ...p, eb: p.home.eb, hi: p.home.hi }));
 // Отзывы (макет ReviewsSec): три первых отзыва, цитата обрезается по границе предложения
 const srcOf = (r) => (/2ГИС/i.test(r.src) ? '2ГИС' : /google/i.test(r.src) ? 'Google' : r.src);
 const topicOf = (s) => (/эндоскоп|гастроскоп|колоноскоп|ЭГДС|ФГДС/i.test(s) ? 'Эндоскопия' : /печен|гепат|фиброскан/i.test(s) ? 'Гепатология' : /стационар|палат|лежал/i.test(s) ? 'Стационар' : /ребён|ребен|дет|сын|доч/i.test(s) ? 'Interna KIDS' : 'Приём');
-const quote = (s, max = 230) => { if (s.length <= max) return s; const cut = s.slice(0, max); const i = Math.max(cut.lastIndexOf('. '), cut.lastIndexOf('! ')); return i > 80 ? cut.slice(0, i + 1) : cut.replace(/\s+\S*$/, '') + '…'; };
+const quote = (s, max = 170) => { if (s.length <= max) return s; const cut = s.slice(0, max); const i = Math.max(cut.lastIndexOf('. '), cut.lastIndexOf('! ')); return i > 80 ? cut.slice(0, i + 1) : cut.replace(/\s+\S*$/, '') + '…'; };
 const revs = reviewsFile.items.slice(0, 3);
 ---
 <Base title="Медицинский центр в Алматы — Interna Clinic" description="Interna Clinic — институт гастроэнтерологии, гепатологии и метаболизма в Алматы. Эндоскопия во сне, фиброскан, check-up — всё в одном здании. Запись онлайн." active="" theme="home">
@@ -48,24 +53,10 @@ const revs = reviewsFile.items.slice(0, 3);
       <div class="title">
         <p class="kicker rise d1">Interna Clinic · Алматы · с 2022 года</p>
         <h1 class="rise d1"><em>Забота</em><span class="rw" data-typing="о здоровье|о пациенте|о семье|о будущем"><span class="rw-w">о здоровье</span></span></h1>
-        <p class="sub rise d2">Институт гастроэнтерологии, гепатологии и метаболизма. Эндоскопия во сне, фиброскан, check-up — всё в одном здании.</p>
+        <p class="sub rise d2">Институт гастроэнтерологии, гепатологии и метаболизма.</p>
         <div class="hacts rise d2 hide-m"><button class="btn btn-primary" data-book>Записаться на приём</button><a class="btn btn-ghost" href={SITE.phoneHref}>{SITE.phone}</a></div>
       </div>
-      <div class="scard rise d3" data-search>
-        <div class="stabs" data-stabs>
-          <button type="button" class="on" data-ph="Колоноскопия, гастроэнтеролог, боль в животе…">Услуги и симптомы</button>
-          <button type="button" data-ph="Фамилия врача или специальность…">Врачи</button>
-          <button type="button" class="hide-m" data-ph="Например: ЭГДС цена, check-up">Цены</button>
-          <button type="button" class="hide-m" data-ph="Вздутие, изжога, инсулинорезистентность, бариатрия…">Блог</button>
-        </div>
-        <div class="hs-in">
-          <span class="msr" aria-hidden="true">search</span>
-          <input type="search" placeholder="Колоноскопия, гастроэнтеролог, боль в животе…" aria-label="Поиск по сайту" autocomplete="off" />
-          <button type="button" class="btn btn-dark" data-search-go>Найти</button>
-        </div>
-        <div class="sres" role="listbox" hidden></div>
-        <div class="hs-chips"><span class="lbl">Популярное:</span>{popular.map((p) => <button type="button" class="hs-tag" data-search-q={p}>{p}</button>)}</div>
-      </div>
+      <nav class="hsvc rise d3" aria-label="Главные услуги">{hsvc.map((c) => <a class="hsc" href={c.href}><span class="msr ic" aria-hidden="true">{c.icon}</span><b>{c.t}</b><small>{c.price}</small><span class="msr ai" aria-hidden="true">arrow_outward</span></a>)}</nav>
     </div>
   </section>
 
@@ -78,14 +69,14 @@ const revs = reviewsFile.items.slice(0, 3);
     <div class="l rv">
       <p class="kicker">Направления</p>
       <h2 class="h">Один институт — все специалисты по ЖКТ и обмену веществ</h2>
-      <p>{all.length} врача, 18 направлений и стационар. Весь цикл — от выявления до лечения — в одном здании.</p>
+      <p>{all.length} {docWord(all.length)}, 18 направлений и стационар — в одном здании.</p>
       <a class="link" href="/services">Все направления <span class="msr">arrow_forward</span></a>
     </div>
     <div class="list rv d2">{dirs.map((d) => <a href={d[3]}><span class="msr ic">{d[0]}</span><span class="i"><b>{d[1]}</b><small>{d[2]}</small></span><span class="msr ai">arrow_forward</span></a>)}</div>
   </div></div></section>
 
   <section class="docs3"><div class="shell">
-    <SecHead eyebrow="Врачи" title="Сегодня принимают" link={[`Все ${all.length} врача`, '/doctors']} />
+    <SecHead eyebrow="Врачи" title="Сегодня принимают" link={[`Все ${all.length} ${docWord(all.length)}`, '/doctors']} />
     <div class="cols2 rv">{cols.map((c) => <div class="doclist">{c.map((d) => <DocRow d={d} role={`${d.r}${d.exp ? ' · ' + d.exp : ''}`} tags={(d.tags || []).filter(Boolean).slice(0, 2).map(cap)} />)}</div>)}</div>
   </div></section>
 
@@ -115,13 +106,13 @@ const revs = reviewsFile.items.slice(0, 3);
     <aside class="events rv d2">
       <p class="kicker">События</p>
       <b class="t">Школа диабета для детей и родителей</b>
-      <p>Ежемесячно, группы по записи. Эндокринолог и диетолог Interna KIDS — о питании, инсулине и жизни без ограничений.</p>
+      <p>Ежемесячно, группы по записи. Ведут эндокринолог и диетолог Interna KIDS.</p>
       <span class="when"><span class="msr">event</span>Следующая — 21 ноября, 11:00</span>
       <button class="btn btn-dark" data-book data-svc="Школа диабета">Записаться в группу</button>
     </aside>
   </div></div></section>
 
-  <Cta title="Запишитесь на приём уже сегодня" text="Администратор ответит в рабочее время, подберёт врача и пришлёт памятку по подготовке." />
+  <Cta title="Запишитесь на приём уже сегодня" text="Администратор подберёт врача и пришлёт памятку по подготовке." />
   <script is:inline>
     // вкладки в карточке поиска: меняют подсказку в поле
     (function(){var t=document.querySelector('[data-stabs]');if(!t)return;var inp=t.parentElement.querySelector('input');t.addEventListener('click',function(e){var b=e.target.closest('button');if(!b)return;t.querySelectorAll('button').forEach(function(x){x.classList.toggle('on',x===b);});if(inp){inp.placeholder=b.dataset.ph;inp.focus();}});})();

@@ -6,21 +6,21 @@ import SecHead from '../components/SecHead.astro';
 import Cta from '../components/Cta.astro';
 import { SITE, img } from '../lib/site.js';
 const rows = [
-  ['location_on', 'Богенбай батыра, 248', 'Алматы, центр города · рядом остановки общественного транспорта'],
+  ['location_on', 'Богенбай батыра, 248', 'Алматы, центр города'],
   ['schedule', 'Пн–Пт 08:00–20:00', 'Сб–Вс 09:00–17:00 · приём по записи'],
-  ['call', SITE.phone, 'Звонок или WhatsApp — ответим в рабочее время'],
-  ['mail', SITE.email, 'Для документов, партнёров и корпоративных запросов'],
+  ['call', SITE.phone, 'Звонок или WhatsApp'],
+  ['mail', SITE.email, 'Документы, партнёры, корпоративные запросы'],
 ];
 const hrefs = [SITE.map2gis, null, SITE.phoneHref, `mailto:${SITE.email}`];
 const ways = [
-  ['directions_car', 'На машине', 'Клиника в центре города с удобными подъездными путями. Условия парковки уточните у администратора при записи.'],
-  ['directions_bus', 'На транспорте', 'Рядом с клиникой — остановки общественного транспорта. Маршрут удобно построить в 2ГИС по ссылке выше.'],
-  ['accessible', 'Доступная среда', 'Если нужна помощь при входе или сопровождение — предупредите администратора при записи, мы встретим вас у входа.'],
+  ['directions_car', 'На машине', 'Условия парковки уточните у администратора при записи.'],
+  ['directions_bus', 'На транспорте', 'Рядом с клиникой — остановки общественного транспорта.'],
+  ['accessible', 'Доступная среда', 'Нужна помощь при входе — предупредите администратора, мы встретим вас.'],
 ];
 const jsonld = { '@context': 'https://schema.org', '@type': 'MedicalClinic', name: 'Interna Clinic', telephone: SITE.phone, email: SITE.email, address: { '@type': 'PostalAddress', streetAddress: 'ул. Богенбай батыра, 248', addressLocality: 'Алматы', addressCountry: 'KZ' }, openingHours: ['Mo-Fr 08:00-20:00', 'Sa-Su 09:00-17:00'] };
 ---
 <Base og="contacts" title="Контакты — Interna Clinic, Алматы, Богенбай батыра 248" description="Адрес, телефон, WhatsApp и часы работы клиники Interna Clinic. Работаем без выходных." active="contacts" jsonld={jsonld}>
-  <PageHero crumbs={[['Контакты']]} title="Контакты" sub="Клиника на Богенбай батыра, 248 — в центре Алматы. Работаем без выходных, приём по записи." />
+  <PageHero crumbs={[['Контакты']]} title="Контакты" sub="Работаем без выходных, приём по записи." />
 
   <section style="padding:24px 0 0"><div class="shell"><div class="lay g48 cwrap">
     <div class="cinfo rv">
@@ -42,5 +42,5 @@ const jsonld = { '@context': 'https://schema.org', '@type': 'MedicalClinic', nam
     {['winter', 'building', 'coats'].map((k, i) => <div class={`ph d${i + 1}`}><img src={img(k)} alt="Клиника Interna Clinic" loading="lazy" /></div>)}
   </div></div></section>
 
-  <Cta title="Ждём вас на Богенбай батыра, 248" text="Позвоните или оставьте заявку — администратор подтвердит время и подскажет, как добраться." />
+  <Cta title="Ждём вас на Богенбай батыра, 248" text="Администратор подтвердит время и подскажет, как добраться." />
 </Base>

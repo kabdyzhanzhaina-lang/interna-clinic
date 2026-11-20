@@ -12,7 +12,7 @@ const { title, description = 'Институт гастроэнтерологи�
 const canonical = new URL(Astro.url.pathname, Astro.site).href;
 const isKk = Astro.currentLocale === 'kk';
 // Иконки Material Symbols — только используемые (параметр text=), иначе шрифт весит 3 МБ
-const ICONS_CSS = "https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,400,0..1,0&display=block&icon_names=accessible,attach_file,upload_file,close,keyboard_arrow_down,chevron_right,calendar_month,check,chat,call,search,menu,account_balance_wallet,add,animation,apartment,arrow_back,arrow_downward,arrow_forward,arrow_outward,badge,biotech,bookmark,bubble_chart,campaign,chat_bubble,check_circle,checklist,child_care,credit_card,description,directions_bus,directions_car,download,endocrinology,event,event_available,event_note,expand_more,fact_check,gastroenterology,gavel,grid_view,handshake,health_and_safety,health_metrics,height,help,home,hotel,info,keyboard_arrow_up,local_hospital,location_on,lock,mail,medical_services,monitor_heart,music_note,near_me,open_in_new,payments,pediatrics,person_search,photo_camera,picture_as_pdf,play_arrow,play_circle,print,radio_button_unchecked,radiology,receipt_long,remove,schedule,school,share,star,stethoscope,verified,verified_user,water_drop,waving_hand,work";
+const ICONS_CSS = "https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,400,0..1,0&display=block&icon_names=accessible,account_balance_wallet,add,alarm,animation,apartment,arrow_back,arrow_downward,arrow_forward,arrow_outward,assignment,attach_file,badge,bed,biotech,bookmark,bubble_chart,calendar_month,call,campaign,chat,chat_bubble,check,check_circle,checklist,chevron_right,child_care,clinical_notes,close,content_copy,credit_card,description,directions_bus,directions_car,download,endocrinology,event,event_available,event_note,expand_more,fact_check,folder_open,gastroenterology,gavel,grid_view,handshake,health_and_safety,health_metrics,height,help,home,hotel,how_to_reg,info,keyboard_arrow_down,keyboard_arrow_up,local_hospital,location_on,lock,mail,medical_services,medication,menu,monitor_heart,music_note,near_me,no_food,open_in_new,payments,pediatrics,person_search,photo_camera,picture_as_pdf,play_arrow,play_circle,print,radio_button_unchecked,radiology,receipt_long,remove,restaurant,schedule,school,search,share,star,stethoscope,translate,upload_file,verified,verified_user,water_drop,waving_hand,work";
 const basePath = import.meta.env.BASE_URL.replace(/\/$/, '');   // на GitHub Pages pathname содержит /interna-clinic
 const ruPath = (basePath && Astro.url.pathname.startsWith(basePath) ? Astro.url.pathname.slice(basePath.length) : Astro.url.pathname).replace(/^\/kk(?=\/|$)/, '').replace(/^\/404\/?$/, '') || '/';
 const org = {
@@ -46,9 +46,9 @@ const org = {
     <meta property="og:image:width" content="1200" /><meta property="og:image:height" content="630" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,400;1,400&display=swap" media="print" onload="this.media='all'" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&display=swap" media="print" onload="this.media='all'" />
     <link rel="stylesheet" href={ICONS_CSS} media="print" onload="this.media='all'" />
-    <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,400;1,400&display=swap" /><link rel="stylesheet" href={ICONS_CSS} /></noscript>
+    <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&display=swap" /><link rel="stylesheet" href={ICONS_CSS} /></noscript>
     <style set:html={`:root{--logo:url(${img('logo')})}`} />
     <script type="application/ld+json" set:html={JSON.stringify(jsonld || org)} />
   </head>
@@ -72,7 +72,7 @@ const org = {
                     <a href="/checkup"><span class="msr">checklist</span>Check-up программы<span class="msr ch">chevron_right</span></a>
                     <a href="/kids"><span class="msr">pediatrics</span>Interna KIDS<span class="msr ch">chevron_right</span></a>
                     <a href="/prices"><span class="msr">payments</span>Цены<span class="msr ch">chevron_right</span></a>
-                    <a href="/uslugi/station"><span class="msr">local_hospital</span>Стационар и ОСМС<span class="msr ch">chevron_right</span></a>
+                    <a href="/uslugi/station"><span class="msr">local_hospital</span>Стационар<span class="msr ch">chevron_right</span></a>
                     <div class="dd-promo"><p class="kicker on-dark">Check-up</p><b>Полное обследование за 1–2 дня</b><small>Пять программ от 91 113 ₸. Анализы, УЗИ, эндоскопия и заключение врача.</small><a class="btn btn-primary" href="/checkup">Подобрать программу</a></div>
                   </div>
                 </div>
@@ -152,7 +152,7 @@ const org = {
             <a href={`mailto:${SITE.email}`}>{SITE.email}</a>
             <div class="fsoc">{SITE.social.map(([n, href, ic]) => <a href={href} target="_blank" rel="noopener" aria-label={n} title={n}><span class="msr">{ic}</span></a>)}</div>
           </div>
-          <div><p class="fh">Пациентам</p><a href="#" data-book>Записаться онлайн</a><a href="/patient">Гид пациента</a><a href="/prepare">Подготовка к исследованиям</a><a href="/promo">ОСМС и ГОБМП</a><a href="/faq">Вопросы и ответы</a><a href="/reviews">Отзывы</a></div>
+          <div><p class="fh">Пациентам</p><a href="#" data-book>Записаться онлайн</a><a href="/patient">Гид пациента</a><a href="/prepare">Подготовка к исследованиям</a><a href="/promo">Акции</a><a href="/faq">Вопросы и ответы</a><a href="/reviews">Отзывы</a></div>
           <div><p class="fh">Услуги</p><a href="/service/colonoscopy">Эндоскопия</a><a href="/service/gastro">Гастроэнтерология</a><a href="/service/fibroscan">Гепатология</a><a href="/service/ultrasound">УЗИ и диагностика</a><a href="/checkup">Check-up программы</a><a href="/uslugi/station">Стационар</a><a href="/kids">Interna KIDS</a><a href="/kids/shkola-diabeta-dlya-detei-i-roditelei">Школы для пациентов</a></div>
           <div><p class="fh">Клиника</p><a href="/about">О клинике</a><a href="/doctors">Врачи</a><a href="/about#equip">Оборудование</a><a href="/prices">Цены</a><a href="/contacts">Контакты</a><a href="/vacancies">Вакансии</a></div>
           <div><p class="fh">Новости и блог</p><a href="/media">Статьи</a><a href="/media?t=video">Видео</a><a href="/media?t=podcast">Подкасты</a><a href="/news">Новости и события</a><a href="/media?t=press">Пресса о нас</a></div>
@@ -169,7 +169,7 @@ const org = {
     <div class="spanel" id="spanel" role="dialog" aria-modal="true" aria-label="Поиск по сайту">
       <div class="spanel-in">
         <div class="spanel-top"><b>Поиск по сайту</b><button class="x" id="spanelX" aria-label="Закрыть"><span class="msr">close</span></button></div>
-        <SearchBar big popular={['Колоноскопия', 'ЭГДС', 'Фиброскан', 'Гастроэнтеролог', 'Check-up', 'Цены']} />
+        <SearchBar big popular={['Видеоколоноскопия', 'ЭГДС', 'Фиброскан', 'Гастроэнтеролог', 'Check-up', 'Цены']} />
         <p class="spanel-hint">Ищем по врачам, услугам, прайсу, детскому отделению и статьям. Enter — открыть первый результат.</p>
       </div>
     </div>

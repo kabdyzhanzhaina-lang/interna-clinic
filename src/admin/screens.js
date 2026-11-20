@@ -61,7 +61,7 @@ export function Overview() {
   const found = issues(s.data).filter((x) => can(x.href.split('/')[1]));
   const quick = [
     ['#/prices', 'payments', 'var(--ice50)', 'Изменить цену', `${nPrices} ${plural(nPrices, 'позиция', 'позиции', 'позиций')} в ${nSecs} ${plural(nSecs, 'разделе', 'разделах', 'разделах')}`],
-    [() => addItem('news'), 'campaign', 'var(--peach)', 'Добавить новость', 'Объявления, ОСМС, график'],
+    [() => addItem('news'), 'campaign', 'var(--peach)', 'Добавить новость', 'Объявления, акции, график'],
     [() => addItem('promos'), 'sell', 'var(--mint)', 'Запустить акцию', `Сейчас идёт ${nPromos} ${plural(nPromos, 'акция', 'акции', 'акций')}`],
     [() => addItem('doctors'), 'person_add', 'var(--lav)', 'Добавить врача', `${nDocs} ${plural(nDocs, 'врач', 'врача', 'врачей')} на сайте`],
   ].filter((q, i) => can(['prices', 'news', 'promos', 'doctors'][i]));
@@ -525,7 +525,7 @@ export function Translations() {
     </div>`; })}</div>`
       : html`<div class="table"><${Empty} icon="translate" title="Всё переведено" text="Новые строки появятся здесь, когда поменяете тексты в других разделах" /></div>`}
     <div class="card-h" style="margin-top:16px"><h2>Найти перевод</h2><span class="sub">${Object.keys(dict).length} строк в словаре — поиск по русскому или казахскому тексту</span></div>
-    <${Search} w=${420} value=${q} onInput=${(e) => setQ(e.target.value)} placeholder="Например, «колоноскопия»" />
+    <${Search} w=${420} value=${q} onInput=${(e) => setQ(e.target.value)} placeholder="Например, «видеоколоноскопия»" />
     ${found.length > 0 && html`<div class="table">${found.map((t) => html`<div class="kkrow" key=${t}>
       <div class="ru"><p>${t}</p></div>
       <div class="kz"><${KkArea} value=${dict[t] ?? ''} onChange=${(x) => setKk(t, x)} placeholder="Пусто — строка останется по-русски" />${s.files.kk.data.dict[t] !== dict[t] && html`<button class="text-btn" onClick=${() => setKk(t, s.files.kk.data.dict[t] ?? '')}><${Icon} n="undo" />Вернуть</button>`}</div>

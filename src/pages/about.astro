@@ -12,21 +12,23 @@ import prices from '../data/prices.json';
 import { SITE, img } from '../lib/site.js';
 const doctors = doctorsFile.items.filter((d) => !d.hidden);
 const total = Object.values(prices).reduce((a, v) => a + v.length, 0);
+const plural = (n, a, b, c) => { const m = n % 100, k = n % 10; return m > 10 && m < 20 ? c : k === 1 ? a : k > 1 && k < 5 ? b : c; };
+const docWord = plural(doctors.length, 'врач', 'врача', 'врачей');
 const timeline = [
-  ['2022', 'Открытие Interna Clinic', 'Первая клиника доказательной медицины в области внутренних заболеваний в Центральной Азии: все необходимые специалисты и обследования в одном здании.'],
-  ['2023–2024', 'Оборудование экспертного класса', 'Японское, корейское и европейское оборудование 2023–2024 годов выпуска: Olympus EVIS X1, GE LOGIQ E10s, FibroScan 630 Expert.'],
+  ['2022', 'Открытие Interna Clinic', 'Все необходимые специалисты и обследования в одном здании.'],
+  ['2023–2024', 'Оборудование экспертного класса', 'Японское, корейское и европейское оборудование 2023–2024 годов выпуска.'],
 ];
 const eq = ['evis-x1', 'fibroscan-630-exp', 'ge-logiq-e10s', 'inbody770', 'sudoscan', 'ge-versana-premier'].map((id) => equipment.items.find((e) => e.id === id)).filter(Boolean);
 const eqDesc = { 'evis-x1': 'Эндоскопическая видеосистема с режимами NBI и TXI', 'fibroscan-630-exp': 'Эластометрия печени без прокола за несколько минут', 'ge-logiq-e10s': 'УЗИ экспертного класса с поддержкой ИИ', inbody770: 'Анализ состава тела: жир, мышцы, вода', sudoscan: 'Ранняя диагностика диабетической нейропатии', 'ge-versana-premier': 'УЗИ для рутинной и детской диагностики' };
 ---
 <Base og="about" title="О клинике — Interna Clinic, институт гастроэнтерологии, гепатологии и метаболизма" description="Первая клиника доказательной медицины внутренних болезней в Центральной Азии. Оборудование экспертного класса, профессура, лицензия." active="about">
-  <PhotoHero image="building" eyebrow="Институт гастроэнтерологии, гепатологии и метаболизма" title="О клинике" sub="Первая клиника доказательной медицины внутренних болезней в Центральной Азии. Приём, обследование и стационар — в одном здании на Богенбай батыра, 248.">
+  <PhotoHero image="building" eyebrow="Институт гастроэнтерологии, гепатологии и метаболизма" title="О клинике" sub="Приём, обследование и стационар — в одном здании на Богенбай батыра, 248.">
     <a class="btn btn-ghost" href="/doctors">Наши врачи</a><a class="btn btn-ghost" href="#equip">Оборудование</a>
   </PhotoHero>
   <SubNav items={[['История', '#history'], ['Миссия', '#mission'], ['Команда', '#team'], ['Оборудование', '#equip'], ['Стационар', '/uslugi/station'], ['Лицензии', '#license'], ['Вакансии', '/vacancies']]} />
 
   <section style="padding:48px 0 0"><div class="shell">
-    <Facts items={[['2022', 'год открытия клиники'], [`${doctors.length}`, 'врача, 18 направлений'], [`${total}`, 'услуги в одном здании'], ['7 дней', 'в неделю принимаем пациентов']]} />
+    <Facts items={[['2022', 'год открытия клиники'], [`${doctors.length}`, `${docWord}, 18 направлений`], [`${total}`, `${plural(total, 'услуга', 'услуги', 'услуг')} в одном здании`], ['7 дней', 'в неделю принимаем пациентов']]} />
   </div></section>
 
   <section id="mission" style="padding:96px 0 0"><div class="shell"><div class="mission">
@@ -35,8 +37,8 @@ const eqDesc = { 'evis-x1': 'Эндоскопическая видеосисте
   </div></div></section>
 
   <section id="history" style="padding:96px 0 0"><div class="shell">
-    <SecHead eyebrow="История" title="Как развивается клиника" />
-    <div class="tline">{timeline.map((t, i) => <div class={`y rv d${i + 1}`}><span class="yr">{t[0]}</span><b>{t[1]}</b><p>{t[2]}</p></div>)}</div>
+    <div class="hist"><SecHead eyebrow="История" title="Как развивается клиника" />
+    <div class="tline">{timeline.map((t, i) => <div class={`y rv d${i + 1}`}><span class="yr">{t[0]}</span><b>{t[1]}</b><p>{t[2]}</p></div>)}</div></div>
   </div></section>
 
   <section id="equip" style="padding:96px 0 0"><div class="shell">
@@ -46,14 +48,14 @@ const eqDesc = { 'evis-x1': 'Эндоскопическая видеосисте
 
   <section id="team" style="padding:96px 0 0"><div class="shell">
     <div class="teamcard rv"><div class="bg" style={`background-image:url(${img('team')})`}></div>
-      <p class="kicker on-dark">Команда</p><h2>{doctors.length} врача: кандидаты и доктора наук, профессура</h2><p>Команда узких специалистов с многолетним стажем, индивидуальный разбор каждого случая. Личный координатор сопровождает пациента на каждом этапе обследования.</p><a class="link w" href="/doctors">Все врачи <span class="msr">arrow_forward</span></a></div>
+      <p class="kicker on-dark">Команда</p><h2>Кандидаты и доктора наук, профессура</h2><p>Индивидуальный разбор каждого случая и личный координатор на каждом этапе обследования.</p><a class="link w" href="/doctors">Все врачи <span class="msr">arrow_forward</span></a></div>
   </div></section>
 
   <section id="license" style="padding:48px 0 96px"><div class="shell"><div class="grid3">
-    <div class="icard rv d1"><span class="msr">verified</span><b>Лицензия {SITE.license}</b><p>Лицензия на медицинскую деятельность. {SITE.legalName} · БИН {SITE.bin}.</p></div>
-    <div class="icard rv d2"><span class="msr">apartment</span><b>Одно здание — все услуги</b><p>Приём, эндоскопия, УЗИ, лаборатория, дневной и круглосуточный стационар. Удобные подъездные пути, рядом остановки общественного транспорта.</p></div>
-    <a class="icard rv d3" href="/vacancies"><span class="msr">work</span><b>Вакансии</b><p>Ищем врачей, медсестёр и координаторов, разделяющих принципы доказательной медицины. Открытые позиции и форма отклика — на странице вакансий.</p><span class="link">Смотреть вакансии <span class="msr">arrow_forward</span></span></a>
+    <div class="icard rv d1"><span class="msr">verified</span><b>Лицензия {SITE.license}</b><p>{SITE.legalName} · БИН {SITE.bin}.</p></div>
+    <div class="icard rv d2"><span class="msr">apartment</span><b>Одно здание — все услуги</b><p>Приём, эндоскопия, УЗИ, лаборатория, дневной и круглосуточный стационар.</p></div>
+    <a class="icard rv d3" href="/vacancies"><span class="msr">work</span><b>Вакансии</b><p>Ищем врачей, медсестёр и координаторов, разделяющих принципы доказательной медицины.</p><span class="link">Смотреть вакансии <span class="msr">arrow_forward</span></span></a>
   </div></div></section>
 
-  <Cta title="Приходите познакомиться" text="Запишитесь на первичный приём — врач разберёт жалобы, назначит только нужные обследования и объяснит результаты в тот же день." />
+  <Cta title="Приходите познакомиться" text="Врач разберёт жалобы и назначит только нужные обследования." />
 </Base>

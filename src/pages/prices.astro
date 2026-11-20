@@ -19,7 +19,7 @@ const pay = [['credit_card', 'Карта, наличные, Kaspi', 'Оплат�
 ---
 <Base og="prices" title="Цены на услуги — Interna Clinic, Алматы" description={`Прайс клиники: ${total} позиций по ${cats.length} разделам — эндоскопия, приёмы врачей, УЗИ, анализы, стационар.`} active="prices">
   <PageHero crumbs={[['Цены']]} title="Цены на услуги" sub="Актуальный прайс клиники по направлениям. Найдите услугу или выберите раздел.">
-    <div class="sbar rise d2"><div class="sin"><span class="msr" aria-hidden="true">search</span><input id="psearch" type="search" placeholder="Найти услугу, например «колоноскопия»" aria-label="Поиск по прайсу" autocomplete="off" /><button type="button" class="btn btn-dark" id="psearch-go">Найти</button></div></div>
+    <div class="sbar rise d2"><div class="sin"><span class="msr" aria-hidden="true">search</span><input id="psearch" type="search" placeholder="Найти услугу, например «видеоколоноскопия»" aria-label="Поиск по прайсу" autocomplete="off" /><button type="button" class="btn btn-dark" id="psearch-go">Найти</button></div></div>
     <div class="chips rise d3" id="ptabs"><button class="chip on" type="button" data-all>Все <span class="cnt">{total}</span></button>{cats.map((k) => <button class="chip" type="button" data-tab={k}>{k} <span class="cnt">{prices[k].length}</span></button>)}</div>
   </PageHero>
 

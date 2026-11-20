@@ -9,11 +9,11 @@ const news = newsFile.items.slice().sort((a, b) => b.date.localeCompare(a.date))
 const events = eventsFile.items;
 const M = ['января', 'февраля', 'марта', 'апреля', 'мая', 'июня', 'июля', 'августа', 'сентября', 'октября', 'ноября', 'декабря'];
 const fmt = (d) => { const [y, m, day] = d.split('-').map(Number); return `${day} ${M[m - 1]} ${y}`; };
-const chips = ['Все', 'ОСМС', 'Акции', 'Стационар', 'Врачи', 'Школы', 'Медиа'];
+const chips = ['Все', 'Акции', 'Стационар', 'Врачи', 'Школы', 'Медиа'];
 const tagOf = (n) => (/акци/i.test(n.tag) ? 'Акции' : /врач/i.test(n.tag) ? 'Врачи' : /школ|подготов/i.test(n.tag) ? 'Школы' : n.tag);
 ---
-<Base og="news" title="Новости и события — Interna Clinic" description="Объявления клиники Interna Clinic: акции, услуги по ОСМС, изменения в работе, школы для пациентов и приёмы приглашённых специалистов." active="media">
-  <PageHero crumbs={[['Новости и события']]} title="Новости и события" sub="Объявления клиники, акции и услуги по страховке, школы для пациентов и приёмы приглашённых специалистов.">
+<Base og="news" title="Новости и события — Interna Clinic" description="Объявления клиники Interna Clinic: акции, изменения в работе, школы для пациентов и приёмы приглашённых специалистов." active="media">
+  <PageHero crumbs={[['Новости и события']]} title="Новости и события" sub="Объявления, акции и школы для пациентов.">
     <div class="chips rise d3" id="newsChips">{chips.map((c, i) => <button type="button" class={`chip${i === 0 ? ' on' : ''}`} data-tag={c}>{c}</button>)}</div>
   </PageHero>
 
@@ -44,7 +44,7 @@ const tagOf = (n) => (/акци/i.test(n.tag) ? 'Акции' : /врач/i.test(
     </aside>
   </div></div></section>
 
-  <Cta title="Хотите получать объявления?" text="Напишите в WhatsApp — будем присылать акции, услуги по ОСМС и даты школ для пациентов. Без спама, можно отписаться одним сообщением." btn="Написать в WhatsApp" />
+  <Cta title="Хотите получать объявления?" text="Напишите в WhatsApp — будем присылать акции и даты школ для пациентов." btn="Написать в WhatsApp" />
   <script is:inline>
     (function(){var ch=document.getElementById('newsChips'),list=document.getElementById('newsList');if(!ch||!list)return;var rows=[].slice.call(list.querySelectorAll('.nrow')),empty=list.querySelector('.empty');
       ch.addEventListener('click',function(e){var b=e.target.closest('.chip');if(!b)return;[].forEach.call(ch.children,function(c){c.classList.toggle('on',c===b);});var t=b.dataset.tag,n=0;rows.forEach(function(r){var on=t==='Все'||r.dataset.tag===t;r.hidden=!on;if(on)n++;});empty.hidden=n>0;});

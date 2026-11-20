@@ -12,32 +12,37 @@ import { img } from '../lib/site.js';
 const { programs, directions } = data;
 const hot = (programs.find((p) => p.hot) || programs[0])?.id;
 const count = (p) => p.groups.reduce((n, g) => n + g.items.filter((i) => i.in).length, 0);
-const groupsOf = (p) => p.groups.map((g) => ({ title: g.title, items: g.items.filter((i) => i.in).map((i) => i.n) })).filter((g) => g.items.length).slice(0, 3);
-const steps = [['Заявка', 'Оставляете заявку на сайте или в WhatsApp — координатор уточняет жалобы и цели и подбирает программу.'], ['Подготовка', 'Присылаем памятку: что взять с собой, как подготовиться к анализам, УЗИ и эндоскопии.'], ['Обследование', 'Утром натощак — анализы, УЗИ, функциональная диагностика и эндоскопия во сне. Всё в одном здании, без очередей.'], ['Заключение', 'Вечером или на следующий день — разбор результатов с профильным врачом и план наблюдения.']];
+const groupsOf = (p) => p.groups.map((g) => ({ title: g.title, items: g.items.filter((i) => i.in).map((i) => i.n) })).filter((g) => g.items.length);
+// главное в программе: 3 пункта с главной (home.hi) или первые исследования приоритетных групп — остальное в «Полный состав»
+const prio = [/консульт/i, /желуд|кишеч|печен/i, /сердц/i, /онко/i, /гормон/i, /инструмент/i, /лаборат/i, /витамин/i];
+const rank = (t) => { const i = prio.findIndex((r) => r.test(t)); return i < 0 ? prio.length : i; };
+const keyOf = (p) => p.home?.hi?.length ? p.home.hi : [...groupsOf(p)].sort((a, b) => rank(a.title) - rank(b.title)).map((g) => g.items[0]).slice(0, 4);
+const steps = [['Заявка', 'Координатор уточняет жалобы и цели и подбирает программу.'], ['Подготовка', 'Присылаем памятку по подготовке.'], ['Обследование', 'Утром натощак. Всё в одном здании, без очередей.'], ['Заключение', 'Разбор результатов с профильным врачом и план наблюдения.']];
 const faq = [
-  ['Сколько времени занимает check-up?', 'Большинство программ проходят за 1–2 дня. В первый день — анализы, УЗИ, функциональная диагностика и эндоскопия при необходимости; во второй — консультации специалистов и разбор результатов.'],
-  ['Амбулаторно или в стационаре — в чём разница?', 'Амбулаторно — приезжаете по согласованному графику, минимальный отрыв от работы. В стационаре — комфортная палата, сопровождение медперсонала, координация маршрута и обследования без ожидания.'],
-  ['Нужна ли подготовка?', 'Прийти натощак для анализов и УЗИ брюшной полости. Подробную памятку пришлём в WhatsApp — см. раздел «Подготовка».'],
-  ['Можно ли изменить состав программы?', 'Да. В каждой программе — личный координатор: выясняем жалобы и цели, профильные панели настраиваются под ваш запрос.'],
+  ['Сколько времени занимает check-up?', 'Большинство программ — 1–2 дня: сначала анализы и диагностика, затем консультации и разбор результатов.'],
+  ['Амбулаторно или в стационаре — в чём разница?', 'Амбулаторно — приезжаете по согласованному графику. В стационаре — палата, сопровождение медперсонала и обследования без ожидания.'],
+  ['Нужна ли подготовка?', 'Прийти натощак для анализов и УЗИ брюшной полости. Памятку пришлём в WhatsApp.'],
+  ['Можно ли изменить состав программы?', 'Да. Координатор выясняет жалобы и цели и настраивает профильные панели под ваш запрос.'],
 ];
 const plural = (n, a, b, c) => { const m = n % 100, k = n % 10; return m > 10 && m < 20 ? c : k === 1 ? a : k > 1 && k < 5 ? b : c; };
 const cnt = (n) => `${n} ${plural(n, 'исследование', 'исследования', 'исследований')}`;
 ---
 <Base og="checkup" title="Check-up программы в Алматы — полное обследование за 1–2 дня | Interna Clinic" description="5 программ check-up с полным составом и ценами: базовая, гастро стандарт и расширенный, премиум мужской и женский. Профильные программы: гастро, кардио, эндокринология, женское здоровье." active="checkup">
-  <PhotoHero image="hero" eyebrow="Check-up" title="Полное обследование за 1–2 дня" sub="Лаборатория, УЗИ, эндоскопия во сне и консультации профильных врачей — в одном здании, с личным координатором и заключением в тот же день.">
+  <PhotoHero image="hero" eyebrow="Check-up" title="Полное обследование за 1–2 дня" sub="Лаборатория, УЗИ, эндоскопия во сне и консультации профильных врачей — в одном здании.">
     <a class="btn btn-ghost" href="#programs">Выбрать программу</a><a class="btn btn-ghost" href="/checkup-request">Оставить заявку</a>
   </PhotoHero>
-  <SubNav items={[['Программы', '#programs'], ['Как проходит', '#how'], ['Для компаний', '#corp'], ['Цены', '#programs'], ['Вопросы', '#faq']]} />
+  <SubNav items={[['Программы', '#programs'], ['Как проходит', '#how'], ['Для компаний', '#corp'], ['Профильные', '#dirs'], ['Вопросы', '#faq']]} />
 
   <section id="programs" style="padding:80px 0 0"><div class="shell cuex">
     <div class="cuhead rv"><SecHead eyebrow="Программы" title="Выберите программу" /><div class="segm" id="cuSeg"><button type="button" class="on">Для него</button><button type="button">Для неё</button></div></div>
     <div class="cupick rv d2" id="cuPick">
       <div class="vtabs">{programs.map((p) => <button type="button" class={`vtab${p.id === hot ? ' on' : ''}`} data-prog={p.id}><span class="n">{p.title}</span><span class="p">{p.price}</span><span class="msr">chevron_right</span></button>)}</div>
       {programs.map((p) => <div class="cudet" data-det={p.id} hidden={p.id !== hot}>
-        <div class="dh"><p class="kicker">{p.sub || 'Самая востребованная'}</p><h3>{p.title}</h3><p class="d">{p.desc || `${count(p)} исследований и консультаций.`}</p></div>
+        <div class="dh"><p class="kicker">{p.sub || 'Самая востребованная'}</p><h3>{p.title}</h3><p class="d">{p.desc || cnt(count(p))}</p></div>
         <div class="dp"><b>{p.price}</b><span>амбулаторно, от</span></div>
-        <div class="dg">{groupsOf(p).map((g) => <div class="g"><span class="t">{g.title}</span>{g.items.slice(0, 4).map((x) => <span class="r"><span class="msr">check</span>{x}</span>)}</div>)}</div>
-        <div class="db"><a class="btn btn-primary" href="/checkup-request">Оставить заявку</a><button type="button" class="btn btn-line" data-book data-svc={`Check-up · ${p.title}`}>Полный состав программы</button><span class="nt">{count(p)} исследований и консультаций · точный состав пришлёт координатор</span></div>
+        <div class="dk">{keyOf(p).map((x) => <span class="r"><span class="msr">check</span>{x}</span>)}</div>
+        <details class="dfull"><summary>Полный состав · {cnt(count(p))}<span class="msr">expand_more</span></summary><div class="dg">{groupsOf(p).map((g) => <div class="g"><span class="t">{g.title}</span>{g.items.map((x) => <span class="r"><span class="msr">check</span>{x}</span>)}</div>)}</div></details>
+        <div class="db"><a class="btn btn-primary" href="/checkup-request">Оставить заявку</a></div>
       </div>)}
     </div>
   </div></section>
@@ -48,7 +53,7 @@ const cnt = (n) => `${n} ${plural(n, 'исследование', 'исследо
   </div></section>
 
   <section id="corp" style="padding:96px 0 0"><div class="shell">
-    <div class="banner dark flip rv"><div class="img" style={`background-image:url(${img('team')})`}></div><div class="in"><p class="kicker">Для компаний</p><h3>Check-up для сотрудников — в удобный для бизнеса день</h3><p>Составим программу под возраст и задачи команды, примем группу за один день и пришлём обобщённый отчёт без персональных данных.</p><div class="btns"><a class="btn btn-ghost" href="#" data-wa="Здравствуйте! Хотим обсудить корпоративный check-up для сотрудников.">Обсудить корпоративный check-up</a></div></div></div>
+    <div class="banner dark flip rv"><div class="img" style={`background-image:url(${img('team')})`}></div><div class="in"><p class="kicker">Для компаний</p><h3>Check-up для сотрудников — в удобный для бизнеса день</h3><p>Составим программу под возраст и задачи команды и примем группу за один день.</p><div class="btns"><a class="btn btn-ghost" href="#" data-wa="Здравствуйте! Хотим обсудить корпоративный check-up для сотрудников.">Обсудить корпоративный check-up</a></div></div></div>
   </div></section>
 
   <section id="dirs" style="padding:96px 0 0"><div class="shell">
@@ -56,11 +61,11 @@ const cnt = (n) => `${n} ${plural(n, 'исследование', 'исследо
     <div class="segm dseg rv d2" id="dirSeg">{directions.map((d, i) => <button type="button" class={i === 0 ? 'on' : ''} data-dir={d.id}>{d.name}</button>)}</div>
     {directions.map((d, i) => <div class="dirpanel" data-dirp={d.id} hidden={i !== 0}>
       <div class="dirintro rv">
-        <div class="t">{d.intro.slice(0, 2).map((p) => <p>{p}</p>)}</div>
+        <div class="t">{d.intro.slice(0, 1).map((p) => <p>{p}</p>)}</div>
         {d.indications.length > 0 && <div class="ind"><b>Кому подходит</b><ul>{d.indications.map((x) => <li><span class="msr">check</span>{x}</li>)}</ul></div>}
       </div>
       <div class="dircards">{d.programs.map((p, j) => <article class={`dcard rv d${(j % 3) + 1}`}>
-        <p class="kicker">{d.name}</p><b class="t">{p.name}</b><span class="n">{cnt(p.items.length)}</span>
+        <b class="t">{p.name}</b><span class="n">{cnt(p.items.length)}</span>
         <details><summary>Состав программы<span class="msr">expand_more</span></summary><ul>{p.items.map((x) => <li><span class="msr">check</span>{x}</li>)}</ul>{p.note && <p class="note">{p.note}</p>}</details>
         <button type="button" class="btn btn-line" data-book data-svc={`Check-up · ${p.name}`}>Оставить заявку</button>
       </article>)}</div>
@@ -69,7 +74,7 @@ const cnt = (n) => `${n} ${plural(n, 'исследование', 'исследо
 
   <section id="faq" style="padding:96px 0 0"><div class="shell"><Faq items={faq} kicker="Вопросы" title="Частые вопросы о check-up" /></div></section>
 
-  <Cta title="Подобрать программу check-up" text="Оставьте заявку — координатор уточнит жалобы и цели, подберёт программу и пришлёт памятку по подготовке." btn="Оставить заявку" svc="Check-up" />
+  <Cta title="Подобрать программу check-up" text="Координатор подберёт программу и пришлёт памятку по подготовке." btn="Оставить заявку" svc="Check-up" />
 
   <script is:inline>
     (() => {

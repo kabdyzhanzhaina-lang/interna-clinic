@@ -10,6 +10,7 @@
   --ease:cubic-bezier(.2,.85,.3,1);
 }
 *{box-sizing:border-box}
+em,i,cite,dfn,address,var{font-style:normal} /* курсив на сайте не используется — клиника: нечитабелен */
 html{scroll-behavior:smooth}
 b,strong{font-weight:600}
 body{margin:0;font-weight:400;background:var(--white);color:var(--body);font-family:"Manrope","Helvetica Neue",Arial,sans-serif;font-size:16px;line-height:1.65;-webkit-font-smoothing:antialiased;overflow-x:hidden}
@@ -19,7 +20,7 @@ a{color:inherit;text-decoration:none}
 :focus-visible{outline:2px solid var(--blue);outline-offset:3px}
 h1,h2,h3,h4,h5,h6{color:var(--ink);font-weight:600;letter-spacing:-.02em;line-height:1.15;margin:0;text-wrap:balance}
 .serif{font-family:"Manrope",sans-serif;font-weight:600;letter-spacing:-.02em}
-.serif.i{font-style:italic}
+.serif.i{font-style:normal}
 .shell{max-width:1180px;margin:0 auto;padding:0 28px}
 @media(max-width:640px){.shell{padding:0 18px}}
 .sec{padding:96px 0}
@@ -560,7 +561,7 @@ body.kids .readprog{background:linear-gradient(90deg,#FF6B4A,#FFC845)}
 .cuinc{list-style:none;padding:0;margin:0;font-size:13px;font-weight:600;color:var(--muted);line-height:1.45}
 .cuinc li{position:relative;padding-left:18px;margin-bottom:6px}
 .cuinc li::before{content:"";position:absolute;left:0;top:6px;width:8px;height:8px;border-radius:50%;background:var(--blue)}
-.cuinc li.more{color:var(--faint);font-style:italic}.cuinc li.more::before{background:var(--line)}
+.cuinc li.more{color:var(--faint);font-style:normal}.cuinc li.more::before{background:var(--line)}
 .cu.fill .cuinc{color:#C9E6F5}.cu.fill .cuinc li::before{background:var(--sky)}
 @media(max-width:1200px){.cugrid{grid-template-columns:repeat(3,1fr)}}
 @media(max-width:760px){.cugrid{grid-template-columns:1fr 1fr}}

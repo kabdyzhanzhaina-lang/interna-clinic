@@ -1,5 +1,5 @@
 ---
-// Памятки по подготовке (макет 18): чипы-фильтры по центру, оглавление списком, статьи с нумерацией серифом, заметка, кнопки печати/шаринга, аккордеон профессора, CTA
+// Памятки по подготовке (макет 18): чипы-фильтры по центру, памятки свёрнуты (номер, название, одна строка) и раскрываются по клику / по #якорю; внутри — инструкция, заметка, запись, печать/шаринг; профессор — тоже свёрнутый блок с аккордеоном; CTA
 import Base from '../layouts/Base.astro';
 import PageHero from '../components/PageHero.astro';
 import ItemToc from '../components/ItemToc.astro';
@@ -8,43 +8,51 @@ import Note from '../components/Note.astro';
 import Accordion from '../components/Accordion.astro';
 import Cta from '../components/Cta.astro';
 import prep from '../data/prepare.json';
-const chips = ['Все', 'УЗИ', 'Фиброскан', 'Колоноскопия', 'Гастроскопия', 'Видеокапсула', 'Седация'];
-const kw = (s) => (/^uzi/.test(s.id) ? 'УЗИ' : /fibro/.test(s.id) ? 'Фиброскан' : /kolono/.test(s.id) ? 'Колоноскопия' : /gastro/.test(s.id) ? 'Гастроскопия' : /video/.test(s.id) ? 'Видеокапсула' : /anest/.test(s.id) ? 'Седация' : 'Все');
+const chips = ['Все', 'УЗИ', 'Фиброскан', 'Видеоколоноскопия', 'Гастроскопия', 'Видеокапсула', 'Седация'];
+const kw = (s) => (/^uzi/.test(s.id) ? 'УЗИ' : /fibro/.test(s.id) ? 'Фиброскан' : /kolono/.test(s.id) ? 'Видеоколоноскопия' : /gastro/.test(s.id) ? 'Гастроскопия' : /video/.test(s.id) ? 'Видеокапсула' : /anest/.test(s.id) ? 'Седация' : 'Все');
 const simple = (s) => s.body.length === 1 && s.body[0][0] === 'ul' ? s.body[0][1] : null;
 const svcOf = (s) => s.title.replace(/\s*\(.*\)/, '');
 const notes = { fibroskan: 'Фиброскан не делают при беременности и с кардиостимулятором — предупредите врача при записи.', kolonoskopiya: 'Если принимаете препараты, разжижающие кровь, или инсулин — согласуйте схему с врачом до подготовки.', 'gastroskopiya-egds-fgds': 'После седации нельзя садиться за руль в течение дня — приходите с сопровождающим.' };
-const toc = [...prep.sections.map((s) => [s.title, `#${s.id}`]), [`Рекомендации профессора ${prep.professor.name.split(' ')[0]}`, '#professor']];
+// одна строка под заголовком свёрнутой памятки — коротко из её же текста; полная инструкция раскрывается по клику
+const gist = { 'uzi-organov-bryushnoy-polosti': 'Натощак, диета за 1–3 дня', 'uzi-mochevydelitelnoy-sistemy': 'Натощак, на полный мочевой пузырь', fibroskan: 'Симетикон за 12 часов, без еды за 4 часа', 'uzi-serdca': 'Особой подготовки не требуется', 'uzi-kishechnika': 'Натощак, диета накануне', kolonoskopiya: 'Диета за 3 дня, Эзиклен в два этапа', 'videokapsulnaya-endoskopiya': 'Диета за 3 дня, Эзиклен накануне и утром', 'gastroskopiya-egds-fgds': 'Натощак, без еды 12 часов', 'anesteziya-i-sedaciya': 'Анализы и ЭКГ заранее, без жидкости за 3 часа' };
+const book = (s) => svcOf(s).replace(/^Фиброскан$/, 'фиброскан').replace(/^Видеоколоноскопия$/, 'видеоколоноскопию').replace(/^Гастроскопия$/, 'гастроскопию').replace(/^Видеокапсульная эндоскопия$/, 'видеокапсулу').replace(/^Анестезия и седация$/, 'приём с седацией');
 ---
-<Base og="patient" title="Памятки по подготовке к исследованиям — Interna Clinic" description="Как подготовиться к УЗИ, фиброскану, колоноскопии, гастроскопии, видеокапсульной эндоскопии и седации: памятки Interna Clinic и рекомендации профессора Нерсесова." active="patient">
-  <PageHero crumbs={[['Пациенту', '/patient'], ['Подготовка к исследованиям']]} title="Памятки по подготовке" sub="Точные инструкции к каждому исследованию. При записи администратор продублирует нужную памятку в WhatsApp." />
+<Base og="patient" title="Памятки по подготовке к исследованиям — Interna Clinic" description="Как подготовиться к УЗИ, фиброскану, видеоколоноскопии, гастроскопии, видеокапсульной эндоскопии и седации: памятки Interna Clinic и рекомендации профессора Нерсесова." active="patient">
+  <PageHero crumbs={[['Пациенту', '/patient'], ['Подготовка к исследованиям']]} title="Памятки по подготовке" sub="Точные инструкции к каждому исследованию." />
 
   <section style="padding:0 0 40px"><div class="shell"><div class="chips center rise d3" id="prepChips">{chips.map((c, i) => <button type="button" class={`chip${i === 0 ? ' on' : ''}`} data-tag={c}>{c}</button>)}</div></div></section>
 
   <section style="padding:24px 0 96px"><div class="shell"><div class="lay g64">
-    <ItemToc items={toc} card={{ title: 'Не нашли свою памятку?', text: 'Напишите название исследования — пришлём инструкцию в WhatsApp.', btn: 'Спросить в WhatsApp', wa: 'Здравствуйте! Подскажите, как подготовиться к исследованию.' }} />
-    <div class="main prep2" id="prepMain">
+    <ItemToc items={[]} card={{ title: 'Не нашли свою памятку?', text: 'Напишите название исследования — пришлём инструкцию в WhatsApp.', btn: 'Спросить в WhatsApp', wa: 'Здравствуйте! Подскажите, как подготовиться к исследованию.' }} />
+    <div class="main prep2 pmx" id="prepMain">
       {prep.sections.map((s, i) => (
         <article class="parts rv" id={s.id} data-tag={kw(s)}>
-          <div class="head"><div class="t"><p class="kicker">Памятка {String(i + 1).padStart(2, '0')}</p><h2>{s.title}</h2></div><div class="b"><button type="button" class="pill" data-print><span class="msr">print</span>Распечатать</button><button type="button" class="pill" data-share><span class="msr">share</span>Поделиться</button></div></div>
-          {simple(s) ? <div class="list">{simple(s).map((x, k) => <div class="li"><span class="n">{String(k + 1).padStart(2, '0')}</span><span>{x}</span></div>)}</div> : <div class="body pbody"><Body body={s.body} /></div>}
-          {notes[s.id] && <Note>{notes[s.id]}</Note>}
-          <div class="btns"><button type="button" class="btn btn-dark" data-book data-svc={svcOf(s)}>Записаться на {svcOf(s).replace(/^Фиброскан$/, 'фиброскан').replace(/^УЗИ/, 'УЗИ').replace(/^Колоноскопия$/, 'колоноскопию').replace(/^Гастроскопия$/, 'гастроскопию').replace(/^Видеокапсульная эндоскопия$/, 'видеокапсулу').replace(/^Анестезия и седация$/, 'приём с седацией')}</button><a class="btn btn-line" href="#">Скачать PDF</a></div>
+          <details class="pm"><summary><span class="n">{String(i + 1).padStart(2, '0')}</span><span class="t"><h2>{s.title}</h2>{gist[s.id] && <small>{gist[s.id]}</small>}</span><span class="msr ic">expand_more</span></summary>
+            <div class="pmb">
+              {simple(s) ? <div class="list">{simple(s).map((x, k) => <div class="li"><span class="n">{String(k + 1).padStart(2, '0')}</span><span>{x}</span></div>)}</div> : <div class="body pbody"><Body body={s.body} /></div>}
+              {notes[s.id] && <Note>{notes[s.id]}</Note>}
+              <div class="btns"><button type="button" class="btn btn-dark" data-book data-svc={svcOf(s)}>Записаться на {book(s)}</button><button type="button" class="pill" data-print><span class="msr">print</span>Распечатать</button><button type="button" class="pill" data-share><span class="msr">share</span>Поделиться</button></div>
+            </div>
+          </details>
         </article>
       ))}
       <article class="parts rv" id="professor" data-tag="Все">
-        <div class="head"><div class="t"><p class="kicker">Рекомендации профессора</p><h2>{prep.professor.name}</h2></div><div class="b"><button type="button" class="pill" data-print><span class="msr">print</span>Распечатать</button><button type="button" class="pill" data-share><span class="msr">share</span>Поделиться</button></div></div>
-        <p class="lead">Диеты и подготовка при заболеваниях печени, поджелудочной железы и кишечника — что можно, что нельзя, как есть до и после обследования.</p>
-        <Accordion items={prep.professor.lists.map((l) => ({ q: l.title, a: [], list: l.items }))} />
-        <div class="btns"><a class="btn btn-dark" href={`/doctor/${prep.professor.doc}`}>Записаться к профессору</a></div>
+        <details class="pm"><summary><span class="n">{String(prep.sections.length + 1).padStart(2, '0')}</span><span class="t"><h2>{prep.professor.name}</h2><small>Рекомендации профессора: анализы перед приёмом</small></span><span class="msr ic">expand_more</span></summary>
+          <div class="pmb">
+            <Accordion items={prep.professor.lists.map((l) => ({ q: l.title, a: [], list: l.items }))} />
+            <div class="btns"><a class="btn btn-dark" href={`/doctor/${prep.professor.doc}`}>Записаться к профессору</a><button type="button" class="pill" data-print><span class="msr">print</span>Распечатать</button><button type="button" class="pill" data-share><span class="msr">share</span>Поделиться</button></div>
+          </div>
+        </details>
       </article>
       <p class="pempty" hidden>Памяток по этому фильтру нет.</p>
     </div>
   </div></div></section>
 
-  <Cta title="Запишитесь — памятку пришлём в WhatsApp" text="Администратор уточнит исследование и отправит точную инструкцию по подготовке сообщением." />
+  <Cta title="Запишитесь — памятку пришлём в WhatsApp" text="Администратор уточнит исследование и отправит инструкцию." />
   <script is:inline>
     (function(){var ch=document.getElementById('prepChips'),m=document.getElementById('prepMain');if(!ch||!m)return;var arts=[].slice.call(m.querySelectorAll('.parts')),empty=m.querySelector('.pempty');
       ch.addEventListener('click',function(e){var b=e.target.closest('.chip');if(!b)return;[].forEach.call(ch.children,function(c){c.classList.toggle('on',c===b);});var t=b.dataset.tag,n=0;arts.forEach(function(a){var on=t==='Все'||a.dataset.tag===t;a.hidden=!on;if(on)n++;});empty.hidden=n>0;});
-      m.addEventListener('click',function(e){var p=e.target.closest('[data-print]'),s=e.target.closest('[data-share]');if(p){window.print();}if(s){var art=s.closest('.parts'),url=location.origin+location.pathname+'#'+art.id,title=art.querySelector('h2').textContent;if(navigator.share){navigator.share({title:title,url:url}).catch(function(){});}else if(navigator.clipboard){navigator.clipboard.writeText(url);s.lastChild.textContent='Ссылка скопирована';}}});})();
+      m.addEventListener('click',function(e){var p=e.target.closest('[data-print]'),s=e.target.closest('[data-share]');if(p){var d=p.closest('details');if(d)d.open=true;window.print();}if(s){var art=s.closest('.parts'),url=location.origin+location.pathname+'#'+art.id,title=art.querySelector('h2').textContent;if(navigator.share){navigator.share({title:title,url:url}).catch(function(){});}else if(navigator.clipboard){navigator.clipboard.writeText(url);s.lastChild.textContent='Ссылка скопирована';}}});
+      function openHash(){var id=decodeURIComponent(location.hash.slice(1)),a=id&&document.getElementById(id),d=a&&a.querySelector('details.pm');if(d){d.open=true;a.scrollIntoView();}}openHash();addEventListener('hashchange',openHash);})();
   </script>
 </Base>

@@ -52,7 +52,7 @@ export const COLLECTIONS = {
     fields: [
       { key: 'title', label: 'Заголовок' },
       { key: 'date', label: 'Дата', type: 'date' },
-      { key: 'tag', label: 'Рубрика', hint: 'Акция, ОСМС, Стационар, Врачи…' },
+      { key: 'tag', label: 'Рубрика', hint: 'Акция, Стационар, Врачи, Школы…' },
       { key: 'text', label: 'Текст', type: 'textarea' },
       { key: 'link', label: 'Ссылка «Подробнее»', opt: true },
     ],
@@ -156,7 +156,7 @@ export const COLLECTIONS = {
       { key: 'prices', label: 'Цены на странице', type: 'rows', cols: [{ label: 'Услуга' }, { label: 'Уточнение' }, { label: 'Цена' }], hint: 'общий прайс клиники меняется в разделе «Прайс»', add: 'Добавить цену' },
       { key: 'faq', label: 'Вопросы и ответы', type: 'rows', cols: [{ label: 'Вопрос' }, { label: 'Ответ', area: true }], add: 'Добавить вопрос' },
       { key: 'related', label: 'Связанные услуги', type: 'checks', options: (it) => (get().data.services?.items || []).filter((x) => x.id !== it.id).map((x) => [x.id, x.t]), hint: 'на сайте видны первые три' },
-      { key: 'prepH', label: 'Подготовка — заголовок', opt: true, hint: 'например «Как подготовиться к колоноскопии»', when: (s) => !!s.prep || s.prepSteps?.length },
+      { key: 'prepH', label: 'Подготовка — заголовок', opt: true, hint: 'например «Как подготовиться к видеоколоноскопии»', when: (s) => !!s.prep || s.prepSteps?.length },
       { key: 'prepSteps', label: 'Подготовка — шаги', type: 'lines', opt: true, hint: 'до 6 коротких шагов, каждый с новой строки', when: (s) => !!s.prep || s.prepSteps?.length },
       { key: 'prepNote', label: 'Подготовка — важное', type: 'textarea', opt: true, hint: 'предупреждение в розовой карточке', when: (s) => !!s.prep || s.prepSteps?.length },
     ],
@@ -223,7 +223,7 @@ export const COLLECTIONS = {
       { key: 'profLists', label: 'Рекомендации профессора — списки', type: 'list', sub: [{ key: 'title', label: 'Заголовок' }, { key: 'items', label: 'Пункты', type: 'lines', hint: 'каждый с новой строки' }], add: 'Добавить список' },
     ],
     fields: [
-      { key: 'title', label: 'Заголовок', hint: 'например «Подготовка к колоноскопии»' },
+      { key: 'title', label: 'Заголовок', hint: 'например «Подготовка к видеоколоноскопии»' },
       { key: 'body', label: 'Текст памятки', type: 'blocks' },
     ],
     blank: () => ({ id: '', title: '', body: [] }),
@@ -334,7 +334,7 @@ const docOptions = () => (get().data.doctors?.items || []).filter((d) => !d.hidd
 export const checkCount = (p) => (p.groups || []).reduce((n, g) => n + g.items.filter((i) => i.in).length, 0);
 export const PRICES_FILE = 'src/data/prices.json';
 export const NAV = [['', 'Обзор', 'dashboard'], ['doctors'], ['prices', 'Прайс', 'payments'], ['checkups'], ['promos'], ['news'], ['events'], ['media'], ['services'], ['reviews'], ['faq'], ['vacancies'], ['equipment'],
-  ['|', 'Страницы'], ['extra'], ['kids'], ['free'], ['prepare'], ['legal'], ['site'], ['kk'], ['access']]
+  ['|', 'Страницы'], ['extra'], ['kids'], ['prepare'], ['legal'], ['site'], ['kk'], ['access']]
   .map(([k, l, i]) => (k === '|' ? { cap: l } : l ? { key: k, label: l, icon: i } : { key: k, label: COLLECTIONS[k].label, icon: COLLECTIONS[k].icon }));
 
 const MONTHS = ['января', 'февраля', 'марта', 'апреля', 'мая', 'июня', 'июля', 'августа', 'сентября', 'октября', 'ноября', 'декабря'];

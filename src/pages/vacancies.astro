@@ -28,7 +28,7 @@ const jsonld = { '@context': 'https://schema.org', '@graph': items.map((v) => ({
   <section id="respond" style="padding:72px 0 96px"><div class="shell"><div class="respond">
     <div class="rl rv">
       <p class="kicker">Отклик</p><h2 class="h">Расскажите о себе</h2>
-      <p>Оставьте контакты и пару слов об опыте — HR-менеджер свяжется в течение двух рабочих дней. Резюме можно прикрепить файлом или прислать в WhatsApp.</p>
+      <p>Оставьте контакты и пару слов об опыте — HR-менеджер свяжется в течение двух рабочих дней.</p>
       <div class="cts"><a href={`mailto:${SITE.email}`}>{SITE.email}</a><a href={SITE.phoneHref}>{SITE.phone} · WhatsApp</a></div>
       <a class="btn btn-wa" href="#" data-wa="Здравствуйте! Хочу откликнуться на вакансию в Interna Clinic."><span class="msr">chat</span>Написать в WhatsApp</a>
     </div>
@@ -41,7 +41,7 @@ const jsonld = { '@context': 'https://schema.org', '@graph': items.map((v) => ({
       <input type="text" name="website" tabindex="-1" autocomplete="off" class="hp" aria-hidden="true" />
       <label class="chk"><input type="checkbox" id="vAgree" /><span>Согласен(на) на <a href="/legal#consent">обработку персональных данных</a> и ознакомлен(а) с <a href="/legal">политикой конфиденциальности</a></span></label>
       <button type="submit" class="btn btn-dark" id="vSubmit">Отправить отклик</button>
-      <p class="note">Ответим в течение двух рабочих дней. Данные используем только для связи по вакансии.</p>
+      <p class="note">Данные используем только для связи по вакансии.</p>
     </form>
     <div class="vform done" id="vDone" hidden>
       <div class="ok"><span class="msr">check</span></div>
@@ -51,7 +51,7 @@ const jsonld = { '@context': 'https://schema.org', '@graph': items.map((v) => ({
     </div>
   </div></div></section>
 
-  <Cta kicker="Пациентам" title="Записаться на приём" text="Если вы ищете не работу, а врача — позвоните или оставьте заявку, администратор подберёт время." />
+  <Cta kicker="Пациентам" title="Записаться на приём" text="Если вы ищете не работу, а врача — администратор подберёт время." />
   <script is:inline>
     (function () {
       var f = document.getElementById('vform'); if (!f) return;

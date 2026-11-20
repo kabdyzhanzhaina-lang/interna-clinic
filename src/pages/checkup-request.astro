@@ -1,7 +1,7 @@
 ---
 // Заявка на check-up (макет 07): форма 872 в рамке r24 p40 — прогресс «Шаг n из 5», пять нумерованных шагов
 // (карточки программ 3×2 с радио, чипы 42px с галочкой, поля r12 54px, согласие, итог, кнопки); сайдбар 400:
-// «Что будет после отправки», «Как это работает», «Личный координатор», «Корпоративным клиентам»; FAQ в две колонки.
+// «Что будет после отправки», «Личный координатор», «Корпоративным клиентам»; FAQ в две колонки (свёрнут).
 // Хуки public/scripts/site.js: #cuReq, .pick[data-pick][data-single] button[data-v], #cuName, #cuPhone, #cuAgree, #cuComment, #cuDate, #cuPromo, #cuSubmit, #cuDone…
 import Base from '../layouts/Base.astro';
 import PageHero from '../components/PageHero.astro';
@@ -13,9 +13,8 @@ const hot = (programs.find((p) => p.hot) || programs[0])?.id;
 const goals = [['Профилактика, жалоб нет', 'ЖКТ: боли, вздутие, изжога', 'Печень: анализы, гепатит'], ['Сердце и сосуды', 'Гормоны и щитовидная железа', 'Вес и обмен веществ'], ['Наследственность: онкология', 'Перед операцией или беременностью']];
 const steps = ['Программа', 'Формат', 'Что проверить', 'Когда', 'Контакты'];
 const faq = [
-  ['Что будет после отправки заявки?', 'В рабочее время координатор напишет в WhatsApp или позвонит: уточнит жалобы, предложит программу и день, пришлёт памятку по подготовке и точную стоимость.'],
-  ['Можно ли собрать программу под себя?', 'Да. Программы — отправная точка. Координатор убирает лишнее и добавляет нужные панели после разговора с вами и врачом.'],
-  ['Сколько это займёт времени?', 'Амбулаторно — один день с 08:00, обычно 4–6 часов. В стационаре — 1–2 дня с палатой. Заключение врача — на очной консультации после готовности анализов.'],
+  ['Можно ли собрать программу под себя?', 'Да. Координатор убирает лишнее и добавляет нужные панели после разговора с вами и врачом.'],
+  ['Сколько это займёт времени?', 'Амбулаторно — один день с 08:00, обычно 4–6 часов. В стационаре — 1–2 дня с палатой.'],
   ['Нужно ли платить при заявке?', 'Нет. Оплата — в клинике в день обследования. Kaspi Red и рассрочка доступны для программ от 300 000 ₸.'],
 ];
 // группы чипов: [ключ, подпись, подсказка, [варианты], выбранный]
@@ -25,7 +24,7 @@ const g4 = C('time', 'Время', '', ['Утро 08:00–12:00', 'День 12:0
 const g5 = C('channel', 'Как с вами связаться', '', ['WhatsApp', 'Звонок', 'Telegram'], 0);
 ---
 <Base og="checkup" active="checkup" title="Заявка на check-up — подобрать программу обследования | Interna Clinic" description="Заявка на check-up в Interna Clinic: программа, формат, что проверить и удобные даты. Координатор соберёт маршрут обследования.">
-  <PageHero cta={false} crumbs={[['Check-up', '/checkup'], ['Заявка']]} title="Заявка на check-up" sub="Расскажите, что для вас важно — координатор соберёт программу, предложит день и пришлёт памятку. Ответим в рабочее время." />
+  <PageHero cta={false} crumbs={[['Check-up', '/checkup'], ['Заявка']]} title="Заявка на check-up" sub="Координатор соберёт программу, предложит день и пришлёт памятку." />
 
   <section class="cq"><div class="shell"><div class="cq-wrap">
     <form class="cq-form rv" id="cuReq" novalidate>
@@ -35,26 +34,26 @@ const g5 = C('channel', 'Как с вами связаться', '', ['WhatsApp'
       </div>
 
       <div class="cq-step" data-step="1">
-        <div class="h"><span class="n">1</span><div><h3>Какая программа интересует</h3><p>Выберите одну. Не уверены — нажмите «Не знаю», координатор подберёт по жалобам и возрасту.</p></div></div>
+        <div class="h"><span class="n">1</span><div><h3>Какая программа интересует</h3><p>Не уверены — нажмите «Не знаю».</p></div></div>
         <div class="pick progs" data-pick="program" data-single>
           {programs.map((p) => <button type="button" class={p.id === hot ? 'on' : ''} data-v={p.title}><span class="top"><b>{p.title}</b><span class="msr ic" aria-hidden="true">{p.id === hot ? 'check_circle' : 'radio_button_unchecked'}</span></span><span class="pz">{p.price}</span><small>{p.brief || p.sub}</small></button>)}
-          <button type="button" class="unk" data-v="Не знаю — подобрать"><span class="top"><b>Не знаю</b><span class="msr ic" aria-hidden="true">help</span></span><span class="pz">помогите подобрать</span><small>Координатор предложит программу после звонка</small></button>
+          <button type="button" class="unk" data-v="Не знаю — подобрать"><span class="top"><b>Не знаю</b><span class="msr ic" aria-hidden="true">help</span></span><span class="pz">помогите подобрать</span><small>Координатор предложит программу</small></button>
         </div>
       </div>
 
       <div class="cq-step" data-step="2">
-        <div class="h"><span class="n">2</span><div><h3>Формат и для кого</h3><p>Это влияет на программу: в стационаре добавляются палата и наблюдение, для близкого — мы позвоним вам, а не пациенту.</p></div></div>
+        <div class="h"><span class="n">2</span><div><h3>Формат и для кого</h3><p>Для близкого — мы позвоним вам, а не пациенту.</p></div></div>
         {g2.map((g) => <div class="g"><div class="lr"><b>{g.l}</b>{g.h && <small>{g.h}</small>}</div><div class="pick" data-pick={g.k} data-single>{g.vs.map((v, i) => <button type="button" class={i === g.on ? 'on' : ''} data-v={v}>{i === g.on && <span class="msr">check</span>}{v}</button>)}</div></div>)}
       </div>
 
       <div class="cq-step" data-step="3">
-        <div class="h"><span class="n">3</span><div><h3>Что важно проверить</h3><p>Можно выбрать несколько или ничего. По этим пунктам координатор добавит нужные панели.</p></div></div>
+        <div class="h"><span class="n">3</span><div><h3>Что важно проверить</h3><p>Можно выбрать несколько или ничего.</p></div></div>
         <div class="pick goals" data-pick="goals">{goals.flat().map((g) => <button type="button" class={g === 'ЖКТ: боли, вздутие, изжога' ? 'on' : ''} data-v={g}>{g === 'ЖКТ: боли, вздутие, изжога' && <span class="msr">check</span>}{g}</button>)}</div>
         <div class="g"><label class="lr" for="cuComment"><b>Жалобы, диагнозы, что уже обследовали</b></label><textarea id="cuComment" rows="3" placeholder="Например: год назад был гастрит, беспокоит вздутие; принимаю лекарства от давления"></textarea></div>
       </div>
 
       <div class="cq-step" data-step="4">
-        <div class="h"><span class="n">4</span><div><h3>Когда удобно</h3><p>Дата ориентировочная: координатор подтвердит свободное окно. Обследование начинается натощак, поэтому утро — лучший вариант.</p></div></div>
+        <div class="h"><span class="n">4</span><div><h3>Когда удобно</h3><p>Дата ориентировочная: координатор подтвердит свободное окно.</p></div></div>
         <div class="g"><label class="lr" for="cuDate"><b>Желаемая дата</b></label><span class="inp"><input id="cuDate" type="text" inputmode="numeric" maxlength="10" placeholder="12.11.2026" autocomplete="off" /><span class="msr">calendar_month</span></span></div>
         {[g4].map((g) => <div class="g"><div class="lr"><b>{g.l}</b></div><div class="pick" data-pick={g.k} data-single>{g.vs.map((v, i) => <button type="button" class={i === g.on ? 'on' : ''} data-v={v}>{i === g.on && <span class="msr">check</span>}{v}</button>)}</div></div>)}
       </div>
@@ -83,7 +82,7 @@ const g5 = C('channel', 'Как с вами связаться', '', ['WhatsApp'
       <span class="ok"><span class="msr">check</span></span>
       <h3>Заявка принята</h3>
       <p class="sub" id="cuDoneTxt"></p>
-      <p>Координатор check-up ответит в рабочее время: уточнит детали, назовёт точную стоимость и пришлёт памятку.</p>
+      <p>Координатор ответит в рабочее время, назовёт точную стоимость и пришлёт памятку.</p>
       <div class="cq-btns"><a class="btn btn-primary" href="#" id="cuDoneWa" rel="noopener">Продублировать в WhatsApp</a><a class="btn btn-line" href="/checkup">К программам</a></div>
     </div>
 
@@ -93,17 +92,14 @@ const g5 = C('channel', 'Как с вами связаться', '', ['WhatsApp'
         <div class="r"><span class="ci"><span class="msr">checklist</span></span><span class="i"><b>Уточняем</b><small>жалобы, программу и день — без лишних анализов</small></span></div>
         <div class="r"><span class="ci"><span class="msr">description</span></span><span class="i"><b>Памятка</b><small>подготовка и точная стоимость приходят в мессенджер</small></span></div>
       </div>
-      <div class="cq-how rv d2"><p class="kicker">Как это работает</p>
-        {[['Заявка', 'координатор связывается и уточняет запрос'], ['Маршрут', 'программа, день и подготовка — в WhatsApp'], ['Обследование', 'всё в одном здании, без очередей'], ['Консультация', 'врач объясняет результаты и даёт план']].map((r) => <div class="r"><span class="msr">arrow_forward</span><span class="i"><b>{r[0]}</b><small>{r[1]}</small></span></div>)}
-      </div>
-      <div class="cq-coord rv d3"><p class="kicker">Личный координатор</p><b class="t">Один контакт на всё время обследования</b><p>Записывает, напоминает о подготовке, встречает в клинике и собирает заключения врачей в одну папку.</p><a class="btn btn-ghost" href={SITE.phoneHref}>{SITE.phone}</a></div>
-      <div class="cq-corp rv d4"><p class="kicker">Корпоративным клиентам</p><p>Обследование сотрудников по графику компании, единый договор и отчёт для HR. Укажите название компании в заявке.</p><a class="link" href="#" data-wa="Здравствуйте! Интересует корпоративный check-up для сотрудников.">Обсудить в WhatsApp <span class="msr">arrow_forward</span></a></div>
+      <div class="cq-coord rv d3"><p class="kicker">Личный координатор</p><b class="t">Один контакт на всё время обследования</b><p>Записывает, напоминает о подготовке и встречает в клинике.</p><a class="btn btn-ghost" href={SITE.phoneHref}>{SITE.phone}</a></div>
+      <div class="cq-corp rv d4"><p class="kicker">Корпоративным клиентам</p><p>Обследование сотрудников по графику компании. Укажите название компании в заявке.</p><a class="link" href="#" data-wa="Здравствуйте! Интересует корпоративный check-up для сотрудников.">Обсудить в WhatsApp <span class="msr">arrow_forward</span></a></div>
     </aside>
   </div></div></section>
 
   <section class="cq-faq"><div class="shell">
-    <div class="rv"><p class="kicker">Вопросы о заявке</p><h2 class="h">Что будет после отправки</h2></div>
-    <div class="cols2 rv d2"><Accordion items={faq.slice(0, 2)} /><Accordion items={faq.slice(2)} open={-1} /></div>
+    <div class="rv"><h2 class="h">Вопросы о заявке</h2></div>
+    <div class="cols2 rv d2"><Accordion items={faq.slice(0, 2)} open={-1} /><Accordion items={faq.slice(2)} open={-1} /></div>
     <script type="application/ld+json" set:html={JSON.stringify({ '@context': 'https://schema.org', '@type': 'FAQPage', mainEntity: faq.map((q) => ({ '@type': 'Question', name: q[0], acceptedAnswer: { '@type': 'Answer', text: q[1] } })) })} />
   </div></section>
 
