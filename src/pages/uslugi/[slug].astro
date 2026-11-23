@@ -12,23 +12,22 @@ import Body from '../../components/Body.astro';
 import Cta from '../../components/Cta.astro';
 import extra from '../../data/services_extra.json';
 import doctorsFile from '../../data/doctors.json';
-import prices from '../../data/prices.json';
+import { uslugiPrices } from '../../lib/uslugi-prices.js';
 import { SITE, img } from '../../lib/site.js';
 const doctors = doctorsFile.items.filter((d) => !d.hidden);
 
 export function getStaticPaths() { return Object.keys(extra).map((slug) => ({ params: { slug } })); }
 const { slug } = Astro.params;
 const s = extra[slug];
+// Врачи направления: детские направления — врачи Interna KIDS, ЭРГ — команда со старой страницы, иначе по категории или должности
+const kidsRe = { childgastro: /гастроэнтеролог/i, childendo: /эндокринолог/i }[slug];
+const ids = { esg: ['erdalieva-laura-kerimbaevna', 'kontorshchikov'], baloon: ['erdalieva-laura-kerimbaevna', 'kontorshchikov'] }[slug];
 const kw = (s.h1 + ' ' + slug).toLowerCase();
-const catFor = /гастро|гепат|печен|жкт|колоно|эгдс/.test(kw) ? 'gastro' : /эндокрин|диабет|щитовид/.test(kw) ? 'endo' : /кардио|сердц/.test(kw) ? 'cardio' : /детск|child/.test(kw) ? 'kids' : /эндоскоп|капсул|биопс|ph|баллон|гастропласт/.test(kw) ? 'endoscopy' : null;
+const catFor = /гастроэнт|гепат|печен|жкт|колоно|эгдс/.test(kw) ? 'gastro' : /эндокрин|диабет|щитовид/.test(kw) ? 'endo' : /кардио|сердц/.test(kw) ? 'cardio' : /эндоскоп|капсул|биопс|ph/.test(kw) ? 'endoscopy' : null;
 const stem = s.t.split(' ')[0].slice(0, 6);
-const rel = (catFor ? doctors.filter((d) => d.cat === catFor) : doctors.filter((d) => new RegExp(stem, 'i').test(d.r))).slice(0, 6);
+const rel = kidsRe ? doctors.filter((d) => d.kids && kidsRe.test(`${d.r} ${d.kidsRole || ''}`)) : ids ? ids.map((id) => doctors.find((d) => d.id === id)).filter(Boolean) : slug === 'hepatologist' ? doctors.filter((d) => /гепатолог/i.test(d.r)) : catFor ? doctors.filter((d) => d.cat === catFor) : doctors.filter((d) => new RegExp(stem, 'i').test(d.r));
 const half = Math.ceil(rel.length / 2);
-const keys = Object.keys(prices);
-const priceKey = prices[s.cat] ? s.cat : (keys.find((k) => k.toLowerCase().includes(stem.toLowerCase())) || (/приём/i.test(s.cat) ? 'Приёмы врачей' : /эндоскоп/i.test(s.cat) ? 'Эндоскопия' : /узи/i.test(s.cat) ? 'УЗИ и УЗДГ' : keys[0]));
-const rows = (prices[priceKey] || []);
-const own = rows.filter((r) => r[0].toLowerCase().includes(stem.toLowerCase()) && r[2] !== 'по запросу');
-const priceRows = (own.length ? own : rows.filter((r) => r[2] !== 'по запросу')).slice(0, 4);
+const priceRows = uslugiPrices(slug);
 const img0 = { 'Приём врача': 'coats', 'Эндоскопические процедуры': 'sedation', 'УЗИ': 'uzi', 'Стационар': 'building', 'Interna KIDS': 'heart', 'Функциональная диагностика': 'cardio' }[s.cat] || 'hero';
 const bgImg = /капсул/i.test(s.t) ? 'hero' : /фибро/i.test(s.t) ? 'fibroscan' : img0;
 const body = s.body || [];
@@ -47,9 +46,9 @@ const indications = lists;
 const shown = body.filter((b, i) => !used.has(i));
 const bodyRest = shown.length === 1 && shown[0][0] === 'p' && lead.startsWith(String(shown[0][1]).slice(0, 40)) ? [] : shown;
 const n = rel.length;
-const facts = [[priceRows[0]?.[2] || 'по запросу', priceRows[0] ? 'стоимость: ' + priceRows[0][0].toLowerCase().split('(')[0].trim().split(' ').slice(0, 4).join(' ') : 'стоимость — у администратора'], ['1 визит', 'приём и обследование в один день'], ['с 08:00', 'работаем 7 дней в неделю'], [n ? `${n} ${n === 1 ? 'врач' : n < 5 ? 'врача' : 'врачей'}` : 'Эксперты', n ? 'принимают по направлению' : 'кандидаты и доктора наук']];
-const steps = [['Запись', 'Позвоните, напишите в WhatsApp или оставьте заявку на сайте.'], ['Подготовка', 'Если нужна подготовка, памятку пришлём в WhatsApp при записи.'], ['Приём', 'Врач уточняет жалобы и назначает только нужные обследования.'], ['Заключение', 'Результаты и план лечения — на очной консультации.']];
-const faq = [['Нужно ли направление?', 'Нет, направление не нужно.'], ['Что взять с собой?', 'Удостоверение личности, прошлые выписки и результаты обследований.'], ['Можно ли пройти обследование в тот же день?', 'Да, в большинстве случаев — всё в одном здании.'], ['Как оплатить?', 'Картой, наличными или Kaspi в клинике. Для некоторых услуг доступна рассрочка.']];
+const facts = [[priceRows[0]?.[2] || 'по запросу', priceRows[0] ? 'стоимость: ' + priceRows[0][0].toLowerCase().split('(')[0].trim().split(' ').slice(0, 4).join(' ') : 'стоимость — у администратора'], ['Одна клиника', 'специалисты и диагностика'], ['08:00–22:00', 'Пн–Пт, Сб–Вс 09:00–17:00'], n > 0 && [`${n} ${n % 10 === 1 && n !== 11 ? 'врач' : n % 10 >= 2 && n % 10 <= 4 && (n < 10 || n > 20) ? 'врача' : 'врачей'}`, 'принимают в клинике']].filter(Boolean);
+const steps = [['Запись', 'Позвоните, напишите в WhatsApp или оставьте заявку на сайте.'], ['Подготовка', 'Если нужна подготовка, памятка — на странице «Подготовка к исследованиям».'], ['Приём', 'Врач уточняет жалобы и назначает необходимые исследования.'], ['Заключение', 'Результаты и план лечения — на очной консультации.']];
+const faq = [slug === 'station' && ['Нужно ли направление?', 'Нет. Госпитализация платная, без направления, вне государственной очереди.'], ['Что взять с собой?', 'Удостоверение личности и имеющиеся медицинские документы.'], ['Как оплатить?', 'Наличными или безналичным способом в клинике.']].filter(Boolean);
 const t = s.t.toLowerCase();
 ---
 <Base og="services" title={s.title || `${s.h1} — Interna Clinic`} description={s.description || s.lead} active="services">
@@ -84,11 +83,11 @@ const t = s.t.toLowerCase();
 
   <section id="price" style="padding:80px 0 96px"><div class="shell"><div class="lay g60">
     <div class="pcard w560 rv"><p class="kicker">Стоимость</p>
-      {priceRows.length ? priceRows.map((p) => <div class="r"><span>{p[0]}{p[1] && <small> · {p[1].slice(0, 60)}</small>}</span><span>{p[2]}</span></div>) : <div class="r"><span>{s.t}</span><span>по запросу</span></div>}
+      {priceRows.length ? priceRows.map((p) => <div class="r"><span>{p[0]}{p[1] && <small> · {p[1].length > 70 ? p[1].slice(0, p[1].lastIndexOf(' ', 70)) + '…' : p[1]}</small>}</span><span>{p[2]}</span></div>) : <div class="r"><span>{s.t}</span><span>по запросу</span></div>}
       <div class="b"><button class="btn btn-primary" data-book data-svc={s.t}>Записаться на приём</button><a class="btn btn-wa" href="#" data-wa={`Здравствуйте! Хочу записаться: ${s.t}.`}><span class="msr">chat</span>Спросить в WhatsApp</a></div>
     </div>
     <div class="main" id="faq"><Faq items={faq} /></div>
   </div></div></section>
 
-  <Cta title={`Запишитесь на ${/приём|лог$|ист$/i.test(s.t) ? 'приём' : t}`} text="Позвоните или оставьте заявку — администратор подберёт время и ответит на вопросы." svc={s.t} />
+  <Cta title={/приём|лог$|ист$|евт$/i.test(s.t) ? 'Запишитесь на приём' : `Записаться: ${s.t}`} text="Позвоните или оставьте заявку — администратор подберёт время и ответит на вопросы." svc={s.t} />
 </Base>

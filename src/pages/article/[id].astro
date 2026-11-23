@@ -13,14 +13,11 @@ export function getStaticPaths() { return articles.map((a) => ({ params: { id: a
 const a = articles.find((x) => x.id === Astro.params.id);
 const d = a.doc ? doctors.find((x) => x.id === a.doc) : null;
 const others = articles.filter((x) => x.id !== a.id).slice(0, 3);
-const jsonld = { '@context': 'https://schema.org', '@type': 'MedicalWebPage', headline: a.t, author: { '@type': 'Person', name: a.by }, image: new URL(img(a.img), Astro.site).href, datePublished: a.date };
+const jsonld = { '@context': 'https://schema.org', '@type': 'MedicalWebPage', headline: a.t, author: { '@type': 'Organization', name: a.by }, image: new URL(img(a.img), Astro.site).href, datePublished: a.date };
 let n = 0, firstP = true, factDone = false;
 const toSec = (t) => t.split(':').reduce((acc, x) => acc * 60 + +x, 0);
 const kind = a.tag.split(' · ')[0];
 const topic = a.tag.split(' · ')[1] || 'Блог';
-// «плавающий факт» — цифра из текста статьи, если найдётся
-const factSrc = a.body.map((b) => (b[0] === 'p' ? b[1] : '')).join(' ').match(/(\d{1,3}\s?%|\d{1,2}\s?(?:минут|мин|часов|лет|дней))/);
-const fact = factSrc ? [factSrc[0], 'из текста статьи — чтобы запомнить главное'] : ['1 визит', 'приём и обследования в один день'];
 ---
 <Base og="media" title={`${a.t} — блог Interna Clinic`} description={excerpt(a, 160) || a.t} active="media" jsonld={jsonld}>
   <div class="readprog" id="readprog"></div>
@@ -59,8 +56,7 @@ const fact = factSrc ? [factSrc[0], 'из текста статьи — чтоб
       {d && <div class="author"><span class="ph">{d.img && <img src={img(d.img)} alt="" />}</span><span><b>{d.n}</b><small>{d.r}</small></span><button class="btn btn-primary sm" data-book>Записаться</button></div>}
     </article>
     <aside class="side rv d2">
-      <div class="floatfact" data-parallax="0.1"><b>{fact[0]}</b><span>{fact[1]}</span></div>
-      <div class="card" style="padding:22px;margin-top:28px"><p class="kicker" style="font-size:17px">Есть вопрос по теме?</p><p style="margin:0 0 14px;font-size:14px;color:var(--g600)">Запишитесь на приём — врач ответит на всё за один визит и назначит только нужные обследования.</p><button class="btn btn-primary sm" data-book style="width:100%">Записаться</button></div>
+      <div class="card" style="padding:22px;margin-top:28px"><p class="kicker" style="font-size:17px">Есть вопрос по теме?</p><p style="margin:0 0 14px;font-size:14px;color:var(--g600)">Оставьте заявку — администратор подтвердит время приёма.</p><button class="btn btn-primary sm" data-book style="width:100%">Записаться</button></div>
       <div class="toc" style="margin-top:28px"><b style="font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--g600);display:block;margin-bottom:12px">Читайте также</b>{others.map((x) => <a href={`/article/${x.id}`} style="display:block;font-size:14px;color:var(--black);padding:10px 0;border-top:1px solid var(--g200)">{x.t}</a>)}</div>
     </aside>
   </div></div></section>

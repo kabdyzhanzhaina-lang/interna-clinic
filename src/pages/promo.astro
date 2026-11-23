@@ -21,7 +21,7 @@ const promos = activePromos(promosFile.items);
         <div class="in"><span class="badge dark">{promo.off}</span><p class="kicker">{untilLabel(promo)}</p><h3>{promo.t}</h3><p>{promo.d}</p>
           <div class="pp"><span class="new">{promo.p}</span>{promo.old && <s>{promo.old}</s>}</div>
           <div class="btns"><button class="btn btn-dark" data-book data-svc={promo.t}>Записаться</button>{promo.link && <a class="btn btn-line" href={promo.link}>Об услуге <span class="msr ai">arrow_forward</span></a>}</div>
-          <small>Скидки не суммируются. Имеются противопоказания, необходима консультация специалиста.</small>
+          <small>Имеются противопоказания, необходима консультация специалиста.</small>
         </div>
         <div class="img" style={`background-image:url(${img('sedation')})`}></div>
       </div>

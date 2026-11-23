@@ -51,7 +51,7 @@ export const COLLECTIONS = {
     title: (n) => n.title || 'Новая новость', sub: (n) => [fmtDay(n.date), n.tag].filter(Boolean).join(' · '),
     fields: [
       { key: 'title', label: 'Заголовок' },
-      { key: 'date', label: 'Дата', type: 'date' },
+      { key: 'date', label: 'Дата', type: 'date', opt: true },
       { key: 'tag', label: 'Рубрика', hint: 'Акция, Стационар, Врачи, Школы…' },
       { key: 'text', label: 'Текст', type: 'textarea' },
       { key: 'link', label: 'Ссылка «Подробнее»', opt: true },
@@ -110,7 +110,7 @@ export const COLLECTIONS = {
       { key: 'price', label: 'Цена', hint: 'например «от 187 666 ₸» — амбулаторно' },
       { key: 'sub', label: 'Надпись над названием', opt: true, hint: 'например «Полное обследование»; пусто — «Самая востребованная»' },
       { key: 'desc', label: 'Описание на странице чек-апов', type: 'textarea', max: 200 },
-      { key: 'brief', label: 'Коротко — в форме заявки', max: 70, hint: 'например «ЖКТ, печень, гастроскопия во сне · 1 день»' },
+      { key: 'brief', label: 'Коротко — в форме заявки', max: 70, hint: 'например «ЖКТ, печень, гастроскопия»' },
       { key: 'hot', label: 'Открыта по умолчанию', type: 'toggle', only: true, hint: 'вкладка, которая открыта первой на /checkup и выбрана в заявке; может быть только одна' },
       { key: 'homeOn', label: 'Показывать на главной', type: 'toggle', hint: 'на главной помещаются три программы — первые по порядку' },
       { key: 'homeEb', label: 'Главная — надпись над названием', when: (p) => p.homeOn, hint: 'например «Самая востребованная»' },
@@ -291,12 +291,13 @@ export const COLLECTIONS = {
   },
   vacancies: {
     label: 'Вакансии', one: 'вакансию', icon: 'work', file: 'src/data/vacancies.json', idKey: 'id',
-    title: (v) => v.title || 'Новая вакансия', sub: (v) => [v.type, v.salary].filter(Boolean).join(' · '),
+    title: (v) => v.title || 'Новая вакансия', sub: (v) => [v.hidden && 'скрыта', v.type, v.salary].filter(Boolean).join(' · '),
     fields: [
       { key: 'title', label: 'Должность' },
       { key: 'type', label: 'Занятость и график', hint: 'например «Полная занятость · 5/2»' },
       { key: 'salary', label: 'Зарплата', opt: true, hint: 'например «от 600 000 ₸»' },
       { key: 'text', label: 'Описание', type: 'textarea', max: 400, hint: 'обязанности и требования в 2–3 предложениях' },
+      { key: 'hidden', label: 'Скрыть с сайта', type: 'toggle', hint: 'черновики-примеры скрыты: включите вакансию, когда клиника подтвердит позицию и условия' },
     ],
     fileFields: [{ key: 'intro', label: 'Вводный текст на странице «Вакансии»', type: 'textarea' }],
     blank: () => ({ id: '', title: '', type: 'Полная занятость · 5/2', salary: '', text: '' }),

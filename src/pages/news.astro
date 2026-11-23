@@ -5,7 +5,7 @@ import PageHero from '../components/PageHero.astro';
 import Cta from '../components/Cta.astro';
 import newsFile from '../data/news.json';
 import eventsFile from '../data/events.json';
-const news = newsFile.items.slice().sort((a, b) => b.date.localeCompare(a.date));
+const news = newsFile.items.slice().sort((a, b) => (b.date || '').localeCompare(a.date || ''));
 const events = eventsFile.items;
 const M = ['января', 'февраля', 'марта', 'апреля', 'мая', 'июня', 'июля', 'августа', 'сентября', 'октября', 'ноября', 'декабря'];
 const fmt = (d) => { const [y, m, day] = d.split('-').map(Number); return `${day} ${M[m - 1]} ${y}`; };
@@ -22,7 +22,7 @@ const tagOf = (n) => (/акци/i.test(n.tag) ? 'Акции' : /врач/i.test(
       <div class="newsl" id="newsList">
         {news.map((n, i) => (
           <a class={`nrow rv d${(i % 3) + 1}`} href={n.link || '#'} id={n.id} data-tag={tagOf(n)}>
-            <span class="i"><span class="meta">{n.tag}&nbsp;&nbsp;•&nbsp;&nbsp;{fmt(n.date)}</span><b>{n.title}</b><p>{n.text}</p></span>
+            <span class="i"><span class="meta">{n.tag}{n.date && <>&nbsp;&nbsp;•&nbsp;&nbsp;{fmt(n.date)}</>}</span><b>{n.title}</b><p>{n.text}</p></span>
             <span class="msr ai">arrow_forward</span>
           </a>
         ))}

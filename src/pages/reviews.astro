@@ -1,8 +1,7 @@
 ---
-// Отзывы (макет 20): цифры, чипы источников, три колонки карточек со звёздами, «Показать ещё», блок «Поделитесь впечатлением», CTA
+// Отзывы (макет 20): чипы источников, три колонки карточек (оценок в данных нет — без звёзд и сводных цифр), «Показать ещё», блок «Поделитесь впечатлением», CTA
 import Base from '../layouts/Base.astro';
 import PageHero from '../components/PageHero.astro';
-import Facts from '../components/Facts.astro';
 import Cta from '../components/Cta.astro';
 import reviewsFile from '../data/reviews.json';
 import { SITE } from '../lib/site.js';
@@ -10,15 +9,13 @@ const items = reviewsFile.items;
 const srcOf = (r) => (/2ГИС/i.test(r.src) ? '2ГИС' : /google/i.test(r.src) ? 'Google' : r.src);
 const tagsOf = (r) => { const t = [srcOf(r)]; const s = r.text; if (/эндоскоп|гастроскоп|колоноскоп|ЭГДС|ФГДС/i.test(s)) t.push('Эндоскопия'); if (/печен|гепат|фиброскан/i.test(s)) t.push('Гепатология'); if (/ребён|ребен|дет|сын|доч|kids/i.test(s)) t.push('Interna KIDS'); if (/стационар|палат|лежал|капельниц/i.test(s)) t.push('Стационар'); return t.join('|'); };
 const ini = (n) => n.trim()[0].toUpperCase();
-const chips = ['Все', '2ГИС', 'Google', 'Эндоскопия', 'Гепатология', 'Interna KIDS', 'Стационар'];
+const chips = ['Все', '2ГИС', 'Google', 'iDoctor', 'Эндоскопия', 'Гепатология', 'Interna KIDS', 'Стационар'];
 const cols = [[], [], []]; items.forEach((r, i) => cols[i % 3].push({ ...r, i }));
 const hidden = Math.max(0, items.length - 9);
-const jsonld = { '@context': 'https://schema.org', '@type': 'MedicalClinic', name: 'Interna Clinic', aggregateRating: { '@type': 'AggregateRating', ratingValue: '4.9', reviewCount: '1200' }, review: items.slice(0, 9).map((r) => ({ '@type': 'Review', author: { '@type': 'Person', name: r.name }, reviewBody: r.text, reviewRating: { '@type': 'Rating', ratingValue: '5' } })) };
+const jsonld = { '@context': 'https://schema.org', '@type': 'MedicalClinic', name: 'Interna Clinic', review: items.slice(0, 9).map((r) => ({ '@type': 'Review', author: { '@type': 'Person', name: r.name }, reviewBody: r.text })) };
 ---
-<Base og="about" title="Отзывы пациентов — Interna Clinic, Алматы" description="Отзывы пациентов о врачах, эндоскопии, гепатологии и стационаре Interna Clinic из 2ГИС и Google. Средняя оценка 4,9." active="about" jsonld={jsonld}>
-  <PageHero crumbs={[['О клинике', '/about'], ['Отзывы']]} title="Отзывы пациентов" sub="Что пишут о клинике в 2ГИС и Google: о врачах, эндоскопии, гепатологии, детском отделении и стационаре." />
-
-  <section style="padding:8px 0 64px"><div class="shell"><Facts serif items={[['4,9', 'средняя оценка в 2ГИС и Google'], ['1 200+', 'отзывов за время работы клиники'], ['93 %', 'рекомендуют клинику близким'], ['43', 'врача, о которых пишут пациенты']]} /></div></section>
+<Base og="about" title="Отзывы пациентов — Interna Clinic, Алматы" description="Отзывы пациентов о врачах, эндоскопии, гепатологии и стационаре Interna Clinic из 2ГИС, Google и iDoctor." active="about" jsonld={jsonld}>
+  <PageHero crumbs={[['О клинике', '/about'], ['Отзывы']]} title="Отзывы пациентов" sub="Что пишут о клинике в 2ГИС, Google и iDoctor: о врачах, эндоскопии, гепатологии, детском отделении и стационаре." />
 
   <section style="padding:0 0 32px"><div class="shell"><div class="chips center" id="rvChips">{chips.map((c, i) => <button type="button" class={`chip${i === 0 ? ' on' : ''}`} data-tag={c}>{c}</button>)}</div></div></section>
 
@@ -26,7 +23,7 @@ const jsonld = { '@context': 'https://schema.org', '@type': 'MedicalClinic', nam
     <div class="rgrid" id="rvGrid">
       {cols.map((col) => <div class="col">{col.map((r) => (
         <article class={`rev rv d${(r.i % 3) + 1}${r.i % 4 === 1 ? ' ice' : ''}${r.i >= 9 ? ' extra' : ''}`} data-tags={tagsOf(r)} hidden={r.i >= 9}>
-          <div class="top"><span class="stars">{[0, 1, 2, 3, 4].map(() => <span class="msr">star</span>)}</span><span class={`src${srcOf(r) === '2ГИС' ? ' gis' : ''}`}>{srcOf(r)}</span></div>
+          <div class="top"><span class={`src${srcOf(r) === '2ГИС' ? ' gis' : ''}`}>{srcOf(r)}</span></div>
           <p class="q">{r.text}</p>
           <div class="au"><span class="av">{ini(r.name)}</span><span><b>{r.name}</b><small>{r.src}</small></span></div>
         </article>
@@ -37,15 +34,14 @@ const jsonld = { '@context': 'https://schema.org', '@type': 'MedicalClinic', nam
   </div></section>
 
   <section class="leave" style="padding:96px 0"><div class="shell"><div class="row">
-    <div class="t rv"><p class="kicker">Поделитесь впечатлением</p><h2 class="h">Ваш отзыв помогает другим пациентам</h2><p>Расскажите, как прошёл приём: это займёт две минуты, а кому-то поможет решиться на обследование. Если что-то пошло не так — напишите главному врачу напрямую.</p></div>
+    <div class="t rv"><p class="kicker">Поделитесь впечатлением</p><h2 class="h">Ваш отзыв помогает другим пациентам</h2><p>Расскажите, как прошёл приём — кому-то это поможет решиться на обследование. Если что-то пошло не так — напишите нам в WhatsApp.</p></div>
     <div class="opts rv d2">
       <a class="opt mint" href={SITE.map2gis} target="_blank" rel="noopener">Оставить отзыв на 2ГИС <span class="msr">arrow_outward</span></a>
-      <a class="opt line" href="https://g.page/r/internaclinic/review" target="_blank" rel="noopener">Оставить отзыв в Google <span class="msr">arrow_outward</span></a>
-      <a class="opt ice" href="#" data-wa="Здравствуйте! Хочу написать главному врачу о визите в клинику.">Написать главному врачу <span class="msr">arrow_outward</span></a>
+      <a class="opt ice" href="#" data-wa="Здравствуйте! Хочу оставить отзыв о визите в клинику.">Написать в WhatsApp <span class="msr">arrow_outward</span></a>
     </div>
   </div></div></section>
 
-  <Cta title="Станьте следующим довольным пациентом" text="Запишитесь на приём — администратор подберёт врача и удобное время, а памятку по подготовке пришлём в WhatsApp." />
+  <Cta title="Запишитесь на приём" text="Администратор подберёт врача и удобное время." />
   <script is:inline>
     (function(){var ch=document.getElementById('rvChips'),g=document.getElementById('rvGrid');if(!ch||!g)return;var cards=[].slice.call(g.querySelectorAll('.rev')),more=document.getElementById('rvMore'),empty=document.querySelector('.rempty'),all=false,tag='Все';
       function apply(){var n=0;cards.forEach(function(c){var ok=(tag==='Все'||c.dataset.tags.split('|').indexOf(tag)>-1)&&(all||tag!=='Все'||!c.classList.contains('extra'));c.hidden=!ok;if(ok)n++;});empty.hidden=n>0;if(more)more.parentNode.hidden=all||tag!=='Все';}

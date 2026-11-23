@@ -1,5 +1,5 @@
 ---
-// Документы (макет 23): оглавление списком со скачиванием PDF, текст оферты и правил, согласие, реквизиты; без CTA
+// Документы (макет 23): оглавление списком (PDF-версий у клиники пока нет — /oferta ведёт сюда же), текст оферты и правил, согласие, реквизиты; без CTA
 import Base from '../layouts/Base.astro';
 import PageHero from '../components/PageHero.astro';
 import ItemToc from '../components/ItemToc.astro';
@@ -15,19 +15,14 @@ const ofertaRest = legal.oferta.body.slice(1);
   <PageHero cta={false} crumbs={[['Документы']]} title="Правовые документы" sub="Договор публичной оферты, политика конфиденциальности, правила возврата денег за медицинские услуги и реквизиты клиники." />
 
   <section style="padding:24px 0 96px"><div class="shell"><div class="lay g64">
-    <ItemToc items={toc}>
-      <div class="dl">
-        <a class="f" href="https://internaclinic.kz/oferta" target="_blank" rel="noopener"><span class="msr">picture_as_pdf</span><span>Публичная оферта · PDF</span><span class="msr dl-ic">download</span></a>
-        <a class="f" href="https://internaclinic.kz/oferta" target="_blank" rel="noopener"><span class="msr">picture_as_pdf</span><span>Правила возврата · PDF</span><span class="msr dl-ic">download</span></a>
-        <a class="f" href="https://internaclinic.kz/oferta" target="_blank" rel="noopener"><span class="msr">picture_as_pdf</span><span>Версия на казахском · PDF</span><span class="msr dl-ic">download</span></a>
-      </div>
-    </ItemToc>
+    <ItemToc items={toc} />
     <div class="main legal2 body">
       <div class="head rv" id="offer"><p class="kicker">Редакция от {legal.oferta.date}</p><h2>{legal.oferta.title}</h2></div>
       <p class="intro rv">{intro}</p>
       <div class="secs rv"><Body body={ofertaRest} /></div>
 
       <div class="head rv" id="privacy"><p class="kicker">Политика конфиденциальности</p><h2>Как мы обращаемся с данными пациентов</h2></div>
+      <Note soft icon="gavel">Черновик: текст политики и согласия утверждает юрист клиники перед запуском сайта.</Note>
       <div class="secs rv">
         <h3>Какие данные собираем</h3><p>Имя, номер телефона и сведения, которые пациент указывает в форме записи или сообщает администратору: направление, жалобы, удобное время. Медицинские данные хранятся в медицинской карте в соответствии с законодательством Республики Казахстан.</p>
         <h3>Зачем</h3><p>Для записи на приём, напоминаний о визите и подготовке, информирования о результатах и, с отдельного согласия, об акциях клиники. Данные не передаются третьим лицам, кроме случаев, предусмотренных законом.</p>
@@ -39,10 +34,10 @@ const ofertaRest = legal.oferta.body.slice(1);
 
       <div class="head rv" id="consent"><p class="kicker">Согласие</p><h2>Согласие на обработку персональных данных</h2></div>
       <div class="secs rv"><p>Отправляя форму записи на сайте, пациент даёт согласие ТОО «Институт гастроэнтерологии, гепатологии и метаболизма» на обработку указанных персональных данных (имя, номер телефона) в целях записи на приём и информирования о его времени в соответствии с Законом Республики Казахстан «О персональных данных и их защите». Данные не передаются третьим лицам, кроме случаев, предусмотренных законодательством, и хранятся в течение срока, необходимого для оказания услуги.</p></div>
-      <Note soft icon="gavel">Формулировку согласия согласовывает юрист клиники перед запуском сайта. Вопросы по документам — {SITE.email}.</Note>
+      <Note soft icon="gavel">Вопросы по документам — {SITE.email}.</Note>
 
       <div class="head rv" id="license"><p class="kicker">Лицензии и свидетельства</p><h2>Лицензия на медицинскую деятельность</h2></div>
-      <div class="secs rv"><p>Лицензия {SITE.license}. Выдана {SITE.legalName}, БИН {SITE.bin}. Копии лицензии и свидетельств специалистов — на стойке администратора и по запросу.</p></div>
+      <div class="secs rv"><p>Лицензия {SITE.license}. Выдана {SITE.legalName}, БИН {SITE.bin}.</p></div>
 
       <div class="head rv" id="requisites"><p class="kicker">Реквизиты</p><h2>Реквизиты клиники</h2></div>
       <div class="secs rv"><ul class="alist">{legal.requisites.map((r) => <li>{r}</li>)}<li>Лицензия на медицинскую деятельность {SITE.license}</li><li>{SITE.email}</li></ul></div>

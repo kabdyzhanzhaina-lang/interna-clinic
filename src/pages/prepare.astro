@@ -12,18 +12,18 @@ const chips = ['Все', 'УЗИ', 'Фиброскан', 'Видеоколоно
 const kw = (s) => (/^uzi/.test(s.id) ? 'УЗИ' : /fibro/.test(s.id) ? 'Фиброскан' : /kolono/.test(s.id) ? 'Видеоколоноскопия' : /gastro/.test(s.id) ? 'Гастроскопия' : /video/.test(s.id) ? 'Видеокапсула' : /anest/.test(s.id) ? 'Седация' : 'Все');
 const simple = (s) => s.body.length === 1 && s.body[0][0] === 'ul' ? s.body[0][1] : null;
 const svcOf = (s) => s.title.replace(/\s*\(.*\)/, '');
-const notes = { fibroskan: 'Фиброскан не делают при беременности и с кардиостимулятором — предупредите врача при записи.', kolonoskopiya: 'Если принимаете препараты, разжижающие кровь, или инсулин — согласуйте схему с врачом до подготовки.', 'gastroskopiya-egds-fgds': 'После седации нельзя садиться за руль в течение дня — приходите с сопровождающим.' };
+const notes = { 'videokapsulnaya-endoskopiya': 'Приём препаратов перед исследованием желательно согласовать с врачом-эндоскопистом.', 'gastroskopiya-egds-fgds': 'После внутривенной анестезии в этот день не рекомендуется водить машину.' }; // тексты памяток старого сайта (p_prepare)
 // одна строка под заголовком свёрнутой памятки — коротко из её же текста; полная инструкция раскрывается по клику
 const gist = { 'uzi-organov-bryushnoy-polosti': 'Натощак, диета за 1–3 дня', 'uzi-mochevydelitelnoy-sistemy': 'Натощак, на полный мочевой пузырь', fibroskan: 'Симетикон за 12 часов, без еды за 4 часа', 'uzi-serdca': 'Особой подготовки не требуется', 'uzi-kishechnika': 'Натощак, диета накануне', kolonoskopiya: 'Диета за 3 дня, Эзиклен в два этапа', 'videokapsulnaya-endoskopiya': 'Диета за 3 дня, Эзиклен накануне и утром', 'gastroskopiya-egds-fgds': 'Натощак, без еды 12 часов', 'anesteziya-i-sedaciya': 'Анализы и ЭКГ заранее, без жидкости за 3 часа' };
 const book = (s) => svcOf(s).replace(/^Фиброскан$/, 'фиброскан').replace(/^Видеоколоноскопия$/, 'видеоколоноскопию').replace(/^Гастроскопия$/, 'гастроскопию').replace(/^Видеокапсульная эндоскопия$/, 'видеокапсулу').replace(/^Анестезия и седация$/, 'приём с седацией');
 ---
 <Base og="patient" title="Памятки по подготовке к исследованиям — Interna Clinic" description="Как подготовиться к УЗИ, фиброскану, видеоколоноскопии, гастроскопии, видеокапсульной эндоскопии и седации: памятки Interna Clinic и рекомендации профессора Нерсесова." active="patient">
-  <PageHero crumbs={[['Пациенту', '/patient'], ['Подготовка к исследованиям']]} title="Памятки по подготовке" sub="Точные инструкции к каждому исследованию." />
+  <PageHero crumbs={[['Пациенту', '/patient'], ['Подготовка к исследованиям']]} title="Памятки по подготовке" sub="УЗИ, фиброскан, видеоколоноскопия, гастроскопия, видеокапсула и седация — памятки клиники." />
 
   <section style="padding:0 0 40px"><div class="shell"><div class="chips center rise d3" id="prepChips">{chips.map((c, i) => <button type="button" class={`chip${i === 0 ? ' on' : ''}`} data-tag={c}>{c}</button>)}</div></div></section>
 
   <section style="padding:24px 0 96px"><div class="shell"><div class="lay g64">
-    <ItemToc items={[]} card={{ title: 'Не нашли свою памятку?', text: 'Напишите название исследования — пришлём инструкцию в WhatsApp.', btn: 'Спросить в WhatsApp', wa: 'Здравствуйте! Подскажите, как подготовиться к исследованию.' }} />
+    <ItemToc items={[]} card={{ title: 'Не нашли свою памятку?', text: 'Напишите название исследования администратору в WhatsApp.', btn: 'Спросить в WhatsApp', wa: 'Здравствуйте! Подскажите, как подготовиться к исследованию.' }} />
     <div class="main prep2 pmx" id="prepMain">
       {prep.sections.map((s, i) => (
         <article class="parts rv" id={s.id} data-tag={kw(s)}>
@@ -48,7 +48,7 @@ const book = (s) => svcOf(s).replace(/^Фиброскан$/, 'фиброскан
     </div>
   </div></div></section>
 
-  <Cta title="Запишитесь — памятку пришлём в WhatsApp" text="Администратор уточнит исследование и отправит инструкцию." />
+  <Cta title="Остались вопросы по подготовке?" text="Напишите администратору в WhatsApp или запишитесь на исследование." />
   <script is:inline>
     (function(){var ch=document.getElementById('prepChips'),m=document.getElementById('prepMain');if(!ch||!m)return;var arts=[].slice.call(m.querySelectorAll('.parts')),empty=m.querySelector('.pempty');
       ch.addEventListener('click',function(e){var b=e.target.closest('.chip');if(!b)return;[].forEach.call(ch.children,function(c){c.classList.toggle('on',c===b);});var t=b.dataset.tag,n=0;arts.forEach(function(a){var on=t==='Все'||a.dataset.tag===t;a.hidden=!on;if(on)n++;});empty.hidden=n>0;});

@@ -4,7 +4,6 @@ import Base from '../../layouts/Base.astro';
 import SubNav from '../../components/SubNav.astro';
 import Facts from '../../components/Facts.astro';
 import SecHead from '../../components/SecHead.astro';
-import Steps from '../../components/Steps.astro';
 import Body from '../../components/Body.astro';
 import Cta from '../../components/Cta.astro';
 import kids from '../../data/kids.json';
@@ -18,7 +17,7 @@ const s = kids.services.find((x) => x.id === Astro.params.id);
 const KEY = [[/эндокринолог|диабет/i, /эндокринолог/i], [/гастроэнтеролог/i, /гастроэнтеролог/i], [/педиатр/i, /педиатр/i], [/диетолог/i, /диетолог/i], [/ревматолог/i, /ревматолог/i], [/гематолог/i, /гематолог/i], [/гинеколог/i, /гинеколог/i], [/кардиолог/i, /кардиолог/i], [/аллерголог/i, /аллерголог/i], [/нефролог/i, /нефролог/i], [/инфекционист/i, /инфекционист/i], [/эгдс|колоноскоп|капсульн|импеданс/i, /эндоскопист/i], [/фиброскан/i, /ультразвуков/i]];
 const rule = KEY.find(([k]) => k.test(s.t));
 const rel = doctors.filter((d) => d.kids && rule && rule[1].test(d.kidsRole || d.r));
-const doc = rel[0] || doctors.find((d) => d.kids && /педиатр/i.test(d.kidsRole || d.r));
+const doc = rel[0]; // врача другого профиля не подставляем
 const others = kids.services.filter((x) => x.id !== s.id);
 const first = (s.body.find((b) => b[0] === 'p') || ['', ''])[1];
 // подзаголовок — целыми предложениями, до ~220 символов
@@ -38,6 +37,7 @@ const ini = (n) => n.split(' ').slice(0, 2).map((w) => w[0]).join('');
 const nav = [['Interna KIDS', '/kids'], ...others.slice(0, 5).map((o) => [o.t, `/kids/${o.id}`]), [s.t, `/kids/${s.id}`]];
 const bgs = ['mint', 'ice', 'peach', 'ice50'];
 const isSchool = /школ/i.test(s.t);
+const isProc = /ЭГДС|колоноскоп|эндоскоп|импеданс|фиброскан/i.test(s.t);
 ---
 <Base og="kids" title={`${s.full} — детская клиника Interna KIDS, Алматы`} description={first.slice(0, 160)} active="kids">
   <SubNav items={nav} active={nav.length - 1} />
@@ -47,14 +47,14 @@ const isSchool = /школ/i.test(s.t);
       <p class="crumbs rise d1"><a href="/kids">Interna KIDS</a><span class="msr">chevron_right</span><span>{s.t}</span></p>
       <h1 class="rise d2">{s.t}</h1>
       <p class="sub rise d3">{lead}</p>
-      <div class="price rise d3"><span class="p">{s.price || 'по запросу'}</span><span class="l">{isSchool ? 'занятие в группе' : 'первичный приём'}</span></div>
+      <div class="price rise d3"><span class="p">{s.price || 'по запросу'}</span><span class="l">{isSchool ? 'групповые занятия, 3 дня' : isProc ? 'исследование' : 'первичный приём'}</span></div>
       <div class="btns rise d4"><a class="btn btn-primary" href="#" data-book data-svc={s.t}>Записать ребёнка</a><a class="btn btn-wa" href="#" data-wa={`Здравствуйте! Хочу записать ребёнка: ${s.t}.`}><span class="msr">chat</span>Спросить в WhatsApp</a></div>
       {s.note && <p class="note rise d5"><span class="msr">info</span><span>{s.note}</span></p>}
     </div>
     <div class="visual rise d3"><img src={s.icon} alt={s.t} width="260" height="260" /></div>
   </div></div></section>
 
-  <section style="padding:48px 0 0"><div class="shell"><Facts serif md items={[[`${kids.services.length}`, 'детских направлений'], [`${doctors.filter((d) => d.kids).length}`, 'детских врачей'], ['1', 'здание со взрослой клиникой'], ['7 дней', 'в неделю принимаем пациентов']]} /></div></section>
+  <section style="padding:48px 0 0"><div class="shell"><Facts serif md items={[[`${kids.services.length}`, 'детских направлений'], [`${doctors.filter((d) => d.kids).length}`, 'детских врачей']]} /></div></section>
 
   <section id="about" style="padding:96px 0 0"><div class="shell"><div class="lay g64">
     <div class="main">
@@ -78,15 +78,11 @@ const isSchool = /школ/i.test(s.t);
     </a>
   </div></div></section>}
 
-  <section style="padding:96px 0 0"><div class="shell">
-    <SecHead eyebrow="Как проходит приём" title="Три шага за один визит" />
-    <Steps dark cols={3} items={[['Разговор с родителями', 'Жалобы, питание, сон и рост, прежние анализы и выписки.'], ['Осмотр и обследование', 'При необходимости — УЗИ, анализы или фиброскан в тот же день.'], ['План и памятка', 'Понятное заключение, схема лечения и питания.']]} />
-  </div></section>
 
   <section style="padding:96px 0 0"><div class="shell">
     <SecHead eyebrow="Interna KIDS" title="Другие детские направления" link={[`Все ${kids.services.length} направлений`, '/kids#services']} />
     <div class="grid4">{others.slice(0, 4).map((o, i) => <a class={`kcard ${bgs[i]} rv d${i + 1}`} href={`/kids/${o.id}`}><img src={o.icon} alt="" width="72" height="72" loading="lazy" /><b>{o.t}</b><small>{o.price ? `от ${o.price}` : 'цена по запросу'}</small><span class="link">Подробнее <span class="msr">arrow_forward</span></span></a>)}</div>
   </div></section>
 
-  <Cta title={`Запишите ребёнка к ${isSchool ? 'нам в школу диабета' : 'детскому специалисту'}`} text="Администратор подберёт время и пришлёт памятку по подготовке в WhatsApp." svc={s.t} />
+  <Cta title={`Запишите ребёнка к ${isSchool ? 'нам в школу диабета' : 'детскому специалисту'}`} text="Администратор подтвердит время приёма." svc={s.t} />
 </Base>

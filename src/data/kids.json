@@ -23,7 +23,7 @@
    "id": "detskii-endokrinolog",
    "t": "Детский эндокринолог",
    "full": "Детский эндокринолог в Interna Kids",
-   "price": "15 000 ₸",
+   "price": "18 000 ₸",
    "note": "Обратите внимание: онлайн-консультации не проводятся. Приём осуществляется только очно в клинике.",
    "icon": "/images/kids/detskii-endokrinolog.svg",
    "body": [
@@ -65,7 +65,7 @@
    "id": "shkola-diabeta-dlya-detei-i-roditelei",
    "t": "Школа диабета для детей и родителей",
    "full": "Школа диабета для детей и родителей",
-   "price": "",
+   "price": "22 000 ₸",
    "note": "",
    "icon": "/images/kids/shkola-diabeta-dlya-detei-i-roditelei.svg",
    "body": [
@@ -150,7 +150,7 @@
    "id": "pediatr",
    "t": "Педиатр",
    "full": "Педиатр в Interna Kids",
-   "price": "",
+   "price": "16 500 ₸",
    "note": "",
    "icon": "/images/kids/pediatr.svg",
    "body": [
@@ -190,7 +190,7 @@
    "id": "detskii-gastroenterolog",
    "t": "Детский гастроэнтеролог",
    "full": "Детский гастроэнтеролог в Interna Kids",
-   "price": "",
+   "price": "18 500 ₸",
    "note": "",
    "icon": "/images/kids/detskii-gastroenterolog.svg",
    "body": [
@@ -484,7 +484,7 @@
    "id": "egds",
    "t": "ЭГДС у детей",
    "full": "ЭГДС у детей в Interna Kids",
-   "price": "",
+   "price": "24 000 ₸",
    "note": "",
    "icon": "/images/kids/egds.svg",
    "body": [
@@ -528,7 +528,7 @@
    "id": "kolonoskopiya",
    "t": "Видеоколоноскопия у детей",
    "full": "Видеоколоноскопия у детей в Interna Kids",
-   "price": "",
+   "price": "31 000 ₸",
    "note": "",
    "icon": "/images/kids/kolonoskopiya.svg",
    "body": [

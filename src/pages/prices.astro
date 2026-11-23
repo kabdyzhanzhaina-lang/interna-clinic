@@ -15,7 +15,7 @@ const LIMIT = 8;
 const promo = activePromos(promos.items)[0];
 const plural = (n) => n % 10 === 1 && n % 100 !== 11 ? 'услуга' : [2, 3, 4].includes(n % 10) && ![12, 13, 14].includes(n % 100) ? 'услуги' : 'услуг';
 const slug = (k) => encodeURIComponent(k);
-const pay = [['credit_card', 'Карта, наличные, Kaspi', 'Оплата в клинике перед приёмом или процедурой'], ['account_balance_wallet', 'Рассрочка на обследования', 'Kaspi Red до 4 месяцев и Kaspi рассрочка до 12 месяцев на комплексные программы'], ['verified', 'Актуальные цены', 'Прайс клиники по направлениям; точную стоимость подтвердит администратор при записи'], ['receipt_long', 'Чек и выписка', 'Фискальный чек и документы для страховой или работодателя']];
+const pay = [['verified', 'Актуальные цены', 'Прайс клиники по направлениям'], ['call', 'Вопрос по стоимости', 'Позвоните или напишите в WhatsApp']]; // способы оплаты и рассрочку клиника не подтвердила — не пишем
 ---
 <Base og="prices" title="Цены на услуги — Interna Clinic, Алматы" description={`Прайс клиники: ${total} позиций по ${cats.length} разделам — эндоскопия, приёмы врачей, УЗИ, анализы, стационар.`} active="prices">
   <PageHero crumbs={[['Цены']]} title="Цены на услуги" sub="Актуальный прайс клиники по направлениям. Найдите услугу или выберите раздел.">
@@ -36,7 +36,7 @@ const pay = [['credit_card', 'Карта, наличные, Kaspi', 'Оплат�
     </div>
 
     <aside class="pside">
-      <div class="pcard p28 rv"><p class="kicker">Оплата</p>
+      <div class="pcard p28 rv"><p class="kicker">Цены</p>
         {pay.map(([ic, b, t]) => <div class="payrow"><span class="msr">{ic}</span><span class="i"><b>{b}</b><small>{t}</small></span></div>)}
         <div class="b"><button class="btn btn-primary" data-book>Записаться</button></div>
       </div>
@@ -45,7 +45,7 @@ const pay = [['credit_card', 'Карта, наличные, Kaspi', 'Оплат�
     </aside>
   </div></div></section>
 
-  <Cta title="Нужна точная стоимость?" text="Администратор посчитает комплекс под вашу задачу, подскажет, что входит в цену, и запишет на удобное время." />
+  <Cta title="Нужна точная стоимость?" text="Позвоните или напишите в WhatsApp — администратор ответит и подтвердит время записи." />
 
   <script is:inline>
     (function () {

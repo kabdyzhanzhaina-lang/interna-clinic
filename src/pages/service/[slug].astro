@@ -53,7 +53,7 @@ const catShort = { 'Эндоскопия': 'Эндоскопия', 'Диагно
   </div></section>
 
   <section id="how" style="padding:80px 0 0"><div class="shell">
-    <SecHead eyebrow="Как проходит" title={steps.length === 4 ? 'Четыре шага — и вы свободны к обеду' : 'Как проходит визит'} />
+    <SecHead eyebrow="Как проходит" title={s.cat === 'Приём' ? 'Как проходит визит' : 'Как проходит процедура'} />
     <Steps items={steps.map((st) => [st[0], st[2]])} />
   </div></section>
 
@@ -61,7 +61,7 @@ const catShort = { 'Эндоскопия': 'Эндоскопия', 'Диагно
     <SecHead eyebrow="Подготовка" title={prep.h} link={['Все памятки', '/prepare']} />
     <div class="prep">
       <ol class="plist rv">{prep.steps.map((st, i) => <li><span class="n">{String(i + 1).padStart(2, '0')}</span><span class="t">{st}</span></li>)}</ol>
-      <aside class="pside rv d2"><p class="kicker">Важно</p><b>Администратор пришлёт памятку в WhatsApp при записи.</b>{prep.note && <p>{prep.note}</p>}
+      <aside class="pside rv d2"><p class="kicker">Важно</p><b>Полная памятка — на странице «Подготовка к исследованиям». Вопросы можно задать в WhatsApp.</b>{prep.note && <p>{prep.note}</p>}
         <div class="b"><a class="btn btn-line" href={`/prepare#${prep.memo}`}>Полная памятка</a><a class="btn btn-wa" href="#" data-wa={`Здравствуйте! Вопрос по подготовке: ${s.t}.`}><span class="msr">chat</span>Написать в WhatsApp</a></div>
       </aside>
     </div>

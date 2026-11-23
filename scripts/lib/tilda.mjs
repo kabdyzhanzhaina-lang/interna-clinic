@@ -158,3 +158,27 @@ export function textToBody(html) {
   }
   return body;
 }
+
+/** Биография из каталога: строки через <br>; ЗАГОЛОВКИ КАПСОМ или «Образование:» → h3, остальное → пункты списка */
+const HEAD = /^(образование|опыт работы|место работы|публикации|курсы[^:]*|специализац[^:]*|достижения|членство[^:]*|стажировк[^:]*|сертификат[^:]*|научн[^:]*|повышение квалификации|квалификац[^:]*|конференции|награды|направления[^:]*|принимает[^:]*|языки)$/i;
+export function bioToBody(html, name) {
+  const dec = (t) => t.replace(/&nbsp;|&#160;|\uFEFF/g, ' ').replace(/&amp;/g, '&').replace(/&quot;/g, '"').replace(/&#39;/g, "'").replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim();
+  const lines = html.split(/<br\s*\/?>|<\/p>|<\/div>|<\/li>/i).map(dec).filter(Boolean);
+  const body = []; let list = null;
+  const flush = () => { if (list) { body.push(list.length === 1 && list[0].length > 140 ? ['p', list[0]] : ['ul', list]); list = null; } };
+  const cap = (t) => t.charAt(0).toUpperCase() + t.slice(1).toLowerCase();
+  const n2 = name.toLowerCase().split(' ').slice(0, 2).join(' ');
+  for (let l of lines) {
+    l = l.replace(/^[•·\-–—]\s*/, '').trim(); if (!l) continue;
+    if (l.toLowerCase().includes(n2) && l.length < 60) continue;                       // повтор имени
+    if (/^(врач|детский|акушер)[\s\-–—а-яё,.]*$/i.test(l) && l.length < 60) continue;   // повтор должности
+    const m = l.match(/^([^:]{3,32}):\s*(.+)$/);                                     // «Образование: текст»
+    if (m && HEAD.test(m[1].trim())) { flush(); body.push(['h3', cap(m[1].trim())]); l = m[2]; }
+    else if ((/:$/.test(l) && l.length < 50) || (l === l.toUpperCase() && /^[А-ЯЁ][А-ЯЁ\s\-]{3,}$/.test(l) && l.split(' ').length <= 3)) { flush(); body.push(['h3', cap(l.replace(/:$/, ''))]); continue; }
+    if (/^(стаж|опыт работы)\s[^.]{0,40}(лет|года?)/i.test(l) && l.length < 60) { flush(); body.push(['p', l]); continue; }
+    if (l === l.toUpperCase() && /[А-ЯЁ]{4}/.test(l)) l = cap(l);                      // регалии капсом — обычной строкой
+    (list ??= []).push(l);
+  }
+  flush();
+  return body;
+}
