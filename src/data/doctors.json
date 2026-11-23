@@ -341,7 +341,7 @@
   {
    "id": "kontorshchikov",
    "n": "Конторщиков Павел Константинович",
-   "r": "Врач-эндоскопист",
+   "r": "Эндоскопист",
    "cat": "endoscopy",
    "img": "doctors/kontorschikov-pavel-konstantinovich",
    "exp": "",
@@ -659,7 +659,7 @@
   {
    "id": "omar",
    "n": "Омар Ардана Булдыбайқызы",
-   "r": "Эндокринолог",
+   "r": "Эндокринолог, детский эндокринолог",
    "cat": "endo",
    "img": "doctors/omar-ardana-buldibaiizi",
    "exp": "",

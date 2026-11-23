@@ -38,7 +38,7 @@ const cnt = (n) => `${n} ${plural(n, 'исследование', 'исследо
       <div class="vtabs">{programs.map((p) => <button type="button" class={`vtab${p.id === hot ? ' on' : ''}`} data-prog={p.id}><span class="n">{p.title}</span><span class="p">{p.price}</span><span class="msr">chevron_right</span></button>)}</div>
       {programs.map((p) => <div class="cudet" data-det={p.id} hidden={p.id !== hot}>
         <div class="dh"><p class="kicker">{p.sub || 'Самая востребованная'}</p><h3>{p.title}</h3><p class="d">{p.desc || cnt(count(p))}</p></div>
-        <div class="dp"><b>{p.price}</b><span>от</span></div>
+        <div class="dp"><b>{p.price}</b></div>
         <div class="dk">{keyOf(p).map((x) => <span class="r"><span class="msr">check</span>{x}</span>)}</div>
         <details class="dfull"><summary>Полный состав · {cnt(count(p))}<span class="msr">expand_more</span></summary><div class="dg">{groupsOf(p).map((g) => <div class="g"><span class="t">{g.title}</span>{g.items.map((x) => <span class="r"><span class="msr">check</span>{x}</span>)}</div>)}</div></details>
         <div class="db"><a class="btn btn-primary" href="/checkup-request">Оставить заявку</a></div>
