@@ -9,7 +9,7 @@ export const img = (key) => (key === 'logo' ? '/images/logo.png' : key === 'og' 
 
 export const SLOTS = [['14:30', 'сегодня'], ['16:00', 'сегодня'], ['09:15', 'завтра'], ['11:00', 'завтра'], ['13:45', 'завтра'], ['18:20', 'завтра']];
 
-export const CATS = { all: 'Все', gastro: 'Гастроэнтерологи', endo: 'Эндокринологи', endoscopy: 'Эндоскописты', cardio: 'Кардиологи', kids: 'Детские', other: 'Другие специалисты' };
+export const CATS = { all: 'Все', gastro: 'Гастроэнтерологи', endo: 'Эндокринологи', cardio: 'Кардиологи', endoscopy: 'Эндоскописты', uzi: 'Врачи УЗИ', kids: 'Детские', other: 'Другие специалисты' };
 
 export const NAV = [
   ['/services', 'Услуги'], ['/doctors', 'Врачи'], ['/checkup', 'Check-up'], ['/prices', 'Цены'],

@@ -1,5 +1,5 @@
 ---
-// Врачи (макет 04): хиро с поиском, чипами и алфавитом; список врачей в две колонки; «Показать ещё»; карточка «Не знаете, к кому?»; CTA
+// Врачи (макет 04): хиро с поиском, чипами и алфавитом; список врачей одной сеткой в две колонки (после фильтра карточки идут ровно, без пустот); «Показать ещё»; карточка «Не знаете, к кому?»; CTA
 import Base from '../layouts/Base.astro';
 import PageHero from '../components/PageHero.astro';
 import SearchBar from '../components/SearchBar.astro';
@@ -8,27 +8,25 @@ import Cta from '../components/Cta.astro';
 import doctorsFile from '../data/doctors.json';
 import { CATS } from '../lib/site.js';
 const doctors = doctorsFile.items.filter((d) => !d.hidden);
-const cats = (d) => (d.kids && d.cat !== 'kids' ? `${d.cat} kids` : d.cat); // врачи Interna KIDS видны и в своей специальности, и в «Детских»
+// фильтры по специальностям из подписи врача: «Кардиолог, врач ультразвуковой диагностики» — и в кардиологах, и во врачах УЗИ; врачи Interna KIDS — ещё и в «Детских»
+const SPEC = { gastro: /гастроэнтеролог/i, endo: /эндокринолог/i, cardio: /кардиолог/i, endoscopy: /эндоскопист/i, uzi: /ультразвуков|узи\b|узд\b/i };
+const cats = (d) => { const c = Object.keys(SPEC).filter((k) => SPEC[k].test(d.r)); return [...(c.length ? c : ['other']), ...(d.kids || d.cat === 'kids' ? ['kids'] : [])].join(' '); };
 const count = (k) => (k === 'all' ? doctors.length : doctors.filter((d) => cats(d).split(' ').includes(k)).length);
 const letters = [...new Set(doctors.map((d) => d.n[0].toUpperCase()))].sort((a, b) => a.localeCompare(b, 'ru'));
 const SHOW = 12;
 const docWord = (n, a = 'врач', b = 'врача', c = 'врачей') => { const m = n % 100, k = n % 10; return m > 10 && m < 20 ? c : k === 1 ? a : k > 1 && k < 5 ? b : c; };
-// первые SHOW врачей делим пополам между колонками, остальные (скрытые) — тоже пополам
-const vis = doctors.slice(0, SHOW), rest = doctors.slice(SHOW);
-const h1 = Math.ceil(vis.length / 2), h2 = Math.ceil(rest.length / 2);
-const cols = [[...vis.slice(0, h1), ...rest.slice(0, h2)], [...vis.slice(h1), ...rest.slice(h2)]];
 const isMore = (d) => doctors.indexOf(d) >= SHOW;
 ---
 <Base og="doctors" title="Врачи Interna Clinic — гастроэнтерологи, эндокринологи, эндоскописты в Алматы" description="Кандидаты и доктора наук, профессура. Запись онлайн." active="doctors">
   <PageHero crumbs={[['Врачи']]} title="Найти врача" sub={`${doctors.length} ${docWord(doctors.length, 'специалист', 'специалиста', 'специалистов')}: кандидаты и доктора наук, профессура.`}>
     <div class="rise d2" style="width:100%;display:flex;justify-content:center"><SearchBar dark placeholder="Фамилия, специальность или заболевание…" /></div>
-    <div class="chips rise d3" id="docfilter">{Object.entries(CATS).map(([k, v], i) => <button class={`chip${i === 0 ? ' on' : ''}`} data-cat={k}>{v} {count(k)}</button>)}</div>
+    <div class="chips rise d3" id="docfilter">{Object.entries(CATS).map(([k, v], i) => <button class={`chip${i === 0 ? ' on' : ''}`} data-cat={k}>{v} <span>{count(k)}</span></button>)}</div>
     <div class="az rise d3" id="docaz">{letters.map((l, i) => <a href={`#l-${l}`} class={i === 0 ? 'on' : ''} data-letter={l}>{l}</a>)}</div>
   </PageHero>
 
   <section style="padding:24px 0 0"><div class="shell">
     <div class="cols2 rv" id="docgrid">
-      {cols.map((col, c) => <div class="doclist">{col.map((d, i) => <div class="docwrap" data-doc-cat={cats(d)} data-letter={d.n[0].toUpperCase()} hidden={isMore(d) ? true : undefined} data-more={isMore(d) ? '' : undefined}><DocRow d={d} cat={cats(d)} /></div>)}</div>)}
+      {doctors.map((d) => <div class="docwrap" data-doc-cat={cats(d)} data-letter={d.n[0].toUpperCase()} hidden={isMore(d) ? true : undefined} data-more={isMore(d) ? '' : undefined}><DocRow d={d} cat={cats(d)} /></div>)}
     </div>
     <div class="more-wrap rv" id="docmore" style="padding-top:40px;display:flex;justify-content:center"><button class="btn btn-line" type="button" id="docmoreBtn">Показать ещё {doctors.length - SHOW} {docWord(doctors.length - SHOW)}</button></div>
   </div></section>
