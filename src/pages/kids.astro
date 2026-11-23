@@ -13,7 +13,7 @@ const docs = doctorsFile.items.filter((d) => !d.hidden).filter((d) => d.kids).sl
 const jsonld = { '@context': 'https://schema.org', '@type': 'MedicalClinic', name: 'Interna KIDS', description: kids.welcome, medicalSpecialty: 'Pediatric', parentOrganization: { '@type': 'MedicalClinic', name: 'Interna Clinic' } };
 ---
 <Base og="kids" title="Interna KIDS — детская клиника в Алматы" description={`Детское отделение Interna Clinic: ${kids.services.length} направлений — педиатр, детский гастроэнтеролог, эндокринолог, эндоскопия и фиброскан детям. ${kids.welcome}`} active="kids" jsonld={jsonld}>
-  <PhotoHero image="heart" eyebrow="Interna KIDS" title="Детское отделение" sub={kids.welcome}>
+  <PhotoHero image="hero-kids" pos="80% 30%" eyebrow="Interna KIDS" title="Детское отделение" sub={kids.welcome}>
     <a class="btn btn-ghost" href="#" data-book data-svc="Interna KIDS">Записать ребёнка</a>
     <a class="btn btn-ghost" href="#services">Все направления</a>
   </PhotoHero>
@@ -36,7 +36,7 @@ const jsonld = { '@context': 'https://schema.org', '@type': 'MedicalClinic', nam
 
   <section id="school" style="padding:96px 0 0"><div class="shell">
     <div class="banner lav rv">
-      <div class="in"><p class="kicker">Школа диабета</p><h2 class="h">Для детей и родителей</h2><p>Как считать хлебные единицы, вводить инсулин и предотвращать гипогликемию. Групповые и индивидуальные занятия для детей и родителей.</p><div class="btns"><a class="btn btn-dark" href="#" data-book data-svc="Школа диабета">Записаться в группу</a><a class="link" href="/kids/shkola-diabeta-dlya-detei-i-roditelei">Подробнее о школе <span class="msr">arrow_forward</span></a></div></div>
+      <div class="in"><p class="kicker">Школа диабета</p><h2 class="h">Для детей и родителей</h2><p>Как считать хлебные единицы, вводить инсулин и предотвращать гипогликемию. Групповые занятия для детей и родителей, курс 3 дня.</p><div class="btns"><a class="btn btn-dark" href="#" data-book data-svc="Школа диабета">Записаться в группу</a><a class="link" href="/kids/shkola-diabeta-dlya-detei-i-roditelei">Подробнее о школе <span class="msr">arrow_forward</span></a></div></div>
       <div class="img" style="background-image:url(/images/heart.webp)" role="img" aria-label="Interna KIDS"></div>
     </div>
   </div></section>

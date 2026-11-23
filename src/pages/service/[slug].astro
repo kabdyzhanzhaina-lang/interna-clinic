@@ -35,7 +35,8 @@ const related = (s.related || []).map((k) => [k, services[k]]).filter(([, x]) =>
 const catShort = { 'Эндоскопия': 'Эндоскопия', 'Диагностика': 'Диагностика', 'Приём': 'Консультации' };
 ---
 <Base og="services" title={`${s.h1} — цена, запись | Interna Clinic`} description={s.sub} active="services" jsonld={jsonld}>
-  <PhotoHero image={s.img} eyebrow={s.cat} title={s.t} sub={s.sub}>
+  {/* heroImg — отдельный широкий кадр для хиро (s.img остаётся для карточек); heroEb/heroT/heroSub — свой заголовок хиро (страница эндокринолога посвящена междисциплинарному подходу — просьба клиники) */}
+  <PhotoHero image={s.heroImg || s.img} pos={s.heroPos} eyebrow={s.heroEb || s.cat} title={s.heroT || s.t} sub={s.heroSub || s.sub}>
     <button class="btn btn-ghost" data-book data-svc={s.t}>Записаться</button><a class="btn btn-ghost" href="#price">Цены и подготовка</a>
   </PhotoHero>
   <SubNav items={[['Обзор', '#overview'], ['Показания', '#indications'], ...(prep ? [['Подготовка', '#prep']] : []), ['Как проходит', '#how'], ['Врачи', '#docs'], ['Цены', '#price'], ['Вопросы', '#faq']]} />

@@ -8,17 +8,15 @@ import SecHead from '../components/SecHead.astro';
 import Cta from '../components/Cta.astro';
 import doctorsFile from '../data/doctors.json';
 import equipment from '../data/equipment.json';
-import prices from '../data/prices.json';
 import { SITE, img } from '../lib/site.js';
 const doctors = doctorsFile.items.filter((d) => !d.hidden);
-const total = Object.values(prices).reduce((a, v) => a + v.length, 0);
 const plural = (n, a, b, c) => { const m = n % 100, k = n % 10; return m > 10 && m < 20 ? c : k === 1 ? a : k > 1 && k < 5 ? b : c; };
 const docWord = plural(doctors.length, 'врач', 'врача', 'врачей');
 const timeline = [
   ['2022', 'Открытие Interna Clinic', 'Все необходимые специалисты и обследования в одной клинике.'],
   ['Сегодня', 'Оборудование экспертного класса', 'Японское, корейское и европейское оборудование 2023–2024 годов выпуска.'],
 ];
-const eq = ['evis-x1', 'fibroscan-630-exp', 'ge-logiq-e10s', 'inbody770', 'sudoscan', 'ge-versana-premier'].map((id) => equipment.items.find((e) => e.id === id)).filter(Boolean);
+const eq = ['evis-x1', 'fibroscan-630-exp', 'ge-logiq-e10s', 'inbody770', 'ge-versana-premier'].map((id) => equipment.items.find((e) => e.id === id)).filter(Boolean);
 const eqDesc = { 'evis-x1': 'Эндоскопическая видеосистема с режимами NBI и TXI', 'fibroscan-630-exp': 'Эластометрия печени без прокола за несколько минут', 'ge-logiq-e10s': 'УЗИ экспертного класса с поддержкой ИИ', inbody770: 'Анализ состава тела: жир, мышцы, вода', sudoscan: 'Ранняя диагностика диабетической нейропатии', 'ge-versana-premier': 'УЗИ для рутинной и детской диагностики' };
 ---
 <Base og="about" title="О клинике — Interna Clinic, институт гастроэнтерологии, гепатологии и метаболизма" description="Первая клиника доказательной медицины внутренних болезней в Центральной Азии. Оборудование экспертного класса, профессура, лицензия." active="about">
@@ -28,7 +26,7 @@ const eqDesc = { 'evis-x1': 'Эндоскопическая видеосисте
   <SubNav items={[['История', '#history'], ['Миссия', '#mission'], ['Команда', '#team'], ['Оборудование', '#equip'], ['Стационар', '/uslugi/station'], ['Лицензии', '#license'], ['Вакансии', '/vacancies']]} />
 
   <section style="padding:48px 0 0"><div class="shell">
-    <Facts items={[['2022', 'год открытия клиники'], [`${doctors.length}`, `${docWord}, 18 направлений`], [`${total}`, `${plural(total, 'услуга', 'услуги', 'услуг')} в прайсе клиники`], ['7 дней', 'в неделю принимаем пациентов']]} />
+    <Facts items={[['2022', 'год открытия клиники'], [`${doctors.length}`, `${docWord}, 18 направлений`], ['08:00–22:00', 'по будням, в выходные — до 17:00'], ['7 дней', 'в неделю принимаем пациентов']]} />
   </div></section>
 
   <section id="mission" style="padding:96px 0 0"><div class="shell"><div class="mission">

@@ -322,7 +322,7 @@ footer .legal a{margin:0 0 0 20px;color:rgba(255,255,255,.5);font-size:12px}
 .hero3 .bgc{position:absolute;inset:0;z-index:-2;overflow:hidden}
 .hero3 .bg{position:absolute;inset:-10% 0;background-size:cover;background-position:center 30%;animation:kb 12s var(--ease) both}
 @keyframes kb{from{transform:scale(1.14)}to{transform:scale(1.02)}}
-.hero3::after{content:"";position:absolute;inset:0;z-index:-1;background:#071A30;opacity:.44}
+.hero3::after{content:"";position:absolute;inset:0;z-index:-1;background:#071A30;opacity:.58}
 .hero3 .in{width:100%;max-width:1000px;padding:0 20px;display:flex;flex-direction:column;align-items:center;gap:36px}
 .hero3 .title{display:flex;flex-direction:column;align-items:center;gap:14px}
 .hero3 .kicker{font-size:18px;color:#fff;margin:0}
@@ -435,7 +435,7 @@ footer .top{padding:32px 0 8px}footer .top>div:nth-child(3),footer .top>div:nth-
 /* фото-хиро (макеты 03/06/09/13/19) */
 .photohero{position:relative;min-height:520px;display:flex;align-items:center;justify-content:center;text-align:center;color:#fff;overflow:hidden;isolation:isolate;padding:72px 60px}
 .photohero .bg{position:absolute;inset:0;z-index:-2;background:var(--navy) center 30%/cover no-repeat;transform:scale(1.08);animation:zoomOut 1.8s .2s var(--ease) forwards}
-.photohero::after{content:"";position:absolute;inset:0;z-index:-1;background:rgba(7,26,48,.47)}
+.photohero::after{content:"";position:absolute;inset:0;z-index:-1;background:rgba(7,26,48,.56)}
 .photohero .in{display:flex;flex-direction:column;align-items:center;gap:18px;max-width:1000px}
 .photohero .eb{font-family:var(--serif);font-style:normal;font-size:19px;color:#fff;margin:0}
 .photohero h1{color:#fff;font-size:clamp(40px,5vw,72px);font-weight:500;line-height:1.05;letter-spacing:-1px;max-width:900px;margin:0}
@@ -485,6 +485,7 @@ a.docrow:hover{padding-left:6px}
 .docrow b{font-size:20px;font-weight:600;line-height:1.2;color:var(--black)}
 .docrow small{font-size:14px;color:var(--g600)}
 .docrow .tags{display:flex;flex-wrap:wrap;gap:14px;font-size:13px;font-weight:600;color:var(--blue)}
+.docrow .tags .unit{padding:2px 9px;margin-right:-6px;border-radius:999px;background:var(--ice50);border:1px solid var(--lav)}
 .docrow .ai{color:var(--black);font-size:22px;flex:none}
 .docrow .n-short{display:none}
 @media(max-width:560px){.docrow{gap:14px}.docrow .ph{width:64px;height:64px}.docrow b{font-size:17px}}
@@ -597,6 +598,7 @@ a.tile:hover{transform:translateY(-4px);background:var(--ice)}
 /* пилюля-тег */
 .tagp{display:inline-flex;align-items:center;padding:9px 16px;border-radius:999px;background:#fff;border:1px solid var(--g200);font-size:13px;font-weight:500;color:var(--black)}
 .tagp.on{background:var(--blue);border-color:var(--blue);color:#fff}
+.tagp.unit{background:var(--ice50);border-color:var(--lav);color:var(--blue);font-weight:600}
 /* 404 */
 .nf{position:relative;z-index:3;min-height:720px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:20px;padding:80px 60px;isolation:isolate}
 .nf .blobs{position:absolute;inset:0;z-index:-1;overflow:hidden;pointer-events:none}
@@ -1034,6 +1036,7 @@ section[id],div[id].anchor,[data-anchor]{scroll-margin-top:150px}
 .segm{display:flex;padding:4px;background:var(--ice50);border-radius:999px;flex:none}
 .segm button{padding:10px 22px;border-radius:999px;border:0;background:transparent;font:inherit;font-size:14px;font-weight:500;color:var(--g600);cursor:pointer;transition:background .3s,color .3s}
 .segm button.on{background:#fff;color:var(--black);font-weight:700;box-shadow:0 1px 3px rgba(17,17,17,.06)}
+.cusex{align-self:flex-start;background:#fff;margin-bottom:6px}.cusex button.on{background:var(--blue);color:#fff;box-shadow:none}
 .cupick{display:flex;gap:48px;align-items:flex-start}
 .vtabs{width:380px;flex:none;display:flex;flex-direction:column}
 .vtab{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:18px 20px;border:1px solid transparent;border-bottom-color:var(--g200);background:transparent;font:inherit;text-align:left;cursor:pointer;color:var(--black);transition:background .3s,border-color .3s}

@@ -11,6 +11,12 @@ export const SLOTS = [['14:30', 'сегодня'], ['16:00', 'сегодня'], 
 
 export const CATS = { all: 'Все', gastro: 'Гастроэнтерологи', endo: 'Эндокринологи', cardio: 'Кардиологи', endoscopy: 'Эндоскописты', uzi: 'Врачи УЗИ', kids: 'Детские', other: 'Другие специалисты' };
 
+// пометки отделений у врача: «Interna Clinic» — принимает взрослых, «Interna KIDS» — детей; врач только с детской подписью («Педиатр», «Детский …») — только KIDS
+export const units = (d) => {
+  const kidsOnly = (d.r || '').split(/,|·/).every((p) => /^\s*(педиатр|детск)/i.test(p));
+  return [...(kidsOnly ? [] : ['Interna Clinic']), ...(d.kids || d.cat === 'kids' ? ['Interna KIDS'] : [])];
+};
+
 export const NAV = [
   ['/services', 'Услуги'], ['/doctors', 'Врачи'], ['/checkup', 'Check-up'], ['/prices', 'Цены'],
   ['/patient', 'Пациенту'], ['/about', 'О клинике'], ['/media', 'Блог'],

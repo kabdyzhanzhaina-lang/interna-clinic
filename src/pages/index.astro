@@ -10,7 +10,8 @@ import newsFile from '../data/news.json';
 import checkupsFile from '../data/checkups.json';
 import services from '../data/services.json';
 import reviewsFile from '../data/reviews.json';
-import { img, SITE } from '../lib/site.js';
+import promosFile from '../data/promos.json';
+import { img, SITE, activePromos } from '../lib/site.js';
 import { fmtDate } from '../lib/media.js';
 
 const all = doctorsFile.items.filter((d) => !d.hidden);
@@ -20,17 +21,19 @@ const cap = (s) => s.charAt(0).toUpperCase() + s.slice(1);
 const docWord = (n) => { const m = n % 100, k = n % 10; return m > 10 && m < 20 ? 'врачей' : k === 1 ? 'врач' : k > 1 && k < 5 ? 'врача' : 'врачей'; };
 const news = (newsFile.items || newsFile).slice(0, 4);
 
+// карточки «В чём мы сильны» — фото аппаратов клиники (Olympus EVIS X1, FibroScan, GE LOGIQ E10s) на белом, по просьбе клиники
 const best = [
-  ['Эндоскопия', 'Видеоколоноскопия и ЭГДС во сне', 'Olympus EVIS X1, заключение — сразу после процедуры.', '/service/colonoscopy', 'sedation'],
-  ['Гепатология', 'Печень под контролем профессора', 'Фиброскан, УЗИ и анализы — в одной клинике.', '/service/fibroscan', 'fibroscan'],
-  ['Check-up', 'Полное обследование за 1–2 дня', 'Личный координатор на каждом этапе.', '/checkup', 'team'],
+  ['Эндоскопия', 'Видеоколоноскопия и ЭГДС во сне', 'Olympus EVIS X1, заключение — сразу после процедуры.', '/service/colonoscopy', 'card-endo'],
+  ['Гепатология', 'Печень под контролем профессора', 'Фиброскан, УЗИ и анализы — в одной клинике.', '/service/fibroscan', 'card-fibro'],
+  ['Check-up', 'Полное обследование за 1–2 дня', 'Личный координатор на каждом этапе.', '/checkup', 'card-checkup'],
 ];
+// направления — названия по просьбе клиники: «Гастроэнтерология — гепатология», FibroScan, эндоскопический центр, специалисты других профилей (страница /service/endo — о междисциплинарном подходе)
 const dirs = [
-  ['gastroenterology', 'Гастроэнтерология', 'Боли, вздутие, изжога, СРК, болезнь Крона', '/service/gastro'],
-  ['water_drop', 'Гепатология', 'Гепатиты B и C, жировая болезнь печени, цирроз', '/service/fibroscan'],
-  ['biotech', 'Эндоскопия', 'Видеоколоноскопия, ЭГДС, видеокапсула, pH-метрия', '/service/colonoscopy'],
-  ['radiology', 'УЗИ и диагностика', 'Эластометрия, ЭхоКГ, УЗДГ, InBody, Sudoscan', '/service/ultrasound'],
-  ['endocrinology', 'Эндокринология', 'Щитовидная железа, диабет, вес и обмен веществ', '/service/endo'],
+  ['gastroenterology', 'Гастроэнтерология — гепатология', 'Боли, вздутие, изжога, СРК, болезнь Крона, болезни печени', '/service/gastro'],
+  ['water_drop', 'FibroScan', 'Степень фиброза и стеатоза печени без прокола — результат сразу', '/service/fibroscan'],
+  ['biotech', 'Эндоскопический центр', 'Видеоколоноскопия, ЭГДС, видеокапсула, pH-метрия', '/service/colonoscopy'],
+  ['radiology', 'УЗИ и диагностика', 'Эластометрия, ЭхоКГ, УЗДГ, InBody', '/service/ultrasound'],
+  ['diversity_3', 'Специалисты других профилей', 'Эндокринолог, кардиолог, инфекционист, гинеколог и другие', '/service/endo'],
   ['child_care', 'Interna KIDS', 'Детское отделение: педиатр и детские специалисты', '/kids'],
 ];
 // главные услуги карточками в хиро (вместо поиска): название, цена «от» и иконка — из services.json, check-up — минимальная цена программ
@@ -45,6 +48,8 @@ const srcOf = (r) => (/2ГИС/i.test(r.src) ? '2ГИС' : /google/i.test(r.src)
 const topicOf = (s) => (/эндоскоп|гастроскоп|колоноскоп|ЭГДС|ФГДС/i.test(s) ? 'Эндоскопия' : /печен|гепат|фиброскан/i.test(s) ? 'Гепатология' : /стационар|палат|лежал/i.test(s) ? 'Стационар' : /(?<![а-яё])(ребён|ребен|дет[иейскя]|сын|доч[ьке])/i.test(s) ? 'Interna KIDS' : 'Приём');
 const quote = (s, max = 170) => { if (s.length <= max) return s; const cut = s.slice(0, max); const i = Math.max(cut.lastIndexOf('. '), cut.lastIndexOf('! ')); return i > 80 ? cut.slice(0, i + 1) : cut.replace(/\s+\S*$/, '') + '…'; };
 const revs = reviewsFile.items.slice(0, 3);
+// справа от новостей — действующая акция (комбо «ЭГДС + видеоколоноскопия»), вместо школы диабета — просьба клиники
+const promo = activePromos(promosFile.items)[0];
 ---
 <Base title="Медицинский центр в Алматы — Interna Clinic" description="Interna Clinic — институт гастроэнтерологии, гепатологии и метаболизма в Алматы. Эндоскопия во сне, фиброскан, check-up — всё в одном здании. Запись онлайн." active="" theme="home">
   <section class="hero3" id="hero">
@@ -77,7 +82,7 @@ const revs = reviewsFile.items.slice(0, 3);
 
   <section class="docs3"><div class="shell">
     <SecHead eyebrow="Врачи" title="Ведущие врачи" link={[`Все ${all.length} ${docWord(all.length)}`, '/doctors']} />
-    <div class="cols2 rv">{cols.map((c) => <div class="doclist">{c.map((d) => <DocRow d={d} role={`${d.r}${d.exp ? ' · ' + d.exp : ''}`} tags={(d.tags || []).filter(Boolean).slice(0, 2).map(cap)} />)}</div>)}</div>
+    <div class="cols2 rv">{cols.map((c) => <div class="doclist">{c.map((d) => <DocRow d={d} role={d.r} tags={(d.tags || []).filter(Boolean).slice(0, 2).map(cap)} />)}</div>)}</div>
   </div></section>
 
   <section class="cusec"><div class="shell">
@@ -103,13 +108,13 @@ const revs = reviewsFile.items.slice(0, 3);
       <SecHead eyebrow="Новости" title="Что нового в клинике" link={['Все новости', '/news']} />
       <div class="rows">{news.map((n, i) => <a class={`rv d${i + 1}`} href={n.link || '/news'}><span class="i"><span class="meta">{n.tag}{n.date && `  •  ${fmtDate(n.date)}`}</span><b>{n.title}</b></span><span class="msr ai">arrow_forward</span></a>)}</div>
     </div>
-    <aside class="events rv d2">
-      <p class="kicker">События</p>
-      <b class="t">Школа диабета для детей и родителей</b>
-      <p>Групповые и индивидуальные занятия, курс 3 дня.</p>
-      <span class="when"><span class="msr">event</span>Групповые занятия — 22 000 ₸</span>
-      <button class="btn btn-dark" data-book data-svc="Школа диабета">Записаться в группу</button>
-    </aside>
+    {promo && <aside class="events rv d2">
+      <p class="kicker">Акция</p>
+      <b class="t">{promo.t}</b>
+      <p>{promo.d}</p>
+      <span class="when"><span class="msr">sell</span>{promo.p} · {promo.off}</span>
+      <button class="btn btn-dark" data-book data-svc={promo.t}>Записаться</button>
+    </aside>}
   </div></div></section>
 
   <Cta title="Запишитесь на приём уже сегодня" text="Администратор подберёт врача и ответит на вопросы." />

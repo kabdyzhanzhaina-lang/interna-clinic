@@ -47,7 +47,7 @@ const isProc = /ЭГДС|колоноскоп|эндоскоп|импеданс|
       <p class="crumbs rise d1"><a href="/kids">Interna KIDS</a><span class="msr">chevron_right</span><span>{s.t}</span></p>
       <h1 class="rise d2">{s.t}</h1>
       <p class="sub rise d3">{lead}</p>
-      <div class="price rise d3"><span class="p">{s.price || 'по запросу'}</span><span class="l">{isSchool ? 'групповые занятия, 3 дня' : isProc ? 'исследование' : 'первичный приём'}</span></div>
+      {s.price && !/запрос/i.test(s.price) && <div class="price rise d3"><span class="p">{s.price}</span><span class="l">{isSchool ? 'групповые занятия, 3 дня' : isProc ? 'исследование' : 'первичный приём'}</span></div>}
       <div class="btns rise d4"><a class="btn btn-primary" href="#" data-book data-svc={s.t}>Записать ребёнка</a><a class="btn btn-wa" href="#" data-wa={`Здравствуйте! Хочу записать ребёнка: ${s.t}.`}><span class="msr">chat</span>Спросить в WhatsApp</a></div>
       {s.note && <p class="note rise d5"><span class="msr">info</span><span>{s.note}</span></p>}
     </div>
@@ -72,7 +72,7 @@ const isProc = /ЭГДС|колоноскоп|эндоскоп|импеданс|
     <SecHead eyebrow="Кто принимает" title="Врач направления" />
     <a class="docrow big rv" href={`/doctor/${doc.id}`}>
       <span class="ph">{doc.img ? <img src={img(doc.img)} alt={doc.n} loading="lazy" /> : <span class="ini">{ini(doc.n)}</span>}</span>
-      <span class="i"><b>{doc.n}</b><small>{doc.kidsRole || doc.r}</small><span class="tags"><span>Interna KIDS</span>{doc.exp && <span>стаж {doc.exp}</span>}<span>приём очно</span></span></span>
+      <span class="i"><b>{doc.n}</b><small>{doc.kidsRole || doc.r}</small><span class="tags"><span>Interna KIDS</span><span>приём очно</span></span></span>
       <span class="btn btn-line" data-book data-svc={s.t}>Записаться</span>
       <span class="msr ai">arrow_forward</span>
     </a>
@@ -81,7 +81,7 @@ const isProc = /ЭГДС|колоноскоп|эндоскоп|импеданс|
 
   <section style="padding:96px 0 0"><div class="shell">
     <SecHead eyebrow="Interna KIDS" title="Другие детские направления" link={[`Все ${kids.services.length} направлений`, '/kids#services']} />
-    <div class="grid4">{others.slice(0, 4).map((o, i) => <a class={`kcard ${bgs[i]} rv d${i + 1}`} href={`/kids/${o.id}`}><img src={o.icon} alt="" width="72" height="72" loading="lazy" /><b>{o.t}</b><small>{o.price ? `от ${o.price}` : 'цена по запросу'}</small><span class="link">Подробнее <span class="msr">arrow_forward</span></span></a>)}</div>
+    <div class="grid4">{others.slice(0, 4).map((o, i) => <a class={`kcard ${bgs[i]} rv d${i + 1}`} href={`/kids/${o.id}`}><img src={o.icon} alt="" width="72" height="72" loading="lazy" /><b>{o.t}</b>{o.price && !/запрос/i.test(o.price) && <small>от {o.price}</small>}<span class="link">Подробнее <span class="msr">arrow_forward</span></span></a>)}</div>
   </div></section>
 
   <Cta title={`Запишите ребёнка к ${isSchool ? 'нам в школу диабета' : 'детскому специалисту'}`} text="Администратор подтвердит время приёма." svc={s.t} />

@@ -35,6 +35,106 @@
   ],
   "redirects": [
     {
+      "source": "/uslugi/esg",
+      "destination": "/services/",
+      "statusCode": 301
+    },
+    {
+      "source": "/uslugi/esg/",
+      "destination": "/services/",
+      "statusCode": 301
+    },
+    {
+      "source": "/kk/uslugi/esg",
+      "destination": "/kk/services/",
+      "statusCode": 301
+    },
+    {
+      "source": "/kk/uslugi/esg/",
+      "destination": "/kk/services/",
+      "statusCode": 301
+    },
+    {
+      "source": "/uslugi/sudoscan",
+      "destination": "/services/",
+      "statusCode": 301
+    },
+    {
+      "source": "/uslugi/sudoscan/",
+      "destination": "/services/",
+      "statusCode": 301
+    },
+    {
+      "source": "/kk/uslugi/sudoscan",
+      "destination": "/kk/services/",
+      "statusCode": 301
+    },
+    {
+      "source": "/kk/uslugi/sudoscan/",
+      "destination": "/kk/services/",
+      "statusCode": 301
+    },
+    {
+      "source": "/kk/uslugi/coloproctologist",
+      "destination": "/kk/services/",
+      "statusCode": 301
+    },
+    {
+      "source": "/kk/uslugi/coloproctologist/",
+      "destination": "/kk/services/",
+      "statusCode": 301
+    },
+    {
+      "source": "/kk/doctor/gainutdin",
+      "destination": "/kk/doctors/",
+      "statusCode": 301
+    },
+    {
+      "source": "/kk/doctor/gainutdin/",
+      "destination": "/kk/doctors/",
+      "statusCode": 301
+    },
+    {
+      "source": "/kk/doctor/kasteeva-aiim-shalkarkizi",
+      "destination": "/kk/doctors/",
+      "statusCode": 301
+    },
+    {
+      "source": "/kk/doctor/kasteeva-aiim-shalkarkizi/",
+      "destination": "/kk/doctors/",
+      "statusCode": 301
+    },
+    {
+      "source": "/uslugi/coloproctologist",
+      "destination": "/services/",
+      "statusCode": 301
+    },
+    {
+      "source": "/uslugi/coloproctologist/",
+      "destination": "/services/",
+      "statusCode": 301
+    },
+    {
+      "source": "/doctor/gainutdin",
+      "destination": "/doctors/",
+      "statusCode": 301
+    },
+    {
+      "source": "/doctor/gainutdin/",
+      "destination": "/doctors/",
+      "statusCode": 301
+    },
+    {
+      "source": "/doctor/kasteeva-aiim-shalkarkizi",
+      "destination": "/doctors/",
+      "statusCode": 301
+    },
+    {
+      "source": "/doctor/kasteeva-aiim-shalkarkizi/",
+      "destination": "/doctors/",
+      "statusCode": 301
+    },
+    {
       "source": "/:path*",
       "has": [
         {
@@ -437,12 +537,12 @@
     },
     {
       "source": "/coloproctologist",
-      "destination": "/uslugi/coloproctologist/",
+      "destination": "/services/",
       "statusCode": 301
     },
     {
       "source": "/coloproctologist/",
-      "destination": "/uslugi/coloproctologist/",
+      "destination": "/services/",
       "statusCode": 301
     },
     {
@@ -457,12 +557,12 @@
     },
     {
       "source": "/sudoscan",
-      "destination": "/uslugi/sudoscan/",
+      "destination": "/services/",
       "statusCode": 301
     },
     {
       "source": "/sudoscan/",
-      "destination": "/uslugi/sudoscan/",
+      "destination": "/services/",
       "statusCode": 301
     },
     {
@@ -527,12 +627,12 @@
     },
     {
       "source": "/esg",
-      "destination": "/uslugi/esg/",
+      "destination": "/services/",
       "statusCode": 301
     },
     {
       "source": "/esg/",
-      "destination": "/uslugi/esg/",
+      "destination": "/services/",
       "statusCode": 301
     },
     {
@@ -1052,17 +1152,17 @@
     },
     {
       "source": "/page50293545",
-      "destination": "/uslugi/esg/",
+      "destination": "/services/",
       "statusCode": 301
     },
     {
       "source": "/page50293545/",
-      "destination": "/uslugi/esg/",
+      "destination": "/services/",
       "statusCode": 301
     },
     {
       "source": "/page50293545\\.html",
-      "destination": "/uslugi/esg/",
+      "destination": "/services/",
       "statusCode": 301
     },
     {

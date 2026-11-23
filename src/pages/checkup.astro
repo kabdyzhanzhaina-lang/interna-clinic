@@ -8,9 +8,12 @@ import Steps from '../components/Steps.astro';
 import Faq from '../components/Faq.astro';
 import Cta from '../components/Cta.astro';
 import data from '../data/checkups.json';
+import reviewsFile from '../data/reviews.json';
 import { img } from '../lib/site.js';
 const { programs, directions } = data;
 const hot = (programs.find((p) => p.hot) || programs[0])?.id;
+// «Для него / Для неё» — только у премиум-программ (мужская и женская): переключатель внутри карточки ведёт на парную программу
+const sexed = programs.filter((p) => p.who.length === 1);
 const count = (p) => p.groups.reduce((n, g) => n + g.items.filter((i) => i.in).length, 0);
 const groupsOf = (p) => p.groups.map((g) => ({ title: g.title, items: g.items.filter((i) => i.in).map((i) => i.n) })).filter((g) => g.items.length);
 // главное в программе: 3 пункта с главной (home.hi) или первые исследования приоритетных групп — остальное в «Полный состав»
@@ -23,6 +26,10 @@ const faq = [
   ['Амбулаторно или в стационаре — в чём разница?', 'Амбулаторно — без госпитализации, по заранее согласованному графику. В стационаре — палата, сопровождение медперсонала и обследования без длительного ожидания.'],
     ['Можно ли изменить состав программы?', 'Да. Координатор выясняет жалобы и цели и настраивает профильные панели под ваш запрос.'],
 ];
+// отзывы: отзывов именно о check-up в базе нет — показываем настоящие отзывы об обследованиях и оборудовании клиники
+const revs = reviewsFile.items.filter((r) => /обследован|диагност|оборудован/i.test(r.text) && !/дёшев|дешев/i.test(r.text)).sort((a, b) => /обследован/i.test(b.text) - /обследован/i.test(a.text)).slice(0, 3);
+const srcOf = (r) => (/2ГИС/i.test(r.src) ? '2ГИС' : /google/i.test(r.src) ? 'Google' : r.src);
+const quote = (s, max = 170) => { if (s.length <= max) return s; const cut = s.slice(0, max); const i = Math.max(cut.lastIndexOf('. '), cut.lastIndexOf('! ')); return i > 80 ? cut.slice(0, i + 1) : cut.replace(/\s+\S*$/, '') + '…'; };
 const plural = (n, a, b, c) => { const m = n % 100, k = n % 10; return m > 10 && m < 20 ? c : k === 1 ? a : k > 1 && k < 5 ? b : c; };
 const cnt = (n) => `${n} ${plural(n, 'исследование', 'исследования', 'исследований')}`;
 ---
@@ -30,14 +37,14 @@ const cnt = (n) => `${n} ${plural(n, 'исследование', 'исследо
   <PhotoHero image="hero" eyebrow="Check-up" title="Полное обследование за 1–2 дня" sub="Анализы, УЗИ, функциональная диагностика, эндоскопия и консультации профильных специалистов. Личный координатор на каждом этапе.">
     <a class="btn btn-ghost" href="#programs">Выбрать программу</a><a class="btn btn-ghost" href="/checkup-request">Оставить заявку</a>
   </PhotoHero>
-  <SubNav items={[['Программы', '#programs'], ['Как проходит', '#how'], ['Профильные', '#dirs'], ['Вопросы', '#faq']]} />
+  <SubNav items={[['Программы', '#programs'], ['Как проходит', '#how'], ['Профильные', '#dirs'], revs.length > 0 && ['Отзывы', '#reviews'], ['Вопросы', '#faq']].filter(Boolean)} />
 
   <section id="programs" style="padding:80px 0 0"><div class="shell cuex">
-    <div class="cuhead rv"><SecHead eyebrow="Программы" title="Выберите программу" /><div class="segm" id="cuSeg"><button type="button" class="on">Для него</button><button type="button">Для неё</button></div></div>
+    <div class="cuhead rv"><SecHead eyebrow="Программы" title="Выберите программу" /></div>
     <div class="cupick rv d2" id="cuPick">
       <div class="vtabs">{programs.map((p) => <button type="button" class={`vtab${p.id === hot ? ' on' : ''}`} data-prog={p.id}><span class="n">{p.title}</span><span class="p">{p.price}</span><span class="msr">chevron_right</span></button>)}</div>
       {programs.map((p) => <div class="cudet" data-det={p.id} hidden={p.id !== hot}>
-        <div class="dh"><p class="kicker">{p.sub || 'Самая востребованная'}</p><h3>{p.title}</h3><p class="d">{p.desc || cnt(count(p))}</p></div>
+        <div class="dh">{p.who.length === 1 && sexed.length > 1 && <div class="segm cusex">{sexed.map((x) => <button type="button" class={x.id === p.id ? 'on' : ''} data-go={x.id}>{x.who[0] === 'm' ? 'Для него' : 'Для неё'}</button>)}</div>}<p class="kicker">{p.sub || 'Самая востребованная'}</p><h3>{p.title}</h3><p class="d">{p.desc || cnt(count(p))}</p></div>
         <div class="dp"><b>{p.price}</b></div>
         <div class="dk">{keyOf(p).map((x) => <span class="r"><span class="msr">check</span>{x}</span>)}</div>
         <details class="dfull"><summary>Полный состав · {cnt(count(p))}<span class="msr">expand_more</span></summary><div class="dg">{groupsOf(p).map((g) => <div class="g"><span class="t">{g.title}</span>{g.items.map((x) => <span class="r"><span class="msr">check</span>{x}</span>)}</div>)}</div></details>
@@ -68,6 +75,15 @@ const cnt = (n) => `${n} ${plural(n, 'исследование', 'исследо
     </div>)}
   </div></section>
 
+  {revs.length > 0 && <section class="revsec" id="reviews" style="padding:96px 0 0"><div class="shell">
+    <SecHead eyebrow="Отзывы" title="Что говорят пациенты" link={['Все отзывы', '/reviews']} />
+    <div class="revcards">{revs.map((r, i) => <article class={`rev rv d${i + 1}${i === 1 ? ' ice' : ''}`}>
+      <div class="top"><span class="stars">{[0, 1, 2, 3, 4].map(() => <span class="msr">star</span>)}</span><span class={`src${srcOf(r) === '2ГИС' ? ' gis' : ''}`}>{srcOf(r)}</span></div>
+      <p class="q">«{quote(r.text)}»</p>
+      <div class="au"><span class="av">{r.name.trim()[0].toUpperCase()}</span><span><b>{r.name}</b><small>{srcOf(r)}</small></span></div>
+    </article>)}</div>
+  </div></section>}
+
   <section id="faq" style="padding:96px 0 0"><div class="shell"><Faq items={faq} kicker="Вопросы" title="Частые вопросы о check-up" /></div></section>
 
   <Cta title="Подобрать программу check-up" text="Координатор выяснит жалобы и цели и подберёт программу." btn="Оставить заявку" svc="Check-up" />
@@ -76,12 +92,14 @@ const cnt = (n) => `${n} ${plural(n, 'исследование', 'исследо
     (() => {
       const pick = document.getElementById('cuPick'); if (!pick) return;
       pick.addEventListener('click', (e) => {
-        const b = e.target.closest('.vtab'); if (!b) return;
+        const go = e.target.closest('[data-go]');
+        const b = go ? pick.querySelector(`.vtab[data-prog="${go.dataset.go}"]`) : e.target.closest('.vtab'); if (!b) return;
         pick.querySelectorAll('.vtab').forEach((x) => x.classList.toggle('on', x === b));
         pick.querySelectorAll('.cudet').forEach((d) => { d.hidden = d.dataset.det !== b.dataset.prog; });
       });
-      const seg = document.getElementById('cuSeg');
-      if (seg) seg.addEventListener('click', (e) => { const b = e.target.closest('button'); if (!b) return; seg.querySelectorAll('button').forEach((x) => x.classList.toggle('on', x === b)); });
+      // ссылка /checkup#<id программы> (главная, раздел услуг) открывает эту программу
+      const h = pick.querySelector(`.vtab[data-prog="${decodeURIComponent(location.hash.slice(1))}"]`);
+      if (h) { h.click(); addEventListener('load', () => document.getElementById('programs').scrollIntoView({ behavior: 'instant' })); }
       const ds = document.getElementById('dirSeg');
       if (ds) ds.addEventListener('click', (e) => { const b = e.target.closest('button'); if (!b) return; ds.querySelectorAll('button').forEach((x) => x.classList.toggle('on', x === b)); document.querySelectorAll('.dirpanel').forEach((p) => { p.hidden = p.dataset.dirp !== b.dataset.dir; }); });
     })();

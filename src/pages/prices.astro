@@ -28,7 +28,7 @@ const pay = [['verified', 'Актуальные цены', 'Прайс клин�
       {cats.map((k, gi) => { const rows = prices[k]; const extra = rows.length - LIMIT; return (
         <div class="pgroup" id={slug(k)} data-price-tab={k} data-collapsed={extra > 0 ? '' : undefined}>
           <div class="gh rv"><div class="tt"><h3>{k}</h3><span class="cnt">{rows.length} {plural(rows.length)}</span></div></div>
-          {rows.map((r, i) => <div class={`tr srow sm${i >= LIMIT ? ' more' : ''}${i < 6 ? ` rv d${(i % 3) + 1}` : ''}`}><span class="i"><b>{r[0]}</b>{r[1] && <small>{r[1]}</small>}</span><span class="pr">{r[2]}</span></div>)}
+          {rows.map((r, i) => <div class={`tr srow sm${i >= LIMIT ? ' more' : ''}${i < 6 ? ` rv d${(i % 3) + 1}` : ''}`}><span class="i"><b>{r[0]}</b>{r[1] && <small>{r[1]}</small>}</span><span class="pr">{/запрос/i.test(r[2]) ? '' : r[2]}</span></div>)}
           {extra > 0 && <button type="button" class="link showall" data-showall>Показать все в разделе <span class="msr">expand_more</span></button>}
         </div>
       ); })}

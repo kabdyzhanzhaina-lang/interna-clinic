@@ -8,12 +8,15 @@ import Cta from '../components/Cta.astro';
 import services from '../data/services.json';
 import extra from '../data/services_extra.json';
 import prices from '../data/prices.json';
+import checkupsFile from '../data/checkups.json';
 import { img } from '../lib/site.js';
 import { uslugiPrices } from '../lib/uslugi-prices.js';
 
 const total = Object.values(prices).reduce((a, v) => a + v.length, 0);
-const chipMap = [['Приёмы', 'Приёмы врачей'], ['Комплексы', 'Комплексы «Приём + обследование»'], ['Эндоскопия', 'Эндоскопия'], ['УЗИ и УЗДГ', 'УЗИ и УЗДГ'], ['Диагностика', 'Функциональная диагностика'], ['Анализы', 'Анализы'], ['Стационар', 'Стационар'], ['Процедурный', 'Процедурный кабинет'], ['KIDS', 'Interna KIDS']];
+const chipMap = [['Приёмы', 'Приёмы врачей'], ['Эндоскопия', 'Эндоскопия'], ['УЗИ и УЗДГ', 'УЗИ и УЗДГ'], ['Диагностика', 'Функциональная диагностика'], ['Анализы', 'Анализы'], ['Стационар', 'Стационар'], ['Процедурный', 'Процедурный кабинет'], ['KIDS', 'Interna KIDS']];
+const cuProgs = checkupsFile.programs;
 const chips = [['Все', total, '#catalog'], ...chipMap.map(([l, k]) => [l, prices[k]?.length || 0, `/prices#${encodeURIComponent(k)}`])];
+chips.splice(2, 0, ['Check-up', cuProgs.length, '/checkup']);
 
 const featured = ['colonoscopy', 'fgds', 'fibroscan', 'ultrasound'].map((k) => [k, services[k]]);
 const featTitle = { colonoscopy: 'Видеоколоноскопия во сне', fgds: 'ЭГДС (гастроскопия)', fibroscan: 'Фиброскан печени', ultrasound: 'УЗИ и ЭхоКГ' };
@@ -22,7 +25,7 @@ const featTitle = { colonoscopy: 'Видеоколоноскопия во сне
 const all = [...Object.entries(services).map(([k, s]) => ({ href: `/service/${k}`, t: s.t, d: s.short, price: s.price, cat: s.cat })), ...Object.entries(extra).map(([k, s]) => ({ href: `/uslugi/${k}`, t: s.t, d: '', price: uslugiPrices(k)[0]?.[2] || '', cat: s.cat }))];
 const groupDefs = [
   ['reception', 'Приёмы врачей', ['Приём', 'Приём врача'], 'Приёмы врачей'],
-  ['checkup', 'Комплексы и check-up', [], 'Комплексы «Приём + обследование»'],
+  ['checkup', 'Check-up программы', [], '/checkup'],
   ['endoscopy', 'Эндоскопия', ['Эндоскопия', 'Эндоскопические процедуры'], 'Эндоскопия'],
   ['uzi', 'УЗИ и УЗДГ', ['Диагностика', 'УЗИ'], 'УЗИ и УЗДГ'],
   ['func', 'Функциональная диагностика', ['Функциональная диагностика'], 'Функциональная диагностика'],
@@ -32,13 +35,15 @@ const groupDefs = [
   ['surg', 'Хирургия и проктология', [], 'Хирургия и проктология'],
   ['kids', 'Interna KIDS', ['Interna KIDS'], 'Interna KIDS'],
 ];
+// раздел check-up — программы клиники из checkups.json (не позиции прайса «Комплексы», просьба клиники)
 const groups = groupDefs.map(([id, title, cats, pk]) => {
+  if (id === 'checkup') return { id, title, count: cuProgs.length, rows: cuProgs.map((p) => ({ href: `/checkup#${p.id}`, t: `Check-up «${p.title}»`, d: p.sub || '', price: p.price })), href: '/checkup', word: cuProgs.length % 10 === 1 && cuProgs.length % 100 !== 11 ? 'программа' : [2, 3, 4].includes(cuProgs.length % 10) ? 'программы' : 'программ' };
   const items = all.filter((x) => cats.includes(x.cat));
   const priceRows = prices[pk] || [];
   // добавляем позиции прайса, если в группе мало страниц услуг
   const fromPrice = items.length < 4 ? priceRows.filter((r) => !items.some((i) => i.t.toLowerCase() === r[0].toLowerCase())).slice(0, 5 - items.length).map((r) => ({ href: `/prices#${encodeURIComponent(pk)}`, t: r[0], d: '', price: r[2], cat: pk })) : [];
   const rows = [...items, ...fromPrice];
-  return { id, title, count: priceRows.length || rows.length, rows, pk };
+  return { id, title, count: priceRows.length || rows.length, rows, href: `/prices#${encodeURIComponent(pk)}` };
 }).filter((g) => g.rows.length);
 const plural = (n) => (n % 10 === 1 && n % 100 !== 11 ? 'услуга' : [2, 3, 4].includes(n % 10) && ![12, 13, 14].includes(n % 100) ? 'услуги' : 'услуг');
 ---
@@ -57,7 +62,7 @@ const plural = (n) => (n % 10 === 1 && n % 100 !== 11 ? 'услуга' : [2, 3, 
     <div class="main svcgroups">
       {groups.map((g) => (
         <div class="svcgroup" id={g.id}>
-          <div class="gh rv"><div class="tt"><h3>{g.title}</h3><span class="cnt">{g.count} {plural(g.count)}</span></div><a class="link" href={`/prices#${encodeURIComponent(g.pk)}`}>Все в разделе <span class="msr">arrow_forward</span></a></div>
+          <div class="gh rv"><div class="tt"><h3>{g.title}</h3><span class="cnt">{g.count} {g.word || plural(g.count)}</span></div><a class="link" href={g.href}>Все в разделе <span class="msr">arrow_forward</span></a></div>
           {g.rows.map((r, i) => <a class={`srow rv d${(i % 5) + 1}`} href={r.href}><span class="i"><b>{r.t}</b>{r.d && <small>{r.d}</small>}</span>{r.price && <span class="pr">{r.price}</span>}<span class="msr ai">arrow_forward</span></a>)}
         </div>
       ))}

@@ -7,7 +7,7 @@ compatibility_date = "2026-06-01"
 # Хранилище настроек интеграций и журнала заявок
 [[kv_namespaces]]
 binding = "SETTINGS"
-id = "REPLACE_WITH_KV_ID"   # подставится после `wrangler kv namespace create SETTINGS`
+id = "2ac07987f2c6478ca55cdfd2628592c5"
 
 # Повторная отправка заявок, которые CRM не приняла (очередь в KV, ключ pending)
 [triggers]

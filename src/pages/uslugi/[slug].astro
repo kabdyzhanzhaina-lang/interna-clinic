@@ -21,7 +21,7 @@ const { slug } = Astro.params;
 const s = extra[slug];
 // Врачи направления: детские направления — врачи Interna KIDS, ЭРГ — команда со старой страницы, иначе по категории или должности
 const kidsRe = { childgastro: /гастроэнтеролог/i, childendo: /эндокринолог/i }[slug];
-const ids = { esg: ['erdalieva-laura-kerimbaevna', 'kontorshchikov'], baloon: ['erdalieva-laura-kerimbaevna', 'kontorshchikov'] }[slug];
+const ids = { baloon: ['erdalieva-laura-kerimbaevna', 'kontorshchikov'] }[slug];
 const kw = (s.h1 + ' ' + slug).toLowerCase();
 const catFor = /гастроэнт|гепат|печен|жкт|колоно|эгдс/.test(kw) ? 'gastro' : /эндокрин|диабет|щитовид/.test(kw) ? 'endo' : /кардио|сердц/.test(kw) ? 'cardio' : /эндоскоп|капсул|биопс|ph/.test(kw) ? 'endoscopy' : null;
 const stem = s.t.split(' ')[0].slice(0, 6);
@@ -46,8 +46,12 @@ const indications = lists;
 const shown = body.filter((b, i) => !used.has(i));
 const bodyRest = shown.length === 1 && shown[0][0] === 'p' && lead.startsWith(String(shown[0][1]).slice(0, 40)) ? [] : shown;
 const n = rel.length;
-const facts = [[priceRows[0]?.[2] || 'по запросу', priceRows[0] ? 'стоимость: ' + priceRows[0][0].toLowerCase().split('(')[0].trim().split(' ').slice(0, 4).join(' ') : 'стоимость — у администратора'], ['Одна клиника', 'специалисты и диагностика'], ['08:00–22:00', 'Пн–Пт, Сб–Вс 09:00–17:00'], n > 0 && [`${n} ${n % 10 === 1 && n !== 11 ? 'врач' : n % 10 >= 2 && n % 10 <= 4 && (n < 10 || n > 20) ? 'врача' : 'врачей'}`, 'принимают в клинике']].filter(Boolean);
-const steps = [['Запись', 'Позвоните, напишите в WhatsApp или оставьте заявку на сайте.'], ['Подготовка', 'Если нужна подготовка, памятка — на странице «Подготовка к исследованиям».'], ['Приём', 'Врач уточняет жалобы и назначает необходимые исследования.'], ['Заключение', 'Результаты и план лечения — на очной консультации.']];
+// пометку «по запросу» не ставим (просьба клиники): нет строки в прайсе — нет и факта цены
+const facts = [priceRows[0] && !/запрос/i.test(priceRows[0][2]) && [priceRows[0][2], 'стоимость: ' + priceRows[0][0].toLowerCase().split('(')[0].trim().split(' ').slice(0, 4).join(' ')], ['Одна клиника', 'специалисты и диагностика'], ['08:00–22:00', 'Пн–Пт, Сб–Вс 09:00–17:00'], n > 0 && [`${n} ${n % 10 === 1 && n !== 11 ? 'врач' : n % 10 >= 2 && n % 10 <= 4 && (n < 10 || n > 20) ? 'врача' : 'врачей'}`, 'принимают в клинике']].filter(Boolean);
+// седация — не приём врача: анестезия во время эндоскопии, шаги — анализы из чек-листа страницы и само исследование
+const steps = slug === 'sedation'
+  ? [['Запись', 'Позвоните, напишите в WhatsApp или оставьте заявку на сайте.'], ['Анализы', 'Сдайте обязательные анализы и сделайте ЭКГ — чек-лист в обзоре выше.'], ['Подготовка', 'Памятка — на странице «Подготовка к исследованиям».'], ['Исследование', 'Внутривенная анестезия проводится во время видеоколоноскопии или ЭГДС.']]
+  : [['Запись', 'Позвоните, напишите в WhatsApp или оставьте заявку на сайте.'], ['Подготовка', 'Если нужна подготовка, памятка — на странице «Подготовка к исследованиям».'], ['Приём', 'Врач уточняет жалобы и назначает необходимые исследования.'], ['Заключение', 'Результаты и план лечения — на очной консультации.']];
 const faq = [slug === 'station' && ['Нужно ли направление?', 'Нет. Госпитализация платная, без направления, вне государственной очереди.'], ['Что взять с собой?', 'Удостоверение личности и имеющиеся медицинские документы.'], ['Как оплатить?', 'Наличными или безналичным способом в клинике.']].filter(Boolean);
 const t = s.t.toLowerCase();
 ---
@@ -72,7 +76,7 @@ const t = s.t.toLowerCase();
   </div></section>}
 
   <section id="how" style="padding:80px 0 0"><div class="shell">
-    <SecHead eyebrow="Как проходит" title="Четыре шага — от записи до заключения" />
+    <SecHead eyebrow="Как проходит" title={slug === 'sedation' ? 'Четыре шага — от записи до исследования' : 'Четыре шага — от записи до заключения'} />
     <Steps items={steps} />
   </div></section>
 
@@ -83,8 +87,8 @@ const t = s.t.toLowerCase();
 
   <section id="price" style="padding:80px 0 96px"><div class="shell"><div class="lay g60">
     <div class="pcard w560 rv"><p class="kicker">Стоимость</p>
-      {priceRows.length ? priceRows.map((p) => <div class="r"><span>{p[0]}{p[1] && <small> · {p[1].length > 70 ? p[1].slice(0, p[1].lastIndexOf(' ', 70)) + '…' : p[1]}</small>}</span><span>{p[2]}</span></div>) : <div class="r"><span>{s.t}</span><span>по запросу</span></div>}
-      <div class="b"><button class="btn btn-primary" data-book data-svc={s.t}>Записаться на приём</button><a class="btn btn-wa" href="#" data-wa={`Здравствуйте! Хочу записаться: ${s.t}.`}><span class="msr">chat</span>Спросить в WhatsApp</a></div>
+      {priceRows.length ? priceRows.map((p) => <div class="r"><span>{p[0]}{p[1] && <small> · {p[1].length > 70 ? p[1].slice(0, p[1].lastIndexOf(' ', 70)) + '…' : p[1]}</small>}</span><span>{/запрос/i.test(p[2]) ? '' : p[2]}</span></div>) : <div class="r"><span>{s.t}</span><span></span></div>}
+      <div class="b"><button class="btn btn-primary" data-book data-svc={s.t}>{s.cat === 'Приём врача' ? 'Записаться на приём' : 'Записаться'}</button><a class="btn btn-wa" href="#" data-wa={`Здравствуйте! Хочу записаться: ${s.t}.`}><span class="msr">chat</span>Спросить в WhatsApp</a></div>
     </div>
     <div class="main" id="faq"><Faq items={faq} /></div>
   </div></div></section>

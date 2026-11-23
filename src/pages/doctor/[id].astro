@@ -8,12 +8,12 @@ import Cta from '../../components/Cta.astro';
 import doctorsFile from '../../data/doctors.json';
 import reviewsFile from '../../data/reviews.json';
 import prices from '../../data/prices.json';
-import { img } from '../../lib/site.js';
+import { img, units } from '../../lib/site.js';
 const doctors = doctorsFile.items.filter((d) => !d.hidden);
 
 export function getStaticPaths() { return doctorsFile.items.filter((d) => !d.hidden).map((d) => ({ params: { id: d.id } })); }
 const d0 = doctors.find((x) => x.id === Astro.params.id);
-const d = { ...d0, tags: (d0.tags || []).filter((t) => t && t.trim()), exp: d0.exp || "", price: d0.price || "", bio: d0.bio || "", r: d0.r || "Врач" };
+const d = { ...d0, tags: (d0.tags || []).filter((t) => t && t.trim() && !units(d0).includes(t)), exp: d0.exp || "", price: d0.price || "", bio: d0.bio || "", r: d0.r || "Врач" };
 const rel = doctors.filter((x) => x.cat === d.cat && x.id !== d.id).slice(0, 3);
 const [surname, ...rest] = d.n.split(' ');
 const short = `${surname} ${rest.filter(Boolean).map((w) => w[0] + '.').join(' ')}`;
@@ -26,7 +26,8 @@ const rows = []; for (const k in prices) for (const r of prices[k]) { const d1 =
 // цена приёма уже в фактах профиля; справа — только другие позиции прайса этого врача (например, повторный приём)
 const priceRows = rows.filter((r) => r[2] !== d.price).slice(0, 4).map((r) => [r[0], r[2]]);
 const degree = d.tags.filter((t) => /д\.м\.н|к\.м\.н|phd|профессор|доцент/i.test(t)).join(', ');
-const dfacts = [d.exp && [d.exp, 'стаж'], degree && [degree, 'степень и звание'], [d.price || 'по запросу', 'приём']].filter(Boolean);
+// стаж не показываем (просьба клиники); цены без пометки «по запросу» — нет строки в прайсе, нет и факта
+const dfacts = [degree && [degree, 'степень и звание'], d.price && [d.price, 'приём']].filter(Boolean);
 // образование и карьера: d.about целиком, один раз — заголовки, строки и абзацы как на старом сайте; первые 8 строк видны, остальное под «Показать полностью»
 const about = d.about || [];
 const rowsAll = about.flatMap((b) => (b[0] === 'ul' ? b[1].map((t) => ['li', t]) : [[b[0], b[1]]]));
@@ -52,7 +53,7 @@ const bookLabel = isProf ? 'Записаться к профессору' : 'З�
       <p class="kicker rise d1">{d.r}</p>
       <h1 class="rise d1">{d.n}</h1>
       <p class="bio rise d2">{d.bio}</p>
-      {d.tags.length > 0 && <div class="tags rise d2">{d.tags.map((t) => <span class="tagp">{t}</span>)}</div>}
+      <div class="tags rise d2">{units(d).map((t) => <span class="tagp unit">{t}</span>)}{d.tags.map((t) => <span class="tagp">{t}</span>)}</div>
       <div class="dfacts rise d3">{dfacts.map((f) => <div class="dfact"><b>{f[0]}</b><span>{f[1]}</span></div>)}</div>
       <div class="btns rise d4"><button class="btn btn-primary" data-book data-svc={`Приём · ${d.n}`}>{bookLabel}</button><a class="btn btn-wa" href="#" data-wa={`Здравствуйте! Хочу записаться к врачу: ${d.n}.`}><span class="msr">chat</span>Спросить в WhatsApp</a></div>
     </div>

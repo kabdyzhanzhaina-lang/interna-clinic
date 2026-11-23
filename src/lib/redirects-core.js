@@ -18,7 +18,7 @@ export function buildRedirectMap({ base, extra, media, kids }) {
     'about-us': '/about', team: '/doctors', interna_team: '/doctors', teamold: '/doctors', service: '/services', price: '/prices', calculated: '/prices',
     consult_dr: '/prices', endoscopy_menu: '/prices', ultra_menu: '/prices', function_dia: '/prices', species: '/prices',
     'women-checkup': '/checkup', 'gastro-checkup': '/checkup', 'cardio-checkup': '/checkup', 'endocrinology-checkup': '/checkup', packet: '/checkup',
-    oferta: '/legal', rulse: '/legal', page133270433: '/legal', 'page133270433.html': '/legal', page50293545: '/uslugi/esg', 'page50293545.html': '/uslugi/esg',
+    oferta: '/legal', rulse: '/legal', page133270433: '/legal', 'page133270433.html': '/legal', page50293545: '/services', 'page50293545.html': '/services',
     thesis: '/about', academy: '/about', contacts_old: '/contacts', taplink: '/contacts', tapacademy: '/about', feedback: '/reviews',
     cal_tera: '/contacts', cal_proc: '/contacts', cal_gastro: '/contacts', cal_cardio: '/contacts', cal_uro: '/contacts', cal_inf: '/contacts', endo_cal: '/contacts', cal_nevro: '/contacts', cal_ultra: '/contacts', fibro_cal: '/service/fibroscan', interna_cal_team: '/doctors',
   };
