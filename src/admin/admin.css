@@ -1,4 +1,6 @@
 /* Админка Interna Clinic — токены и компоненты из макета (design/interna-clinic.pen, экраны A1–A7, сайдбар qXj5w) */
+/* казахские Ә Ғ Қ Ң Ұ, которых нет в Manrope, — из Onest, как на сайте (global.css) */
+@font-face{font-family:"Manrope";src:url(/fonts/onest-kz.woff2) format("woff2");font-weight:400 700;font-style:normal;font-display:swap;unicode-range:U+0492-0493,U+049A-049B,U+04A2-04A3,U+04B0-04B1,U+04D8-04D9}
 :root {
   --navy: #0a2e45; --blue: #009ee9; --blue700: #0a6db4; --sky: #7bd7ff; --ice: #dcf2fc; --ice50: #eef8fe; --paper: #f3fafe;
   --ink: #0f2e40; --line: #dbe9f1; --black: #111; --g600: #555e66; --g400: #8a939b; --g200: #e4e7ea; --g100: #f2f2f3;

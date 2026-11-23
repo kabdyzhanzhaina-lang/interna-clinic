@@ -9,6 +9,8 @@
   --sh:0 18px 50px -22px rgba(10,46,69,.35); --sh-s:0 8px 24px -14px rgba(10,46,69,.22);
   --ease:cubic-bezier(.2,.85,.3,1);
 }
+/* В Manrope нет казахских Ә Ғ Қ Ң Ұ — берём только эти буквы из Onest (близкий гротеск), остальной текст остаётся в Manrope */
+@font-face{font-family:"Manrope";src:url(/fonts/onest-kz.woff2) format("woff2");font-weight:400 700;font-style:normal;font-display:swap;unicode-range:U+0492-0493,U+049A-049B,U+04A2-04A3,U+04B0-04B1,U+04D8-04D9}
 *{box-sizing:border-box}
 em,i,cite,dfn,address,var{font-style:normal} /* курсив на сайте не используется — клиника: нечитабелен */
 html{scroll-behavior:smooth}
