@@ -23,26 +23,17 @@ const isProf = /(?<!ассоц\.\s)профессор/i.test(d.r); // ассоц
 const key = d.n.toLowerCase().split(' ').slice(0, 2).join(' ');
 const keyIni = new RegExp(`\\b${surname.toLowerCase()}\\s+${(rest[0] || '').slice(0, 1).toLowerCase()}\\.`); // «исмаилова ш.» — так врачи подписаны в прайсе клиники
 const rows = []; for (const k in prices) for (const r of prices[k]) { const d1 = (r[1] || '').toLowerCase(); if ((d1.includes(key) || keyIni.test(d1)) && !rows.some((x) => x[0] === r[0])) rows.push(r); }
-const priceRows = rows.length ? rows.slice(0, 4).map((r) => [r[0], r[2]]) : [['Приём', d.price || 'по запросу']];
+// цена приёма уже в фактах профиля; справа — только другие позиции прайса этого врача (например, повторный приём)
+const priceRows = rows.filter((r) => r[2] !== d.price).slice(0, 4).map((r) => [r[0], r[2]]);
 const degree = d.tags.filter((t) => /д\.м\.н|к\.м\.н|phd|профессор|доцент/i.test(t)).join(', ');
 const dfacts = [d.exp && [d.exp, 'стаж'], degree && [degree, 'степень и звание'], [d.price || 'по запросу', 'приём']].filter(Boolean);
-// образование и карьера: из d.about — заголовки h3 и списки; строки с годом в начале → год + текст
+// образование и карьера: d.about целиком, один раз — заголовки, строки и абзацы как на старом сайте; первые 8 строк видны, остальное под «Показать полностью»
 const about = d.about || [];
-const yearRe = /^(\d{4}(?:\s*[-–—]\s*\d{4})?)\s*(?:г\.?|гг\.?)?\s*[-–—:.]?\s*/;
-const used = new Set(); // строки «текст», за которыми идёт строка только с годами («2017 — 2022 г.»)
-const eduItems = [];
-let cur = '';
-for (const b of about) {
-  if (b[0] === 'h3') cur = b[1].trim();
-  else if (b[0] === 'ul') b[1].forEach((it, i) => {
-    const m = it.match(yearRe), prev = b[1][i - 1];
-    if (m && it.length > m[0].length + 3) eduItems.push([m[1].replace(/\s/g, ''), it.slice(m[0].length).trim()]);
-    else if (m && prev && !yearRe.test(prev)) { eduItems.push([m[1].replace(/\s/g, ''), prev]); used.add(prev); }
-  });
-  else if (b[0] === 'p' && /стаж/i.test(b[1])) eduItems.push(['сейчас', b[1]]);
-}
-const edu = (eduItems.length ? eduItems : [['сейчас', d.bio]]).slice(0, 7);
-const plain = about.filter((b) => b[0] === 'ul').flatMap((b) => b[1]).filter((it) => !yearRe.test(it) && !used.has(it) && it.length < 120).slice(0, 6);
+const rowsAll = about.flatMap((b) => (b[0] === 'ul' ? b[1].map((t) => ['li', t]) : [[b[0], b[1]]]));
+let shown = 0;
+const cutAt = rowsAll.findIndex((r) => r[0] !== 'h3' && ++shown > 8);
+const head = cutAt < 0 ? rowsAll : rowsAll.slice(0, cutAt);
+const tail = cutAt < 0 ? [] : rowsAll.slice(cutAt);
 // отзывы, где упоминается фамилия или имя-отчество врача
 const stem = surname.slice(0, 5).toLowerCase(), io = rest.join(' ').toLowerCase();
 const word = (t, w) => new RegExp(`(?<![а-яё])${w}`).test(t); // с начала слова: «касым» не находит «Сейткасымовна»
@@ -67,25 +58,25 @@ const bookLabel = isProf ? 'Записаться к профессору' : 'З�
     </div>
   </div></div></section>
   <div style="height:56px"></div>
-  <SubNav items={[['Образование', '#edu'], about.length > 0 && ['Биография', '#bio'], ['Приём и цены', '#price'], quotes.length > 0 && ['Отзывы', '#reviews']].filter(Boolean)} />
+  <SubNav items={[['Образование', '#edu'], priceRows.length > 0 && ['Цены', '#price'], quotes.length > 0 && ['Отзывы', '#reviews']].filter(Boolean)} />
 
   <section style="padding:72px 0 96px"><div class="shell"><div class="lay">
     <div class="main dbody">
       <div class="dsec rv" id="edu">
         <p class="kicker">Образование и карьера</p><h2>Путь {isProf ? 'профессора' : 'врача'}</h2>
-        <div class="edu">{edu.map((e) => <div class="r"><span class="yr">{e[0]}</span><span class="t">{e[1]}</span></div>)}{plain.length > 0 && edu.length < 4 && plain.map((p) => <div class="r"><span class="yr">·</span><span class="t">{p}</span></div>)}</div>
+        <div class="dabout">
+          {about.length === 0 && <p class="r">{d.bio}</p>}
+          {head.map((r) => r[0] === 'h3' ? <h3>{r[1]}</h3> : <p class="r">{r[1]}</p>)}
+          {tail.length > 0 && <details class="dmore"><summary>Показать полностью<span class="msr">expand_more</span></summary>{tail.map((r) => r[0] === 'h3' ? <h3>{r[1]}</h3> : <p class="r">{r[1]}</p>)}</details>}
+        </div>
       </div>
-      {about.length > 0 && <div class="dsec rv" id="bio">
-        <p class="kicker">Биография</p><h2>Подробнее о враче</h2>
-        <details class="dbio"><summary>Образование, опыт, публикации<span class="msr">expand_more</span></summary><div class="in">{about.map((b) => b[0] === 'h3' ? <h3>{b[1]}</h3> : b[0] === 'ul' ? <ul>{b[1].map((it) => <li>{it}</li>)}</ul> : <p>{b[1]}</p>)}</div></details>
-      </div>}
       {quotes.length > 0 && <div class="dsec rv" id="reviews">
         <p class="kicker">Отзывы</p><h2>Что говорят пациенты</h2>
         {quotes.map((q) => <div class="quote"><p class="q">«{cut(q.text)}»</p><span class="a">{q.name} · {srcName(q.src)}</span></div>)}
       </div>}
     </div>
     <aside class="dside">
-      <div class="pcard p28 rv" id="price"><p class="kicker">Приём и цены</p>{priceRows.map((r) => <div class="r"><span>{r[0]}</span><span>{r[1]}</span></div>)}<div class="b"><button class="btn btn-dark" data-book data-svc={`Приём · ${d.n}`}>Записаться</button></div></div>
+      {priceRows.length > 0 && <div class="pcard p28 rv" id="price"><p class="kicker">Другие услуги врача</p>{priceRows.map((r) => <div class="r"><span>{r[0]}</span><span>{r[1]}</span></div>)}<div class="b"><button class="btn btn-dark" data-book data-svc={`Приём · ${d.n}`}>Записаться</button></div></div>}
       {rel.length > 0 && <div class="rv d2"><p class="kicker" style="margin-bottom:4px">Коллеги по направлению</p>{rel.map((x) => <DocRow d={x} />)}</div>}
     </aside>
   </div></div></section>

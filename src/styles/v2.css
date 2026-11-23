@@ -917,18 +917,14 @@ section[id],div[id].anchor,[data-anchor]{scroll-margin-top:150px}
 .dsec{display:flex;flex-direction:column}
 .dsec .kicker{margin-bottom:12px}
 .dsec h2{font-size:36px;font-weight:500;line-height:1.1;max-width:600px;margin:0 0 8px}
-.edu .r{display:flex;gap:28px;padding:16px 0;border-bottom:1px solid var(--g200)}
-.edu .yr{flex:none;width:96px;font-family:var(--serif);font-style:normal;font-size:20px;color:var(--blue);line-height:1.3}
-.edu .t{font-size:16px;font-weight:500;color:var(--black);line-height:1.45}
-.dbio{margin-top:8px;padding:20px 24px;background:var(--ice50);border-radius:16px}
-.dbio summary{list-style:none;display:flex;justify-content:space-between;align-items:center;cursor:pointer;font-size:16px;font-weight:600;color:var(--black)}
-.dbio summary::-webkit-details-marker{display:none}
-.dbio summary .msr{font-size:22px;transition:transform .3s var(--ease)}
-.dbio[open] summary .msr{transform:rotate(180deg)}
-.dbio .in{margin-top:16px;display:flex;flex-direction:column;gap:10px;font-size:15px;line-height:1.5;color:var(--g600)}
-.dbio h3{margin:12px 0 0;font-size:17px;font-weight:600;color:var(--black)}
-.dbio ul{margin:0;padding-left:18px;display:flex;flex-direction:column;gap:6px}
-.dbio p{margin:0}
+.dabout h3{margin:28px 0 4px;font-size:17px;font-weight:600;color:var(--black)}
+.dabout h3:first-child{margin-top:0}
+.dabout .r{margin:0;padding:14px 0;border-bottom:1px solid var(--g200);font-size:16px;line-height:1.5;color:var(--black)}
+.dabout .dmore{font-weight:400}
+.dabout .dmore summary{list-style:none;display:inline-flex;align-items:center;gap:4px;margin-top:16px;cursor:pointer;font-size:16px;font-weight:600;color:var(--blue)}
+.dabout .dmore summary::-webkit-details-marker{display:none}
+.dabout .dmore summary .msr{font-size:22px}
+.dabout .dmore[open] summary{display:none}
 .dsec .quote{display:flex;flex-direction:column;gap:12px;padding:24px 0;border-top:1px solid var(--g200)}
 .dsec .quote .q{margin:0;font-family:var(--serif);font-style:normal;font-size:19px;line-height:1.5;color:var(--black)}
 .dsec .quote .a{font-size:13px;font-weight:600;color:var(--g600)}
@@ -936,7 +932,7 @@ section[id],div[id].anchor,[data-anchor]{scroll-margin-top:150px}
 .lcard .r{display:flex;justify-content:space-between;gap:12px;font-size:15px}
 .lcard .r span:first-child{font-weight:500;color:var(--black)}.lcard .r span:last-child{color:var(--g600)}
 @media(max-width:1000px){.dprof-in{grid-template-columns:1fr;gap:28px}.dprof .photo{height:420px}}
-@media(max-width:600px){.dbio{padding:16px 18px}.edu .r{gap:14px}.edu .yr{width:72px;font-size:17px}}
+@media(max-width:600px){.dabout .r{font-size:15px}}
 /* пациенту (11) */
 .tiles{gap:16px}
 .pguide .art{display:flex;flex-direction:column;gap:14px;padding:26px 0 40px;border-bottom:1px solid var(--g200);scroll-margin-top:150px}
