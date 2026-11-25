@@ -9,7 +9,10 @@ import { activePromos, untilLabel } from '../lib/site.js';
 const cats = Object.keys(prices);
 // ТЗ: позиции внутри раздела — по алфавиту; строки «по запросу» — в конце раздела
 const byName = (a, b) => { const qa = /по запросу/i.test(a[2]), qb = /по запросу/i.test(b[2]); if (qa !== qb) return qa ? 1 : -1; return a[0].localeCompare(b[0], 'ru', { sensitivity: 'base' }); };
-cats.forEach((k) => { prices[k] = prices[k].slice().sort(byName); });
+// «Приёмы врачей» — по алфавиту специальностей (просьба клиники): без «Приём/Консультация/Повторный приём», повторный — после первичного
+const spec = (r) => r[0].replace(/^(Консультация|Повторный при[её]м|При[её]м)\s+/i, '').replace(/^взрослого\s+/i, '') + (/^Повторный/i.test(r[0]) ? ' ~' : '');
+const bySpec = (a, b) => spec(a).localeCompare(spec(b), 'ru', { sensitivity: 'base' });
+cats.forEach((k) => { prices[k] = prices[k].slice().sort(k === 'Приёмы врачей' ? bySpec : byName); });
 const total = Object.values(prices).reduce((a, v) => a + v.length, 0);
 const LIMIT = 8;
 const promo = activePromos(promos.items)[0];

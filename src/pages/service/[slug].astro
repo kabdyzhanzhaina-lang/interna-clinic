@@ -76,6 +76,8 @@ const catShort = { 'Эндоскопия': 'Эндоскопия', 'Диагно
   <section id="price" style="padding:80px 0 96px"><div class="shell"><div class="lay g60">
     <div class="pcard w560 rv"><p class="kicker">Стоимость</p>
       {s.prices.map((p) => <div class="r"><span>{p[0]}{p[1] && <small> · {p[1]}</small>}</span><span>{p[2]}</span></div>)}
+      {/* priceCat — раздел прайса этой услуги: ссылка на все позиции раздела */}
+      {s.priceCat && <a class="link blue" style="margin-top:16px" href={`/prices#${encodeURIComponent(s.priceCat)}`}>Все цены раздела «{s.priceCat}»<span class="msr" aria-hidden="true">arrow_forward</span></a>}
       <div class="b"><button class="btn btn-primary" data-book data-svc={s.t}>Записаться на приём</button><a class="btn btn-wa" href="#" data-wa={`Здравствуйте! Хочу записаться: ${s.t}.`}><span class="msr">chat</span>Спросить в WhatsApp</a></div>
     </div>
     <div class="main" id="faq"><Faq items={s.faq} /></div>

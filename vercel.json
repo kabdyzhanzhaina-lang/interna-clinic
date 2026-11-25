@@ -1324,6 +1324,106 @@
       "source": "/interna_cal_team/",
       "destination": "/doctors/",
       "statusCode": 301
+    },
+    {
+      "source": "/doctor/maikenova",
+      "destination": "/doctors/",
+      "statusCode": 301
+    },
+    {
+      "source": "/doctor/maikenova/",
+      "destination": "/doctors/",
+      "statusCode": 301
+    },
+    {
+      "source": "/kk/doctor/maikenova",
+      "destination": "/kk/doctors/",
+      "statusCode": 301
+    },
+    {
+      "source": "/kk/doctor/maikenova/",
+      "destination": "/kk/doctors/",
+      "statusCode": 301
+    },
+    {
+      "source": "/doctor/baiekeeva",
+      "destination": "/doctors/",
+      "statusCode": 301
+    },
+    {
+      "source": "/doctor/baiekeeva/",
+      "destination": "/doctors/",
+      "statusCode": 301
+    },
+    {
+      "source": "/kk/doctor/baiekeeva",
+      "destination": "/kk/doctors/",
+      "statusCode": 301
+    },
+    {
+      "source": "/kk/doctor/baiekeeva/",
+      "destination": "/kk/doctors/",
+      "statusCode": 301
+    },
+    {
+      "source": "/doctor/duisenova",
+      "destination": "/doctors/",
+      "statusCode": 301
+    },
+    {
+      "source": "/doctor/duisenova/",
+      "destination": "/doctors/",
+      "statusCode": 301
+    },
+    {
+      "source": "/kk/doctor/duisenova",
+      "destination": "/kk/doctors/",
+      "statusCode": 301
+    },
+    {
+      "source": "/kk/doctor/duisenova/",
+      "destination": "/kk/doctors/",
+      "statusCode": 301
+    },
+    {
+      "source": "/kids/detskii-revmatolog",
+      "destination": "/kids/",
+      "statusCode": 301
+    },
+    {
+      "source": "/kids/detskii-revmatolog/",
+      "destination": "/kids/",
+      "statusCode": 301
+    },
+    {
+      "source": "/kk/kids/detskii-revmatolog",
+      "destination": "/kk/kids/",
+      "statusCode": 301
+    },
+    {
+      "source": "/kk/kids/detskii-revmatolog/",
+      "destination": "/kk/kids/",
+      "statusCode": 301
+    },
+    {
+      "source": "/kids/detskii-nefrolog",
+      "destination": "/kids/",
+      "statusCode": 301
+    },
+    {
+      "source": "/kids/detskii-nefrolog/",
+      "destination": "/kids/",
+      "statusCode": 301
+    },
+    {
+      "source": "/kk/kids/detskii-nefrolog",
+      "destination": "/kk/kids/",
+      "statusCode": 301
+    },
+    {
+      "source": "/kk/kids/detskii-nefrolog/",
+      "destination": "/kk/kids/",
+      "statusCode": 301
     }
   ]
 }

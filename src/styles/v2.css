@@ -1170,7 +1170,7 @@ section[id],div[id].anchor,[data-anchor]{scroll-margin-top:150px}
 /* цены (08) */
 .phero .chips .cnt{font-family:var(--serif);font-style:normal;font-weight:400;opacity:.7;margin-left:4px}
 .pgroups{display:flex;flex-direction:column;gap:56px}
-.pgroup{display:flex;flex-direction:column}
+.pgroup{display:flex;flex-direction:column;scroll-margin-top:150px}
 .pgroup .gh{margin-bottom:8px}
 .pgroup .tr.srow{cursor:default}.pgroup .tr.srow:hover{padding-left:0}
 .pgroup .srow .i b{flex:1}

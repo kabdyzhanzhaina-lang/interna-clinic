@@ -13,7 +13,7 @@ import { img } from '../lib/site.js';
 import { uslugiPrices } from '../lib/uslugi-prices.js';
 
 const total = Object.values(prices).reduce((a, v) => a + v.length, 0);
-const chipMap = [['Приёмы', 'Приёмы врачей'], ['Эндоскопия', 'Эндоскопия'], ['УЗИ и УЗДГ', 'УЗИ и УЗДГ'], ['Диагностика', 'Функциональная диагностика'], ['Анализы', 'Анализы'], ['Стационар', 'Стационар'], ['Процедурный', 'Процедурный кабинет'], ['KIDS', 'Interna KIDS']];
+const chipMap = [['Приёмы', 'Приёмы врачей'], ['Эндоскопия', 'Эндоскопия'], ['УЗИ и УЗДГ', 'УЗИ и УЗДГ'], ['Фиброскан', 'Фиброскан'], ['Диагностика', 'Функциональная диагностика'], ['Анализы', 'Анализы'], ['Стационар', 'Стационар'], ['Процедурный', 'Процедурный кабинет'], ['KIDS', 'Interna KIDS']];
 const cuProgs = checkupsFile.programs;
 const chips = [['Все', total, '#catalog'], ...chipMap.map(([l, k]) => [l, prices[k]?.length || 0, `/prices#${encodeURIComponent(k)}`])];
 chips.splice(2, 0, ['Check-up', cuProgs.length, '/checkup']);
