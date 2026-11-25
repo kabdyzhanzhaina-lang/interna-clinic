@@ -13,37 +13,46 @@ import { img } from '../lib/site.js';
 import { uslugiPrices } from '../lib/uslugi-prices.js';
 
 const total = Object.values(prices).reduce((a, v) => a + v.length, 0);
-const chipMap = [['Приёмы', 'Приёмы врачей'], ['Эндоскопия', 'Эндоскопия'], ['УЗИ и УЗДГ', 'УЗИ и УЗДГ'], ['Фиброскан', 'Фиброскан'], ['Диагностика', 'Функциональная диагностика'], ['Анализы', 'Анализы'], ['Стационар', 'Стационар'], ['Процедурный', 'Процедурный кабинет'], ['KIDS', 'Interna KIDS']];
+// разделы прайса — как в документе клиники; группа каталога и чип собирают несколько разделов
+const SEC = Object.keys(prices);
+const kidsSec = SEC.filter((k) => /детского|педиатра/.test(k));
+const recSec = SEC.filter((k) => /^Услуги /.test(k) && !/процедурного|стационара/.test(k) && !kidsSec.includes(k));
+const chipMap = [['Приёмы', recSec], ['Эндоскопия', ['Эндоскопические исследования']], ['УЗИ и УЗДГ', ['Ультразвуковое исследование', 'УЗДГ сосудов']], ['Фиброскан', ['Непрямая эластография печени']], ['Рентген', ['Рентген диагностика']], ['Стационар', ['Услуги стационара без учёта медикаментов']], ['Процедурный', ['Услуги процедурного кабинета']], ['KIDS', kidsSec]];
+const nRows = (ks) => ks.reduce((a, k) => a + (prices[k]?.length || 0), 0);
 const cuProgs = checkupsFile.programs;
-const chips = [['Все', total, '#catalog'], ...chipMap.map(([l, k]) => [l, prices[k]?.length || 0, `/prices#${encodeURIComponent(k)}`])];
+const chips = [['Все', total, '#catalog'], ...chipMap.map(([l, ks]) => [l, nRows(ks), `/prices#${encodeURIComponent(ks[0])}`])];
 chips.splice(2, 0, ['Check-up', cuProgs.length, '/checkup']);
 
 const featured = ['colonoscopy', 'fgds', 'fibroscan', 'ultrasound'].map((k) => [k, services[k]]);
 const featTitle = { colonoscopy: 'Видеоколоноскопия во сне', fgds: 'ЭГДС (гастроскопия)', fibroscan: 'Фиброскан печени', ultrasound: 'УЗИ и ЭхоКГ' };
 
 // группы каталога: основные услуги (с коротким описанием) + перенесённые страницы и позиции прайса (только название и цена)
-const all = [...Object.entries(services).map(([k, s]) => ({ href: `/service/${k}`, t: s.t, d: s.short, price: s.price, cat: s.cat })), ...Object.entries(extra).map(([k, s]) => ({ href: `/uslugi/${k}`, t: s.t, d: '', price: uslugiPrices(k)[0]?.[2] || '', cat: s.cat }))];
+// pr — строка прайса, чья цена показана у страницы: эту строку не дублируем ниже позицией прайса.
+// Процедурный кабинет — раздел из многих услуг: без одной цены (первая строка — аллергопроба 330 ₸) и в своей группе, а не в «Стационаре»; хирургические манипуляции — в группе своего раздела прайса, а не в приёмах
+const all = [...Object.entries(services).map(([k, s]) => ({ href: `/service/${k}`, t: s.t, d: s.short, price: s.price, cat: s.cat })), ...Object.entries(extra).map(([k, s]) => { const pr = k === 'proccab' ? null : uslugiPrices(k)[0]; return { href: `/uslugi/${k}`, t: s.t, d: '', price: pr?.[2] || '', pr: pr?.[0], cat: { proccab: 'Процедурный кабинет', surgeon: 'Хирургические манипуляции' }[k] || s.cat }; })];
 const groupDefs = [
-  ['reception', 'Приёмы врачей', ['Приём', 'Приём врача'], 'Приёмы врачей'],
-  ['checkup', 'Check-up программы', [], '/checkup'],
-  ['endoscopy', 'Эндоскопия', ['Эндоскопия', 'Эндоскопические процедуры'], 'Эндоскопия'],
-  ['uzi', 'УЗИ и УЗДГ', ['Диагностика', 'УЗИ'], 'УЗИ и УЗДГ'],
-  ['func', 'Функциональная диагностика', ['Функциональная диагностика'], 'Функциональная диагностика'],
-  ['lab', 'Анализы', [], 'Анализы'],
-  ['station', 'Стационар', ['Стационар'], 'Стационар'],
-  ['proc', 'Процедурный кабинет', [], 'Процедурный кабинет'],
-  ['surg', 'Хирургия и проктология', [], 'Хирургия и проктология'],
-  ['kids', 'Interna KIDS', ['Interna KIDS'], 'Interna KIDS'],
+  ['reception', 'Приёмы врачей', ['Приём', 'Приём врача'], recSec],
+  ['checkup', 'Check-up программы', [], []],
+  ['endoscopy', 'Эндоскопия', ['Эндоскопия', 'Эндоскопические процедуры'], ['Эндоскопические исследования']],
+  ['uzi', 'УЗИ и УЗДГ', ['Диагностика', 'УЗИ'], ['Ультразвуковое исследование', 'УЗДГ сосудов', 'Непрямая эластография печени']],
+  ['func', 'Функциональная диагностика', ['Функциональная диагностика'], ['Мониторинг глюкозы']],
+  ['xray', 'Рентген диагностика', [], ['Рентген диагностика']],
+  ['station', 'Стационар', ['Стационар'], ['Услуги стационара без учёта медикаментов']],
+  ['proc', 'Процедурный кабинет', ['Процедурный кабинет'], ['Услуги процедурного кабинета']],
+  ['surg', 'Хирургические манипуляции', ['Хирургические манипуляции'], ['Хирургические манипуляции']],
+  ['kids', 'Interna KIDS', ['Interna KIDS'], kidsSec],
 ];
 // раздел check-up — программы клиники из checkups.json (не позиции прайса «Комплексы», просьба клиники)
-const groups = groupDefs.map(([id, title, cats, pk]) => {
+const groups = groupDefs.map(([id, title, cats, pks]) => {
   if (id === 'checkup') return { id, title, count: cuProgs.length, rows: cuProgs.map((p) => ({ href: `/checkup#${p.id}`, t: `Check-up «${p.title}»`, d: p.sub || '', price: p.price })), href: '/checkup', word: cuProgs.length % 10 === 1 && cuProgs.length % 100 !== 11 ? 'программа' : [2, 3, 4].includes(cuProgs.length % 10) ? 'программы' : 'программ' };
   const items = all.filter((x) => cats.includes(x.cat));
-  const priceRows = prices[pk] || [];
+  // порядок как в прайсе: по алфавиту, позиции без цены — в конце
+  const priceRows = pks.flatMap((k) => (prices[k] || []).map((r) => [...r, k])).slice().sort((x, y) => (/\d/.test(y[2]) - /\d/.test(x[2])) || x[0].localeCompare(y[0], 'ru', { sensitivity: 'base' }));
   // добавляем позиции прайса, если в группе мало страниц услуг
-  const fromPrice = items.length < 4 ? priceRows.filter((r) => !items.some((i) => i.t.toLowerCase() === r[0].toLowerCase())).slice(0, 5 - items.length).map((r) => ({ href: `/prices#${encodeURIComponent(pk)}`, t: r[0], d: '', price: r[2], cat: pk })) : [];
-  const rows = [...items, ...fromPrice];
-  return { id, title, count: priceRows.length || rows.length, rows, href: `/prices#${encodeURIComponent(pk)}` };
+  const fromPrice = items.length < 4 ? priceRows.filter((r, j) => /\d/.test(r[2]) && priceRows.findIndex((q) => q[0] === r[0]) === j && !items.some((i) => i.t.toLowerCase() === r[0].toLowerCase() || i.pr === r[0])).slice(0, 5 - items.length).map((r) => ({ href: `/prices#${encodeURIComponent(r[4])}`, t: r[0], d: '', price: r[2], cat: r[4] })) : [];
+  // по алфавиту, как прайс (просьба клиники); check-up выше — по уровню программ
+  const rows = [...items, ...fromPrice].sort((x, y) => x.t.localeCompare(y.t, 'ru', { sensitivity: 'base' }));
+  return { id, title, count: priceRows.length || rows.length, rows, href: `/prices#${encodeURIComponent(pks[0])}` };
 }).filter((g) => g.rows.length);
 const plural = (n) => (n % 10 === 1 && n % 100 !== 11 ? 'услуга' : [2, 3, 4].includes(n % 10) && ![12, 13, 14].includes(n % 100) ? 'услуги' : 'услуг');
 ---

@@ -1036,7 +1036,6 @@ section[id],div[id].anchor,[data-anchor]{scroll-margin-top:150px}
 .segm{display:flex;padding:4px;background:var(--ice50);border-radius:999px;flex:none}
 .segm button{padding:10px 22px;border-radius:999px;border:0;background:transparent;font:inherit;font-size:14px;font-weight:500;color:var(--g600);cursor:pointer;transition:background .3s,color .3s}
 .segm button.on{background:#fff;color:var(--black);font-weight:700;box-shadow:0 1px 3px rgba(17,17,17,.06)}
-.cusex{align-self:flex-start;background:#fff;margin-bottom:6px}.cusex button.on{background:var(--blue);color:#fff;box-shadow:none}
 .cupick{display:flex;gap:48px;align-items:flex-start}
 .vtabs{width:380px;flex:none;display:flex;flex-direction:column}
 .vtab{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:18px 20px;border:1px solid transparent;border-bottom-color:var(--g200);background:transparent;font:inherit;text-align:left;cursor:pointer;color:var(--black);transition:background .3s,border-color .3s}

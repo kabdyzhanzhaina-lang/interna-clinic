@@ -7,12 +7,9 @@ import prices from '../data/prices.json';
 import promos from '../data/promos.json';
 import { activePromos, untilLabel } from '../lib/site.js';
 const cats = Object.keys(prices);
-// ТЗ: позиции внутри раздела — по алфавиту; строки «по запросу» — в конце раздела
+// Разделы — как в прайсе клиники (Google-таблица), позиции внутри раздела — по алфавиту; строки «по запросу» — в конце раздела
 const byName = (a, b) => { const qa = /по запросу/i.test(a[2]), qb = /по запросу/i.test(b[2]); if (qa !== qb) return qa ? 1 : -1; return a[0].localeCompare(b[0], 'ru', { sensitivity: 'base' }); };
-// «Приёмы врачей» — по алфавиту специальностей (просьба клиники): без «Приём/Консультация/Повторный приём», повторный — после первичного
-const spec = (r) => r[0].replace(/^(Консультация|Повторный при[её]м|При[её]м)\s+/i, '').replace(/^взрослого\s+/i, '') + (/^Повторный/i.test(r[0]) ? ' ~' : '');
-const bySpec = (a, b) => spec(a).localeCompare(spec(b), 'ru', { sensitivity: 'base' });
-cats.forEach((k) => { prices[k] = prices[k].slice().sort(k === 'Приёмы врачей' ? bySpec : byName); });
+cats.forEach((k) => { prices[k] = prices[k].slice().sort(byName); });
 const total = Object.values(prices).reduce((a, v) => a + v.length, 0);
 const LIMIT = 8;
 const promo = activePromos(promos.items)[0];
@@ -20,7 +17,7 @@ const plural = (n) => n % 10 === 1 && n % 100 !== 11 ? 'услуга' : [2, 3, 4
 const slug = (k) => encodeURIComponent(k);
 const pay = [['verified', 'Актуальные цены', 'Прайс клиники по направлениям'], ['call', 'Вопрос по стоимости', 'Позвоните или напишите в WhatsApp']]; // способы оплаты и рассрочку клиника не подтвердила — не пишем
 ---
-<Base og="prices" title="Цены на услуги — Interna Clinic, Алматы" description={`Прайс клиники: ${total} позиций по ${cats.length} разделам — эндоскопия, приёмы врачей, УЗИ, анализы, стационар.`} active="prices">
+<Base og="prices" title="Цены на услуги — Interna Clinic, Алматы" description={`Прайс клиники: ${total} позиций по ${cats.length} разделам — эндоскопия, УЗИ и УЗДГ, рентген, приёмы врачей, стационар.`} active="prices">
   <PageHero crumbs={[['Цены']]} title="Цены на услуги" sub="Актуальный прайс клиники по направлениям. Найдите услугу или выберите раздел.">
     <div class="sbar rise d2"><div class="sin"><span class="msr" aria-hidden="true">search</span><input id="psearch" type="search" placeholder="Найти услугу, например «видеоколоноскопия»" aria-label="Поиск по прайсу" autocomplete="off" /><button type="button" class="btn btn-dark" id="psearch-go">Найти</button></div></div>
     <div class="chips rise d3" id="ptabs"><button class="chip on" type="button" data-all>Все <span class="cnt">{total}</span></button>{cats.map((k) => <button class="chip" type="button" data-tab={k}>{k} <span class="cnt">{prices[k].length}</span></button>)}</div>

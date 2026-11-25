@@ -4,6 +4,6 @@ const PRICE = { sedation: /^Внутривенная анестезия|анес
 export function uslugiPrices(slug) {
   const re = PRICE[slug];
   if (re) return Object.values(prices).flat().filter((r) => re.test(r[0]) && /\d/.test(r[2])).slice(0, 4);
-  if (slug === 'proccab') return prices['Процедурный кабинет'].filter((r) => /\d/.test(r[2])).slice(0, 4);
+  if (slug === 'proccab') return prices['Услуги процедурного кабинета'].filter((r) => /\d/.test(r[2])).slice(0, 4);
   return [];
 }

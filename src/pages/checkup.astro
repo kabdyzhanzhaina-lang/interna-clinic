@@ -12,8 +12,6 @@ import reviewsFile from '../data/reviews.json';
 import { img } from '../lib/site.js';
 const { programs, directions } = data;
 const hot = (programs.find((p) => p.hot) || programs[0])?.id;
-// «Для него / Для неё» — только у премиум-программ (мужская и женская): переключатель внутри карточки ведёт на парную программу
-const sexed = programs.filter((p) => p.who.length === 1);
 const count = (p) => p.groups.reduce((n, g) => n + g.items.filter((i) => i.in).length, 0);
 const groupsOf = (p) => p.groups.map((g) => ({ title: g.title, items: g.items.filter((i) => i.in).map((i) => i.n) })).filter((g) => g.items.length);
 // главное в программе: 3 пункта с главной (home.hi) или первые исследования приоритетных групп — остальное в «Полный состав»
@@ -44,7 +42,7 @@ const cnt = (n) => `${n} ${plural(n, 'исследование', 'исследо
     <div class="cupick rv d2" id="cuPick">
       <div class="vtabs">{programs.map((p) => <button type="button" class={`vtab${p.id === hot ? ' on' : ''}`} data-prog={p.id}><span class="n">{p.title}</span><span class="p">{p.price}</span><span class="msr">chevron_right</span></button>)}</div>
       {programs.map((p) => <div class="cudet" data-det={p.id} hidden={p.id !== hot}>
-        <div class="dh">{p.who.length === 1 && sexed.length > 1 && <div class="segm cusex">{sexed.map((x) => <button type="button" class={x.id === p.id ? 'on' : ''} data-go={x.id}>{x.who[0] === 'm' ? 'Для него' : 'Для неё'}</button>)}</div>}<p class="kicker">{p.sub || 'Самая востребованная'}</p><h3>{p.title}</h3><p class="d">{p.desc || cnt(count(p))}</p></div>
+        <div class="dh"><p class="kicker">{p.sub || 'Самая востребованная'}</p><h3>{p.title}</h3><p class="d">{p.desc || cnt(count(p))}</p></div>
         <div class="dp"><b>{p.price}</b></div>
         <div class="dk">{keyOf(p).map((x) => <span class="r"><span class="msr">check</span>{x}</span>)}</div>
         <details class="dfull"><summary>Полный состав · {cnt(count(p))}<span class="msr">expand_more</span></summary><div class="dg">{groupsOf(p).map((g) => <div class="g"><span class="t">{g.title}</span>{g.items.map((x) => <span class="r"><span class="msr">check</span>{x}</span>)}</div>)}</div></details>
@@ -92,8 +90,7 @@ const cnt = (n) => `${n} ${plural(n, 'исследование', 'исследо
     (() => {
       const pick = document.getElementById('cuPick'); if (!pick) return;
       pick.addEventListener('click', (e) => {
-        const go = e.target.closest('[data-go]');
-        const b = go ? pick.querySelector(`.vtab[data-prog="${go.dataset.go}"]`) : e.target.closest('.vtab'); if (!b) return;
+        const b = e.target.closest('.vtab'); if (!b) return;
         pick.querySelectorAll('.vtab').forEach((x) => x.classList.toggle('on', x === b));
         pick.querySelectorAll('.cudet').forEach((d) => { d.hidden = d.dataset.det !== b.dataset.prog; });
       });
