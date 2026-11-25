@@ -28,7 +28,7 @@ const stem = s.t.split(' ')[0].slice(0, 6);
 const rel = kidsRe ? doctors.filter((d) => d.kids && kidsRe.test(`${d.r} ${d.kidsRole || ''}`)) : ids ? ids.map((id) => doctors.find((d) => d.id === id)).filter(Boolean) : slug === 'hepatologist' ? doctors.filter((d) => /гепатолог/i.test(d.r)) : catFor ? doctors.filter((d) => d.cat === catFor) : doctors.filter((d) => new RegExp(stem, 'i').test(d.r));
 const half = Math.ceil(rel.length / 2);
 const priceRows = uslugiPrices(slug);
-const img0 = { 'Приём врача': 'coats', 'Эндоскопические процедуры': 'sedation', 'УЗИ': 'uzi', 'Стационар': 'building', 'Interna KIDS': 'heart', 'Функциональная диагностика': 'cardio' }[s.cat] || 'hero';
+const img0 = { 'Приём врача': 'team-doctors', 'Эндоскопические процедуры': 'sedation', 'УЗИ': 'uzi', 'Стационар': 'building', 'Interna KIDS': 'heart', 'Функциональная диагностика': 'cardio' }[s.cat] || 'hero';
 const bgImg = /капсул/i.test(s.t) ? 'hero' : /фибро/i.test(s.t) ? 'fibroscan' : img0;
 const body = s.body || [];
 const lead = (s.lead || (body.find((b) => b[0] === 'p') || ['', ''])[1] || '').split(/(?<=\.)\s/).slice(0, 2).join(' ').slice(0, 260);
