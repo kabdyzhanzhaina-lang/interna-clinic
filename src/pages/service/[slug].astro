@@ -45,7 +45,7 @@ const catShort = { 'Эндоскопия': 'Эндоскопия', 'Диагно
 
   <section id="overview" style="padding:80px 0 0"><div class="shell"><div class="lay ov">
     <div class="main rv"><p class="kicker">Зачем</p><h2 class="h ov-h">{w[0]}</h2>{whyP.map((p) => <p class="ov-p">{p}</p>)}<a class="link" href="/about#equip">Подробнее об оборудовании <span class="msr">arrow_forward</span></a></div>
-    <div class="imgcap rv d2"><div class="im"><img src={img(s.equip.img)} alt={s.equip.n} loading="lazy" /></div><span class="cap">{s.equip.n}</span></div>
+    <div class="imgcap rv d2"><div class="im"><img src={img(s.equip.img)} alt={s.equip.n} loading="lazy" style={s.equip.pos && `object-position:${s.equip.pos}`} /></div><span class="cap">{s.equip.n}</span></div>
   </div></div></section>
 
   <section id="indications" style="padding:80px 0 0"><div class="shell">

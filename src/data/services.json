@@ -99,7 +99,8 @@
           "удаляют во время процедуры"
         ]
       ],
-      "img": "versana"
+      "img": "evis-proc",
+      "pos": "left top"
     },
     "doc": "kontorshchikov",
     "faq": [
@@ -234,7 +235,8 @@
           "надёжное очищение аппаратуры"
         ]
       ],
-      "img": "versana"
+      "img": "evis-proc",
+      "pos": "left top"
     },
     "doc": "kontorshchikov",
     "faq": [
@@ -631,7 +633,7 @@
           "кандидаты и доктора наук"
         ]
       ],
-      "img": "team"
+      "img": "team-gastro"
     },
     "doc": "nersesov",
     "faq": [
@@ -757,7 +759,7 @@
           "детский эндокринолог KIDS"
         ]
       ],
-      "img": "team"
+      "img": "team-endo"
     },
     "doc": "raisova",
     "faq": [

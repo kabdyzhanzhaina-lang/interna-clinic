@@ -34,7 +34,7 @@ const plural = (n, a, b, c) => { const m = n % 100, k = n % 10; return m > 10 &&
 const cnt = (n) => `${n} ${plural(n, 'исследование', 'исследования', 'исследований')}`;
 ---
 <Base og="checkup" title="Check-up программы в Алматы — полное обследование за 1–2 дня | Interna Clinic" description="5 программ check-up с полным составом и ценами: базовая, гастро стандарт и расширенный, премиум мужской и женский. Профильные программы: гастро, кардио, эндокринология, женское здоровье." active="checkup">
-  <PhotoHero image="hero" eyebrow="Check-up" title="Полное обследование за 1–2 дня" sub="Анализы, УЗИ, функциональная диагностика, эндоскопия и консультации профильных специалистов. Личный координатор на каждом этапе.">
+  <PhotoHero image="hero-checkup" pos="center 22%" eyebrow="Check-up" title="Полное обследование за 1–2 дня" sub="Анализы, УЗИ, функциональная диагностика, эндоскопия и консультации профильных специалистов. Личный координатор на каждом этапе.">
     <a class="btn btn-ghost" href="#programs">Выбрать программу</a><a class="btn btn-ghost" href="/checkup-request">Оставить заявку</a>
   </PhotoHero>
   <SubNav items={[['Программы', '#programs'], ['Как проходит', '#how'], ['Профильные', '#dirs'], revs.length > 0 && ['Отзывы', '#reviews'], ['Вопросы', '#faq']].filter(Boolean)} />
