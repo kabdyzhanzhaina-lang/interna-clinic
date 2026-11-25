@@ -159,11 +159,11 @@
   const pt = $("#ptabs");
   if (pt) {
     const tables = $$("[data-price-tab]");
-    const show = (name) => tables.forEach((t) => { t.hidden = t.dataset.priceTab !== name; $$(".tr", t).forEach((r) => (r.hidden = false)); });
+    const show = (name) => tables.forEach((t) => { t.hidden = name != null && t.dataset.priceTab !== name; $$(".tr", t).forEach((r) => (r.hidden = false)); });
     pt.addEventListener("click", (e) => { const b = e.target.closest("[data-tab]"); if (!b) return; $$(".chip", pt).forEach((c) => c.classList.toggle("on", c === b)); $("#psearch").value = ""; show(b.dataset.tab); });
     $("#psearch").addEventListener("input", (e) => {
       const q = e.target.value.trim().toLowerCase();
-      if (!q) { show($(".chip.on", pt).dataset.tab); return; }
+      if (!q) { const on = $(".chip.on", pt); show(on && on.dataset.tab); return; }
       tables.forEach((t) => { let any = false; $$(".tr", t).forEach((r) => { const ok = r.textContent.toLowerCase().includes(q); r.hidden = !ok; any = any || ok; }); t.hidden = !any; });
     });
   }
