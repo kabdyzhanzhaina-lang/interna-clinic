@@ -1,5 +1,5 @@
 ---
-// Рендер структурированного текста, перенесённого со старого сайта: [['h'|'h3'|'p'|'ul'|'ol'|'file', ...]]
+// Рендер структурированного текста, перенесённого со старого сайта: [['h'|'h3'|'p'|'ul'|'ol'|'file'|'table', ...]]; table — ['table', [заголовки], [[ячейки]...]]
 const { body = [], numbered = false } = Astro.props;
 let n = 0;
 ---
@@ -9,6 +9,7 @@ let n = 0;
   if (b[0] === 'q') return <div class="pull">{b[1]}</div>;
   if (b[0] === 'ul') return <ul class="alist">{b[1].map((x) => <li>{x}</li>)}</ul>;
   if (b[0] === 'ol') return <ol class="alist">{b[1].map((x) => <li>{x}</li>)}</ol>;
+  if (b[0] === 'table') return <div class="btable"><table><thead><tr>{b[1].map((h) => <th>{h}</th>)}</tr></thead><tbody>{b[2].map((r) => <tr>{r.map((c) => <td>{c}</td>)}</tr>)}</tbody></table></div>;
   if (b[0] === 'file') return <p><a class="btn btn-line sm" href={b[2]} target="_blank" rel="noopener">{b[1]} · PDF <span class="msr ai">open_in_new</span></a></p>;
   return <p>{b[1]}</p>;
 })}

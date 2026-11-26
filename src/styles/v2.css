@@ -1628,3 +1628,14 @@ body:has(#cuPick) :is(#how,#dirs,#reviews,#faq){padding-top:64px!important}
 .kdocs{display:grid;gap:12px}
 /* карточка врача направления KIDS на телефоне: фото 64px слева, имя и роль рядом, «Записаться» во всю ширину под ними */
 @media(max-width:560px){.docrow.big{display:grid;grid-template-columns:64px minmax(0,1fr);gap:14px;padding:18px;align-items:start}.docrow.big .ph{width:64px;height:64px;border-radius:14px}.docrow.big .i b{font-size:17px}.docrow.big .i small{font-size:13px}.docrow.big .tags{gap:10px}.docrow.big .btn{grid-column:1/-1;width:100%;justify-content:center}.docrow.big .ai{display:none}a.docrow.big:hover{padding-left:18px}}
+/* услуга: пояснение под показаниями; таблицы в памятках (диета, схема приёма) */
+.indnote{margin:24px 0 0;max-width:760px;font-size:16px;line-height:1.55;color:var(--g600)}
+.btable{overflow-x:auto;border:1px solid var(--g200);border-radius:16px;background:#fff}
+.btable table{width:100%;border-collapse:collapse;font-size:15px;line-height:1.5}
+.btable th{padding:14px 18px;text-align:left;font-weight:600;color:var(--black);background:var(--ice50);border-bottom:1px solid var(--g200)}
+.btable td{padding:14px 18px;vertical-align:top;color:var(--black);border-bottom:1px solid var(--g200)}
+.btable tr:last-child td{border-bottom:0}
+@media(max-width:560px){.btable table{font-size:14px}.btable th,.btable td{padding:12px}}
+/* в одну колонку боковая карточка памяток не «прилипает» поверх текста */
+@media(max-width:1000px){.lay>.itoc{position:static}}
+.grid2>:only-child{grid-column:1/-1}

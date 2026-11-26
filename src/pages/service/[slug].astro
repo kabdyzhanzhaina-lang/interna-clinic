@@ -19,7 +19,9 @@ const { slug } = Astro.params;
 const s = services[slug];
 const lead = doctors.find((x) => x.id === s.doc);
 const catFor = { colonoscopy: 'endoscopy', fgds: 'endoscopy', fibroscan: 'gastro', ultrasound: 'other', gastro: 'gastro', endo: 'endo' }[slug];
-const rel = [lead, ...doctors.filter((x) => x.id !== s.doc && (catFor === 'other' ? /ультразвук/i.test(x.r) : x.cat === catFor))].filter(Boolean).slice(0, 6);
+// docs — врачи, которых клиника назвала для услуги дополнительно к профильным (например, гастроэнтеролог-эндоскопист на видеоколоноскопии)
+const extra = (s.docs || []).map((id) => doctors.find((x) => x.id === id)).filter(Boolean);
+const rel = [lead, ...extra, ...doctors.filter((x) => x.id !== s.doc && !extra.includes(x) && (catFor === 'other' ? /ультразвук/i.test(x.r) : x.cat === catFor))].filter(Boolean).slice(0, 6);
 const half = Math.ceil(rel.length / 2);
 const steps = s.steps.length > 4 ? [s.steps[0], s.steps[2], s.steps[3], s.steps[4]] : s.steps;
 const t = s.t.toLowerCase();
@@ -51,7 +53,11 @@ const catShort = { 'Эндоскопия': 'Эндоскопия', 'Диагно
   <section id="indications" style="padding:80px 0 0"><div class="shell">
     <SecHead eyebrow="Показания" title="Когда стоит записаться" />
     <div class="ind3">{s.checks.map((c, i) => <div class={`ind rv d${(i % 3) + 1}`}><span class="msr">check_circle</span><span class="i"><b>{c}</b></span></div>)}</div>
+    {s.checksNote && <p class="indnote rv">{s.checksNote}</p>}
   </div></section>
+
+  {/* more — смысловые блоки из текста клиники: [иконка, заголовок, [абзацы]] */}
+  {s.more && <section style="padding:80px 0 0"><div class="shell"><div class="grid2">{s.more.map(([ic, h, ps], i) => <div class={`icard ice big rv d${i + 1}`}><span class="msr">{ic}</span><b>{h}</b>{ps.map((x) => <p>{x}</p>)}</div>)}</div></div></section>}
 
   <section id="how" style="padding:80px 0 0"><div class="shell">
     <SecHead eyebrow="Как проходит" title={s.cat === 'Приём' ? 'Как проходит визит' : 'Как проходит процедура'} />
