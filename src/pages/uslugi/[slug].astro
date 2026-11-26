@@ -16,7 +16,8 @@ import { uslugiPrices } from '../../lib/uslugi-prices.js';
 import { SITE, img } from '../../lib/site.js';
 const doctors = doctorsFile.items.filter((d) => !d.hidden);
 
-export function getStaticPaths() { return Object.keys(extra).map((slug) => ({ params: { slug } })); }
+// стационар — своя страница uslugi/station.astro (лечебный и диагностический)
+export function getStaticPaths() { return Object.keys(extra).filter((slug) => slug !== 'station').map((slug) => ({ params: { slug } })); }
 const { slug } = Astro.params;
 const s = extra[slug];
 // Врачи направления: детские направления — врачи Interna KIDS, ЭРГ — команда со старой страницы, иначе по категории или должности

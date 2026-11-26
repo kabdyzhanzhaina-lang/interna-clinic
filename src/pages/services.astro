@@ -29,7 +29,7 @@ const featTitle = { colonoscopy: 'Видеоколоноскопия во сне
 // группы каталога: основные услуги (с коротким описанием) + перенесённые страницы и позиции прайса (только название и цена)
 // pr — строка прайса, чья цена показана у страницы: эту строку не дублируем ниже позицией прайса.
 // Процедурный кабинет — раздел из многих услуг: без одной цены (первая строка — аллергопроба 330 ₸) и в своей группе, а не в «Стационаре»; хирургические манипуляции — в группе своего раздела прайса, а не в приёмах
-const all = [...Object.entries(services).map(([k, s]) => ({ href: `/service/${k}`, t: s.t, d: s.short, price: s.price, cat: s.cat })), ...Object.entries(extra).map(([k, s]) => { const pr = k === 'proccab' ? null : uslugiPrices(k)[0]; return { href: `/uslugi/${k}`, t: s.t, d: '', price: pr?.[2] || '', pr: pr?.[0], cat: { proccab: 'Процедурный кабинет', surgeon: 'Хирургические манипуляции' }[k] || s.cat }; })];
+const all = [...Object.entries(services).map(([k, s]) => ({ href: `/service/${k}`, t: s.t, d: s.short, price: s.price, cat: s.cat })), ...Object.entries(extra).map(([k, s]) => { const pr = k === 'proccab' ? null : uslugiPrices(k)[0]; return { href: `/uslugi/${k}`, t: s.t, d: '', price: pr?.[2] || '', pr: pr?.[0], cat: { proccab: 'Процедурный кабинет', surgeon: 'Хирургические манипуляции' }[k] || s.cat }; }), { href: '/uslugi/station#diagnostic', t: 'Диагностический стационар', d: '', price: (prices['Услуги стационара без учёта медикаментов'].find((r) => /check-up/.test(r[0])) || [])[2] || '', cat: 'Стационар' }];
 const groupDefs = [
   ['reception', 'Приёмы врачей', ['Приём', 'Приём врача'], recSec],
   ['checkup', 'Check-up программы', [], []],

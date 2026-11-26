@@ -1639,3 +1639,18 @@ body:has(#cuPick) :is(#how,#dirs,#reviews,#faq){padding-top:64px!important}
 /* в одну колонку боковая карточка памяток не «прилипает» поверх текста */
 @media(max-width:1000px){.lay>.itoc{position:static}}
 .grid2>:only-child{grid-column:1/-1}
+/* Стационар: сравнение двух форматов, заведующая без фото, кнопки check-up */
+.stcmp{display:grid;grid-template-columns:1fr 1fr;gap:24px}
+.stcard{display:flex;flex-direction:column;gap:10px;padding:32px;border-radius:22px;background:var(--ice50)}
+.stcard>.msr{font-size:30px;color:var(--blue)}
+.stcard .kicker{margin:6px 0 0}
+.stcard b.h{font-size:26px;font-weight:600;line-height:1.2;color:var(--black)}
+.stcard dl{margin:10px 0 22px;display:flex;flex-direction:column}
+.stcard dl>div{display:grid;grid-template-columns:130px minmax(0,1fr);gap:16px;padding:13px 0;border-bottom:1px solid var(--g200)}
+.stcard dt{font-size:13px;font-weight:600;color:var(--g600)}
+.stcard dd{margin:0;font-size:15px;line-height:1.45;color:var(--black)}
+.stcard .btn{margin-top:auto;align-self:flex-start}
+.stbtns{display:flex;gap:12px;flex-wrap:wrap;margin-top:24px}
+.docrow.zav{padding-top:0}
+@media(max-width:800px){.stcmp{grid-template-columns:1fr}.stcard{padding:24px}.stcard b.h{font-size:22px}}
+@media(max-width:560px){.stcard dl>div{grid-template-columns:1fr;gap:4px}.stcard .btn{align-self:stretch;justify-content:center}}
