@@ -18,7 +18,9 @@
 
   /* ── появление при прокрутке ── */
   if (!reduce && "IntersectionObserver" in window) {
-    const reveal = (e) => { e.classList.add("in"); setTimeout(() => e.classList.add("rv-done"), 1300); };   // после анимации — обычные transition карточки
+    const show = (e) => { e.classList.add("in"); setTimeout(() => e.classList.add("rv-done"), 1300); };   // после анимации — обычные transition карточки
+    // карточки горизонтальной ленты проявляются вместе: те, что за краем экрана, не ждут прокрутки вбок
+    const reveal = (e) => { const p = e.parentElement; if (p && p.matches(".bcards,.revcards,.dircards")) p.querySelectorAll(":scope > .rv:not(.in)").forEach((x) => { show(x); io.unobserve(x); }); else show(e); };
     const io = new IntersectionObserver((en) => en.forEach((x) => { if (x.isIntersecting) { reveal(x.target); io.unobserve(x.target); } }), { rootMargin: "-40px 0px" });
     $$(".rv").forEach((e) => { if (e.getBoundingClientRect().top < innerHeight * 0.9) reveal(e); else io.observe(e); });
   } else $$(".rv").forEach((e) => e.classList.add("in"));

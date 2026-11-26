@@ -336,7 +336,7 @@ footer .legal a{margin:0 0 0 20px;color:rgba(255,255,255,.5);font-size:12px}
 .hero3 h1 .rw-cur{display:inline-block;vertical-align:top;width:3px;height:.9em;margin:.05em 0 0 .06em;background:var(--sky);border-radius:2px;animation:rwBlink 1s steps(1) infinite}
 .hero3 h1 .rw.typing .rw-cur{animation:none;opacity:1}
 @keyframes rwBlink{0%,49%{opacity:1}50%,100%{opacity:0}}
-@media(max-width:700px){.hero3 h1 .rw{text-align:left}}
+@media(max-width:700px){.hero3 h1 .rw{display:block;text-align:center;min-width:0!important}}
 .hero3 .sub{margin:0;max-width:640px;font-size:17px;line-height:1.5;color:rgba(255,255,255,.85)}
 /* главные услуги карточками (вместо поиска по просьбе клиники): пять белых карточек в ряд, на телефоне — лента со свайпом */
 .hero3 .hsvc{position:relative;z-index:3;display:grid;grid-template-columns:repeat(5,1fr);gap:12px;width:1120px;max-width:calc(100vw - 40px)}
@@ -440,7 +440,7 @@ footer .top{padding:32px 0 8px}footer .top>div:nth-child(3),footer .top>div:nth-
 .photohero .eb{font-family:var(--serif);font-style:normal;font-size:19px;color:#fff;margin:0}
 .photohero h1{color:#fff;font-size:clamp(40px,5vw,72px);font-weight:500;line-height:1.05;letter-spacing:-1px;max-width:900px;margin:0}
 .photohero.wide h1{max-width:1000px;line-height:1.02;letter-spacing:-1.5px}
-@media(max-width:480px){.photohero h1{font-size:clamp(30px,9vw,40px);hyphens:auto;overflow-wrap:break-word}} /* «Видеоколоноскопия» целиком в 360px */
+@media(max-width:480px){.photohero h1{font-size:clamp(30px,9vw,40px);hyphens:auto;hyphenate-limit-chars:12 6 6;overflow-wrap:break-word}} /* «Видеоколоноскопия» целиком в 360px */
 .photohero .sub{font-size:18px;color:rgba(255,255,255,.85);line-height:1.5;max-width:680px;margin:0}
 .photohero.wide .sub{font-size:19px;max-width:720px}
 .photohero .btns{display:flex;gap:12px;flex-wrap:wrap;justify-content:center;padding-top:8px}
@@ -460,7 +460,8 @@ footer .top{padding:32px 0 8px}footer .top>div:nth-child(3),footer .top>div:nth-
 .dfacts.serif{gap:32px}.dfacts.serif .dfact{padding-top:20px}
 .dfacts.serif .dfact b{font-family:var(--serif);font-style:normal;font-weight:400;font-size:44px;line-height:1}
 .dfacts.serif.md .dfact b{font-size:34px}
-@media(max-width:900px){.dfacts{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:900px){.dfacts{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:560px){.dfacts{gap:20px 16px}.dfact b{font-size:22px;hyphens:auto;hyphenate-limit-chars:12 6 6;overflow-wrap:break-word}}
 /* шапка секции */
 .sec-head{margin-bottom:40px;gap:24px}
 .sec-head .kicker{margin-bottom:10px}
@@ -713,6 +714,7 @@ body.scrolled .stickycta{opacity:1;transform:none;pointer-events:auto}
 @media(max-width:700px){.stickycta{display:none}}
 .share{display:flex;gap:18px;align-items:center;margin-top:32px;font-size:10px;letter-spacing:.18em;text-transform:uppercase;font-weight:600}
 .share span{color:var(--g600)}.share a{color:var(--black)}
+@media(max-width:560px){.share{flex-wrap:wrap;row-gap:10px}}
 .author{display:flex;align-items:center;gap:16px;padding:24px 0;border-top:1px solid var(--g200);margin-top:36px}
 .author .ph{width:72px;height:72px;border-radius:50%;overflow:hidden;background:var(--g100);flex:none}
 .author .ph img{width:100%;height:100%;object-fit:cover;object-position:top}
@@ -829,7 +831,7 @@ body.scrolled .stickycta{opacity:1;transform:none;pointer-events:auto}
 .cq-faq .acc-a p{font-size:15px;line-height:1.55}
 @media(max-width:1180px){.cq-wrap{grid-template-columns:1fr}.cq-side{position:static}}
 @media(max-width:700px){.cq-form{padding:24px 18px;border-radius:18px;gap:28px}.cq-prog .r{flex-direction:column;gap:4px}.cq-prog .bar span{display:none}.cq .pick.progs{grid-template-columns:1fr}.cq-step .h h3{font-size:22px}.cq .r2{grid-template-columns:1fr;gap:20px}.cq-sum{flex-wrap:wrap}.cq-btns .btn{width:100%;justify-content:center}.cq-side>div{padding:22px}}
-@media(max-width:700px){.ahero{min-height:520px}.ahero .toprow{left:18px;right:18px}.cta{padding:64px 18px}.team2 .card{min-height:420px;padding:24px}.team2 h3{font-size:26px}.corp .in{padding:28px}.corp h3{font-size:24px}.cureq-form{padding:22px}.cuhead h3{font-size:22px}.cuprog .bar span{display:none}}
+@media(max-width:700px){.ahero .shell{width:100%;min-width:0}.ahero h1{font-size:30px;hyphens:auto;hyphenate-limit-chars:12 6 6;overflow-wrap:break-word}.ahero .crumbs{flex-wrap:wrap}.ahero{min-height:520px}.ahero .toprow{left:18px;right:18px}.cta{padding:64px 18px}.team2 .card{min-height:420px;padding:24px}.team2 h3{font-size:26px}.corp .in{padding:28px}.corp h3{font-size:24px}.cureq-form{padding:22px}.cuhead h3{font-size:22px}.cuprog .bar span{display:none}}
 
 /* ── остатки старых компонентов, которые ещё используются (модалка, Body, статья) ── */
 .seg button{border-radius:14px;border-color:var(--g200)}
@@ -1028,6 +1030,7 @@ section[id],div[id].anchor,[data-anchor]{scroll-margin-top:150px}
 .ind small{font-size:14px;color:var(--g600)}
 .pcard.w560{width:560px;flex:none}
 .pcard .r small{font-weight:400;color:var(--g600);font-size:13px}
+@media(max-width:700px){.imgcap .im{height:auto;aspect-ratio:auto}.imgcap .im img{height:auto}}
 @media(max-width:1000px){.imgcap,.pcard.w560{width:100%}.imgcap.sticky{position:static}.ind3{grid-template-columns:1fr 1fr}}
 @media(max-width:600px){.ind3{grid-template-columns:1fr}.ov-h{font-size:30px}}
 /* check-up (06) */
@@ -1070,8 +1073,9 @@ section[id],div[id].anchor,[data-anchor]{scroll-margin-top:150px}
 .cudet .dfull summary .msr{font-size:22px;transition:transform .3s var(--ease)}
 .cudet .dfull[open] summary .msr{transform:rotate(180deg)}
 .cudet .dfull .dg{margin-top:20px}
+@media(max-width:560px){.cudet h3{font-size:26px;hyphens:auto;hyphenate-limit-chars:12 6 6;overflow-wrap:break-word}.cudet .dp b{font-size:28px}}
 @keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
-@media(max-width:1000px){.cupick{flex-direction:column}.vtabs{width:100%}.cudet{padding:28px 24px}.cuhead{flex-direction:column;align-items:flex-start}}
+@media(max-width:1000px){.cupick{flex-direction:column;align-items:stretch}.vtabs{width:100%}.cudet{padding:28px 24px}.cuhead{flex-direction:column;align-items:flex-start}}
 .lay.ov.top{align-items:flex-start}
 /* отзывы (20) */
 .rgrid{display:flex;gap:24px}
@@ -1177,6 +1181,14 @@ section[id],div[id].anchor,[data-anchor]{scroll-margin-top:150px}
 .showall{background:none;border:0;cursor:pointer;padding:16px 0 0;font:inherit;align-self:flex-start}
 .showall .msr{font-size:18px}
 .pnote{margin:0;font-size:13px;color:var(--g600);line-height:1.5;max-width:640px}
+/* телефон: фильтры в хиро — одна строка с прокруткой вбок на всю ширину экрана, счётчик раздела — под заголовком, «Все в разделе» не вылезает за экран */
+@media(max-width:700px){
+.phero .chips{align-self:flex-start;flex-wrap:nowrap;justify-content:flex-start;overflow-x:auto;scrollbar-width:none;width:100vw;max-width:none;margin-left:calc(50% - 50vw);margin-right:0;padding:0 18px 2px;box-sizing:border-box;scroll-padding:0 18px}
+.phero .chips::-webkit-scrollbar{display:none}
+.phero .chip{flex:none}
+.pgroup .gh .tt,.svcgroup .gh .tt{flex-direction:column;align-items:flex-start;gap:4px}
+.svcgroup .gh{flex-wrap:wrap;align-items:flex-end}
+}
 .pside{width:380px;flex:none;display:flex;flex-direction:column;gap:20px;position:sticky;top:100px}
 .payrow{display:flex;gap:14px;align-items:flex-start;padding:13px 0;border-bottom:1px solid var(--g200)}
 .payrow .msr{font-size:22px;color:var(--blue);flex:none}
@@ -1236,7 +1248,8 @@ section[id],div[id].anchor,[data-anchor]{scroll-margin-top:150px}
 .kcard .link{margin-top:auto}
 .kcard.mint{background:var(--mint)}.kcard.ice{background:var(--ice)}.kcard.peach{background:var(--peach)}.kcard.ice50{background:var(--ice50)}
 @media(max-width:1100px){.khero .visual{width:360px;height:360px}.khero h1{font-size:48px}}
-@media(max-width:800px){.khero .row{flex-direction:column;align-items:flex-start}.khero .visual{width:100%;height:280px}.khero::before{display:none}.docrow.big{flex-wrap:wrap}.docrow.big .btn{margin-left:0}}
+@media(max-width:800px){.khero .row{flex-direction:column;align-items:stretch}.khero .visual{width:100%;height:280px}.khero::before{display:none}.docrow.big{flex-wrap:wrap}.docrow.big .btn{margin-left:0}}
+@media(max-width:560px){.khero h1{font-size:34px;hyphens:auto;hyphenate-limit-chars:12 6 6;overflow-wrap:break-word}.khero .crumbs{flex-wrap:wrap}.khero .price .p{font-size:38px}}
 /* ОСМС (19) */
 section.ice50{background:var(--ice50)}
 .what2{display:grid;grid-template-columns:1fr 1fr;gap:20px}
@@ -1270,7 +1283,7 @@ section.ice50{background:var(--ice50)}
 .promocard small{font-size:12.5px;color:var(--g600);margin-top:8px}
 .promocard .img{background-size:cover;background-position:center}
 @media(max-width:1000px){.what2,.promocard{grid-template-columns:1fr}.promocard .img{min-height:280px}.whatcard{min-height:0}.whatcard .ab{font-size:48px;margin-top:12px}}
-@media(max-width:600px){.freerow .top{flex-wrap:wrap}.promocard .in{padding:32px}.promocard h3{font-size:30px}}
+@media(max-width:600px){.freerow .top{flex-wrap:wrap}.promocard{grid-template-columns:minmax(0,1fr)}.promocard .in{padding:28px 24px}.promocard h3{font-size:28px;hyphens:auto;hyphenate-limit-chars:12 6 6;overflow-wrap:break-word}.promocard .pp{flex-wrap:wrap}}
 
 /* ── мобильное меню (макет 27 A): белый экран, шапка 60 с лого и иконками, «Услуги» раскрыты, пункты 22/500, две колонки 15/400, язык, кнопки, телефон ── */
 .mnav{background:#fff;color:var(--black);padding:0 0 calc(24px + env(safe-area-inset-bottom));gap:0;transform:translateY(-12px);opacity:0;transition:transform .35s var(--ease),opacity .3s,visibility 0s .35s}
@@ -1382,6 +1395,7 @@ body.mn-open{overflow:hidden}
 
 /* ── Главная: программы check-up (макет CheckupSec) ── */
 .cusec{padding:0 0 96px}
+@media(max-width:700px){.cusec{padding-top:64px}}
 .cucards{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
 .cuc{display:flex;flex-direction:column;gap:14px;padding:32px;border-radius:22px;background:var(--ice50)}
 .cuc .kicker{margin:0}
@@ -1547,3 +1561,64 @@ a.icard:hover{border-color:var(--blue);transform:translateY(-2px)}
 .revcards .rev{flex:0 0 82vw;max-width:340px;scroll-snap-align:start;padding:22px;border-radius:18px}.revcards .rev .q{font-size:16px}
 .newssec{padding-bottom:48px}
 }
+
+/* горизонтальные ленты (карточки, фильтры, подменю): листаются только вбок, без вертикальной прокрутки внутри; сверху запас под подъём карточки при наведении */
+.hero3 .hsvc,.subnav .shell,.phero .chips,.bcards,.revcards,.ttrack{overflow-y:hidden;overscroll-behavior-x:contain}
+.bcards,.revcards{padding-top:6px;margin-top:-6px}
+/* в лентах карточки только проявляются: сдвиг снизу обрезался бы краем ленты */
+@media(max-width:1000px){:is(.bcards,.revcards,.dircards)>.rv{transform:none}}
+
+/* Check-up: на компьютере лента карточек не видна как обёртка, «Кому подходит» всегда раскрыт */
+.cutrack{display:contents}
+.vtab .s{display:none}
+.dirintro details.ind summary{list-style:none;display:flex;justify-content:space-between;align-items:center;gap:12px;pointer-events:none;margin-bottom:12px}
+.dirintro details.ind summary::-webkit-details-marker{display:none}
+.dirintro details.ind summary b{margin-bottom:0}
+.dirintro details.ind summary .msr{display:none;font-size:22px;transition:transform .3s var(--ease)}
+/* Check-up на телефоне: чипы программ строкой, карточки программ и профильных программ листаются вбок, шаги компактные */
+@media(max-width:700px){
+.cuex{gap:24px}
+.cuhead .sec-head{margin-bottom:0}
+body:has(#cuPick) :is(#how,#dirs,#reviews,#faq){padding-top:64px!important}
+.cupick{gap:16px}
+.cutrack .cudet h3{font-size:22px}
+.vtabs{flex-direction:row;gap:8px;overflow-x:auto;overflow-y:hidden;scrollbar-width:none;width:100vw;margin-left:-18px;padding:0 18px 2px;box-sizing:border-box}
+.vtabs::-webkit-scrollbar,.cutrack::-webkit-scrollbar,.dseg::-webkit-scrollbar,.dircards::-webkit-scrollbar{display:none}
+.vtab{flex:none;flex-direction:column;align-items:flex-start;justify-content:center;gap:2px;padding:10px 16px;border:1px solid var(--g200);border-radius:14px;background:#fff}
+.vtab:hover{border-radius:14px;background:#fff}
+.vtab .n,.vtab .msr{display:none}
+.vtab .s{display:block;font-size:14px;font-weight:600;white-space:nowrap}
+.vtab .p{font-size:12px}
+.vtab.on{background:var(--black);border-color:var(--black)}
+.vtab.on .s,.vtab.on .p{color:#fff}
+.cutrack{display:flex;align-items:flex-start;gap:12px;overflow-x:auto;overflow-y:hidden;scroll-snap-type:x mandatory;scrollbar-width:none;overscroll-behavior-x:contain;margin:0 -18px;padding:0 18px;scroll-padding:0 18px}
+.cutrack .cudet,.cutrack .cudet[hidden]{display:flex!important;flex:0 0 86%;scroll-snap-align:start;padding:24px 20px;gap:18px;border-radius:20px;animation:none}
+.cutrack .cudet h3{font-size:24px}
+.cutrack .cudet .d{font-size:14px}
+.cutrack .cudet .dp b{font-size:28px}
+.cutrack .cudet .dk .r{font-size:14px}
+.cutrack .cudet .dfull summary{font-size:14px}
+.cutrack .cudet .dfull .dg{gap:18px}
+.cutrack .cudet .db .btn{flex:1;justify-content:center}
+.dseg{flex-wrap:nowrap;overflow-x:auto;overflow-y:hidden;scrollbar-width:none;width:100vw;max-width:none;border-radius:0;align-self:flex-start;margin-left:-18px;padding:0 18px 2px;box-sizing:border-box}
+.dseg button{flex:none}
+.dirintro{gap:16px}
+.dirintro .t p{font-size:15px;line-height:1.5}
+.dirintro details.ind summary{pointer-events:auto;cursor:pointer;margin-bottom:0}
+.dirintro details.ind[open] summary{margin-bottom:12px}
+.dirintro details.ind summary .msr{display:inline-block}
+.dirintro details.ind[open] summary .msr{transform:rotate(180deg)}
+.dircards{display:flex;align-items:stretch;gap:12px;overflow-x:auto;overflow-y:hidden;scroll-snap-type:x mandatory;scrollbar-width:none;overscroll-behavior-x:contain;margin:0 -18px;padding:0 18px;scroll-padding:0 18px}
+.dircards .dcard{flex:0 0 82%;min-width:0;scroll-snap-align:start}
+.dcard .t{hyphens:auto;hyphenate-limit-chars:12 6 6;overflow-wrap:break-word}
+.dcard .btn{align-self:stretch;justify-content:center}
+}
+@media(max-width:560px){
+.steps{gap:16px}
+.step{display:grid;grid-template-columns:36px 1fr;column-gap:12px;row-gap:4px;padding-top:16px}
+.step .n{grid-row:1/3;font-size:24px}
+.step b{font-size:17px}
+.step p{font-size:14px;line-height:1.5}
+}
+/* хиро главной на телефоне: текст — по вертикали в середине фото, карточки услуг — внизу */
+@media(max-width:700px){.hero3{align-items:stretch}.hero3 .in{padding-top:20px}.hero3 .in .title{margin:auto 0}}

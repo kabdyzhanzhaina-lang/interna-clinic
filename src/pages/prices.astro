@@ -23,7 +23,7 @@ const pay = [['verified', 'Актуальные цены', 'Прайс клин�
 ---
 <Base og="prices" title="Цены на услуги — Interna Clinic, Алматы" description={`Прайс клиники: ${total} позиций по ${cats.length} разделам — эндоскопия, УЗИ и УЗДГ, рентген, приёмы врачей, стационар.`} active="prices">
   <PageHero crumbs={[['Цены']]} title="Цены на услуги" sub="Актуальный прайс клиники по направлениям. Найдите услугу или выберите раздел.">
-    <div class="sbar rise d2"><div class="sin"><span class="msr" aria-hidden="true">search</span><input id="psearch" type="search" placeholder="Найти услугу, например «видеоколоноскопия»" aria-label="Поиск по прайсу" autocomplete="off" /><button type="button" class="btn btn-dark" id="psearch-go">Найти</button></div></div>
+    <div class="sbar rise d2"><div class="sin"><span class="msr" aria-hidden="true">search</span><input id="psearch" type="search" placeholder="Найти услугу, например УЗИ" aria-label="Поиск по прайсу" autocomplete="off" /><button type="button" class="btn btn-dark" id="psearch-go">Найти</button></div></div>
     <div class="chips rise d3" id="ptabs"><button class="chip on" type="button" data-all>Все <span class="cnt">{total}</span></button>{tabs.map(([t, n]) => <button class="chip" type="button" data-tab={t}>{t} <span class="cnt">{n}</span></button>)}</div>
   </PageHero>
 
@@ -59,7 +59,7 @@ const pay = [['verified', 'Актуальные цены', 'Прайс клин�
         var sa = e.target.closest('[data-showall]'); if (sa) { expand(sa.closest('[data-price-tab]')); return; }
         if (e.target.closest('[data-print]')) { window.print(); return; }
         var all = e.target.closest('[data-all]'); if (all && tabs) { tabs.querySelectorAll('.chip').forEach(function (c) { c.classList.toggle('on', c === all); }); var s = document.getElementById('psearch'); if (s) s.value = ''; groups.forEach(function (g) { g.hidden = false; g.querySelectorAll('.tr').forEach(function (r) { r.hidden = false; }); }); }
-        var tab = e.target.closest('[data-tab]'); if (tab) { groups.forEach(expand); }
+        var tab = e.target.closest('[data-tab]'); if (tab) { groups.forEach(expand); tab.scrollIntoView({ inline: 'nearest', block: 'nearest', behavior: 'smooth' }); }
       });
       var s = document.getElementById('psearch'); var go = document.getElementById('psearch-go');
       if (s) { s.addEventListener('input', function () { if (s.value.trim()) { groups.forEach(expand); tabs && tabs.querySelectorAll('.chip').forEach(function (c) { c.classList.remove('on'); }); } }); }
