@@ -57,9 +57,21 @@
       "Патологии гипофиза: акромегалия, несахарный диабет, опухоли гипофиза",
       "Нарушения обмена кальция и фосфора: дефицит витамина D, рахит, гипопаратиреоз"
      ]
+    ],
+    [
+     "h3",
+     "Ожирение у детей"
+    ],
+    [
+     "p",
+     "Ведём детей с ожирением, в том числе на специальных препаратах — по назначению врача."
     ]
    ],
-   "src": "https://internaclinic.kz/kids/tproduct/1072600311-978156382644-detskii-endokrinolog-v-interna-kids"
+   "src": "https://internaclinic.kz/kids/tproduct/1072600311-978156382644-detskii-endokrinolog-v-interna-kids",
+   "docs": [
+    "omar",
+    "khabibullina-dina-albertovna"
+   ]
   },
   {
    "id": "shkola-diabeta-dlya-detei-i-roditelei",
@@ -142,9 +154,21 @@
       "Коррекция веса — безопасные программы снижения или набора массы тела",
       "Диетотерапия при заболеваниях — питание как часть комплексного лечения"
      ]
+    ],
+    [
+     "h3",
+     "Ожирение у детей"
+    ],
+    [
+     "p",
+     "Ведём детей с ожирением, в том числе на специальных препаратах — по назначению врача."
     ]
    ],
-   "src": "https://internaclinic.kz/kids/tproduct/1072600311-554520382984-detskii-dietolog-v-interna-kids"
+   "src": "https://internaclinic.kz/kids/tproduct/1072600311-554520382984-detskii-dietolog-v-interna-kids",
+   "docs": [
+    "kolpakova",
+    "bektar-nazim-maratizi"
+   ]
   },
   {
    "id": "pediatr",
@@ -230,7 +254,11 @@
      ]
     ]
    ],
-   "src": "https://internaclinic.kz/kids/tproduct/1072600311-519594132664-detskii-gastroenterolog-v-interna-kids"
+   "src": "https://internaclinic.kz/kids/tproduct/1072600311-519594132664-detskii-gastroenterolog-v-interna-kids",
+   "docs": [
+    "abdrakhmanov",
+    "usenova-tahmina-rustamovna"
+   ]
   },
   {
    "id": "detskii-gematolog",
@@ -410,7 +438,10 @@
      ]
     ]
    ],
-   "src": "https://internaclinic.kz/kids/tproduct/1072600311-349445828784-detskii-fibroskan-v-interna-kids"
+   "src": "https://internaclinic.kz/kids/tproduct/1072600311-349445828784-detskii-fibroskan-v-interna-kids",
+   "docs": [
+    "ashimova-nazugum-adilzhanovna"
+   ]
   },
   {
    "id": "egds",

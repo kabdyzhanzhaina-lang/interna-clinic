@@ -1623,3 +1623,8 @@ body:has(#cuPick) :is(#how,#dirs,#reviews,#faq){padding-top:64px!important}
 }
 /* хиро главной на телефоне: текст — по вертикали в середине фото, карточки услуг — внизу */
 @media(max-width:700px){.hero3{align-items:stretch}.hero3 .in{padding-top:20px}.hero3 .in .title{margin:auto 0}}
+/* check-up: «бесплатно» у анализа InBody (входит во все программы) */
+.cuex .free,.dircards .free{display:inline-block;vertical-align:1px;margin-left:2px;padding:2px 8px;border-radius:999px;background:var(--mint);color:#17805E;font-size:12px;font-weight:600;line-height:1.5;white-space:nowrap}
+.kdocs{display:grid;gap:12px}
+/* карточка врача направления KIDS на телефоне: фото 64px слева, имя и роль рядом, «Записаться» во всю ширину под ними */
+@media(max-width:560px){.docrow.big{display:grid;grid-template-columns:64px minmax(0,1fr);gap:14px;padding:18px;align-items:start}.docrow.big .ph{width:64px;height:64px;border-radius:14px}.docrow.big .i b{font-size:17px}.docrow.big .i small{font-size:13px}.docrow.big .tags{gap:10px}.docrow.big .btn{grid-column:1/-1;width:100%;justify-content:center}.docrow.big .ai{display:none}a.docrow.big:hover{padding-left:18px}}

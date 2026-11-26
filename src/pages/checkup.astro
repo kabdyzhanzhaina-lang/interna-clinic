@@ -18,11 +18,14 @@ const groupsOf = (p) => p.groups.map((g) => ({ title: g.title, items: g.items.fi
 const prio = [/консульт/i, /желуд|кишеч|печен/i, /сердц/i, /онко/i, /гормон/i, /инструмент/i, /лаборат/i, /витамин/i];
 const rank = (t) => { const i = prio.findIndex((r) => r.test(t)); return i < 0 ? prio.length : i; };
 const keyOf = (p) => p.home?.hi?.length ? p.home.hi : [...groupsOf(p)].sort((a, b) => rank(a.title) - rank(b.title)).map((g) => g.items[0]).slice(0, 4);
-const steps = [['Заявка', 'Координатор уточняет жалобы и цели и подбирает программу.'], ['День 1', 'Анализы крови и мочи, УЗИ, функциональная диагностика, эндоскопия при необходимости.'], ['День 2', 'Консультации профильных специалистов и разбор результатов.'], ['Заключение', 'Рекомендации по лечению, питанию и дальнейшему наблюдению, итоговое резюме check-up.']];
+const steps = [['Заявка', 'Координатор уточняет жалобы и цели и подбирает программу.'], ['День 1', 'Лабораторные анализы, функциональная диагностика и УЗ-исследования.'], ['День 2', 'Эндоскопическое обследование и консультации профильных специалистов.'], ['Итоговое резюме', 'Врач сводит результаты в итоговое резюме по check-up: рекомендации по лечению, питанию и дальнейшему наблюдению.']];
 const faq = [
-  ['Сколько времени занимает check-up?', 'Большинство программ — 1–2 дня: сначала анализы и диагностика, затем консультации и разбор результатов.'],
-  ['Амбулаторно или в стационаре — в чём разница?', 'Амбулаторно — без госпитализации, по заранее согласованному графику. В стационаре — палата, сопровождение медперсонала и обследования без длительного ожидания.'],
-    ['Можно ли изменить состав программы?', 'Да. Координатор выясняет жалобы и цели и настраивает профильные панели под ваш запрос.'],
+  ['Сколько времени занимает check-up?', 'Большинство программ — 2–3 дня. В первый день — лабораторные анализы, функциональная диагностика и УЗ-исследования, во второй — эндоскопическое обследование и консультации профильных специалистов. Затем — итоговое резюме по check-up.'],
+  ['Амбулаторно или в стационаре — в чём разница?', 'Амбулаторно — без госпитализации, по согласованному графику; в стационаре — с пребыванием в палате и полным сопровождением.'],
+  ['На каком оборудовании проходит обследование?', 'На оборудовании экспертного класса: УЗИ — на аппаратах GE LOGIQ E10s и GE Versana Premier, печень — на FibroScan 630 Expert, состав тела — на анализаторе InBody 770.'],
+  ['Какие эндоскопические стойки используются?', 'Видеоколоноскопия и ЭГДС проходят на эндоскопической системе Olympus EVIS X1. В ней внедрены новейшие технологии для точной диагностики предраковых состояний и заболеваний ЖКТ на ранних стадиях.'],
+  ['Анализ InBody платный?', 'Нет. Анализ состава тела InBody входит во все программы check-up бесплатно.'],
+  ['Можно ли изменить состав программы?', 'Да. Координатор выясняет жалобы и цели и настраивает профильные панели под ваш запрос.'],
 ];
 // отзывы: отзывов именно о check-up в базе нет — показываем настоящие отзывы об обследованиях и оборудовании клиники
 const revs = reviewsFile.items.filter((r) => /обследован|диагност|оборудован/i.test(r.text) && !/дёшев|дешев/i.test(r.text)).sort((a, b) => /обследован/i.test(b.text) - /обследован/i.test(a.text)).slice(0, 3);
@@ -31,10 +34,12 @@ const quote = (s, max = 170) => { if (s.length <= max) return s; const cut = s.s
 const plural = (n, a, b, c) => { const m = n % 100, k = n % 10; return m > 10 && m < 20 ? c : k === 1 ? a : k > 1 && k < 5 ? b : c; };
 const cnt = (n) => `${n} ${plural(n, 'исследование', 'исследования', 'исследований')}`;
 // на телефоне программы — карточки с прокруткой вбок, над ними чипы с коротким названием
+// анализ InBody входит во все программы бесплатно — помечаем в составе (просьба клиники)
+const isFree = (x) => /InBody/.test(x);
 const short = (t) => t.replace(/^Гастроэнтерологический /, 'Гастро ');
 ---
-<Base og="checkup" title="Check-up программы в Алматы — полное обследование за 1–2 дня | Interna Clinic" description="5 программ check-up с полным составом и ценами: базовая, гастро стандарт и расширенный, премиум мужской и женский. Профильные программы: гастро, кардио, эндокринология, женское здоровье." active="checkup">
-  <PhotoHero image="hero-checkup" pos="center 22%" eyebrow="Check-up" title="Полное обследование за 1–2 дня" sub="Анализы, УЗИ, функциональная диагностика, эндоскопия и консультации профильных специалистов. Личный координатор на каждом этапе.">
+<Base og="checkup" title="Check-up программы в Алматы — полное обследование за 2–3 дня | Interna Clinic" description="5 программ check-up с полным составом и ценами: базовая, гастро стандарт и расширенный, премиум мужской и женский. Профильные программы: гастро, кардио, эндокринология, женское здоровье." active="checkup">
+  <PhotoHero image="hero-checkup" pos="center 22%" eyebrow="Check-up" title="Полное обследование за 2–3 дня" sub="Полная картина здоровья без хождения по разным клиникам: анализы, УЗИ, эндоскопия и консультации специалистов — в одном месте, с личным координатором и итоговым резюме врача.">
     <a class="btn btn-ghost" href="#programs">Выбрать программу</a><a class="btn btn-ghost" href="/checkup-request">Оставить заявку</a>
   </PhotoHero>
   <SubNav items={[['Программы', '#programs'], ['Как проходит', '#how'], ['Профильные', '#dirs'], revs.length > 0 && ['Отзывы', '#reviews'], ['Вопросы', '#faq']].filter(Boolean)} />
@@ -46,15 +51,15 @@ const short = (t) => t.replace(/^Гастроэнтерологический /,
       <div class="cutrack" id="cuTrack">{programs.map((p) => <div class="cudet" data-det={p.id} hidden={p.id !== hot}>
         <div class="dh"><p class="kicker">{p.sub || 'Самая востребованная'}</p><h3>{p.title}</h3><p class="d">{p.desc || cnt(count(p))}</p></div>
         <div class="dp"><b>{p.price}</b></div>
-        <div class="dk">{keyOf(p).map((x) => <span class="r"><span class="msr">check</span>{x}</span>)}</div>
-        <details class="dfull"><summary>Полный состав · {cnt(count(p))}<span class="msr">expand_more</span></summary><div class="dg">{groupsOf(p).map((g) => <div class="g"><span class="t">{g.title}</span>{g.items.map((x) => <span class="r"><span class="msr">check</span>{x}</span>)}</div>)}</div></details>
+        <div class="dk">{keyOf(p).map((x) => <span class="r"><span class="msr">check</span>{isFree(x) ? <span>{x} <span class="free">бесплатно</span></span> : x}</span>)}</div>
+        <details class="dfull"><summary>Полный состав · {cnt(count(p))}<span class="msr">expand_more</span></summary><div class="dg">{groupsOf(p).map((g) => <div class="g"><span class="t">{g.title}</span>{g.items.map((x) => <span class="r"><span class="msr">check</span>{isFree(x) ? <span>{x} <span class="free">бесплатно</span></span> : x}</span>)}</div>)}</div></details>
         <div class="db"><a class="btn btn-primary" href="/checkup-request">Оставить заявку</a></div>
       </div>)}</div>
     </div>
   </div></section>
 
   <section id="how" style="padding:96px 0 0"><div class="shell">
-    <div class="rv"><SecHead eyebrow="Как проходит" title="Большинство программ — за 1–2 дня" /></div>
+    <div class="rv"><SecHead eyebrow="Как проходит" title="Большинство программ — за 2–3 дня" /></div>
     <div class="rv d2" style="margin-top:40px"><Steps items={steps} /></div>
   </div></section>
 
@@ -69,7 +74,7 @@ const short = (t) => t.replace(/^Гастроэнтерологический /,
       </div>
       <div class="dircards">{d.programs.map((p, j) => <article class={`dcard rv d${(j % 3) + 1}`}>
         <b class="t">{p.name}</b><span class="n">{cnt(p.items.length)}</span>
-        <details><summary>Состав программы<span class="msr">expand_more</span></summary><ul>{p.items.map((x) => <li><span class="msr">check</span>{x}</li>)}</ul>{p.note && <p class="note">{p.note}</p>}</details>
+        <details><summary>Состав программы<span class="msr">expand_more</span></summary><ul>{p.items.map((x) => <li><span class="msr">check</span>{isFree(x) ? <span>{x} <span class="free">бесплатно</span></span> : x}</li>)}</ul>{p.note && <p class="note">{p.note}</p>}</details>
         <button type="button" class="btn btn-line" data-book data-svc={`Check-up · ${p.name}`}>Оставить заявку</button>
       </article>)}</div>
     </div>)}

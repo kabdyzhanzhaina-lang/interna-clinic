@@ -17,7 +17,8 @@ const s = kids.services.find((x) => x.id === Astro.params.id);
 const KEY = [[/эндокринолог|диабет/i, /эндокринолог/i], [/гастроэнтеролог/i, /гастроэнтеролог/i], [/педиатр/i, /педиатр/i], [/диетолог/i, /диетолог/i], [/ревматолог/i, /ревматолог/i], [/гематолог/i, /гематолог/i], [/гинеколог/i, /гинеколог/i], [/кардиолог/i, /кардиолог/i], [/аллерголог/i, /аллерголог/i], [/нефролог/i, /нефролог/i], [/инфекционист/i, /инфекционист/i], [/эгдс|колоноскоп|капсульн|импеданс/i, /эндоскопист/i], [/фиброскан/i, /ультразвуков/i]];
 const rule = KEY.find(([k]) => k.test(s.t));
 const rel = doctors.filter((d) => d.kids && rule && rule[1].test(d.kidsRole || d.r));
-const doc = rel[0]; // врача другого профиля не подставляем
+// docs — врачи, которых клиника назвала для направления; иначе первый врач по профилю (другого профиля не подставляем)
+const docs = s.docs ? s.docs.map((id) => doctors.find((d) => d.id === id)).filter(Boolean) : rel.slice(0, 1);
 const others = kids.services.filter((x) => x.id !== s.id);
 const first = (s.body.find((b) => b[0] === 'p') || ['', ''])[1];
 // подзаголовок — целыми предложениями, до ~220 символов
@@ -68,14 +69,14 @@ const isProc = /ЭГДС|колоноскоп|эндоскоп|импеданс|
     <div class="grid4">{reasons.map((r, i) => <div class={`icard big rv d${i + 1}`}><span class="msr">{icons[i]}</span><p>{r}</p></div>)}</div>
   </div></section>}
 
-  {doc && <section style="padding:96px 0 0"><div class="kdoc"><div class="shell">
-    <SecHead eyebrow="Кто принимает" title="Врач направления" />
-    <a class="docrow big rv" href={`/doctor/${doc.id}`}>
+  {docs.length > 0 && <section style="padding:96px 0 0"><div class="kdoc"><div class="shell">
+    <SecHead eyebrow="Кто принимает" title={docs.length > 1 ? 'Врачи направления' : 'Врач направления'} />
+    <div class="kdocs">{docs.map((doc) => <a class="docrow big rv" href={`/doctor/${doc.id}`}>
       <span class="ph">{doc.img ? <img src={img(doc.img)} alt={doc.n} loading="lazy" /> : <span class="ini">{ini(doc.n)}</span>}</span>
       <span class="i"><b>{doc.n}</b><small>{doc.kidsRole || doc.r}</small><span class="tags"><span>Interna KIDS</span><span>приём очно</span></span></span>
       <span class="btn btn-line" data-book data-svc={s.t}>Записаться</span>
       <span class="msr ai">arrow_forward</span>
-    </a>
+    </a>)}</div>
   </div></div></section>}
 
 
