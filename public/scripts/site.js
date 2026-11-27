@@ -9,11 +9,11 @@
   const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
   const KK = window.LANG === "kk";
   // строки, которые скрипт пишет сам (остальной текст переводится при сборке)
-  const T = KK ? { slots: [["Таң", "08:00–12:00"], ["Күндіз", "12:00–17:00"], ["Кеш", "17:00–22:00"], ["Кез келген", "ыңғайлы уақыт"]], book: "Жазылу: ", any: "кез келген уақыт", stac: "Стационарлық формат: палата, дәрігер бақылауы, тамақтану және емшаралар кіреді. Бағдарлама бағасына стационарда болу қосылады.", amb: "Амбулаторлық формат: ыңғайлы, икемді жоспарлау, оңтайлы баға.", plusStac: " + стационар", yours: "Сіздің бағдарламаңыз: ", bookBtn: "Жазылу", confirm: "Растау — ", callTo: "қоңыраумен: ", waBook: "Сәлеметсіз бе! Жазылғым келеді: ", none: "Ештеңе табылмады — телефон соғыңыз, көмектесеміз", hintEnter: "Enter — бірінші нәтижені ашу", hintEsc: "Esc — жабу", date: "күні ", waCu: "Сәлеметсіз бе! Сайтта check-up-қа өтінім қалдырдым.", tel: "Телефон: ", fail: "Өтінімді жіберу мүмкін болмады. Телефон соғыңыз немесе WhatsApp-қа жазыңыз — біз байланыстамыз." }
-    : { slots: [["Утро", "08:00–12:00"], ["День", "12:00–17:00"], ["Вечер", "17:00–22:00"], ["Любое", "как удобно"]], book: "Записаться: ", any: "любое время", stac: "", amb: "", plusStac: " + стационар", yours: "Ваша программа: ", bookBtn: "Записаться", confirm: "Подтверждение — ", callTo: "звонком на ", waBook: "Здравствуйте! Хочу записаться: ", none: "Ничего не нашли — позвоните, подскажем", hintEnter: "Enter — открыть первый результат", hintEsc: "Esc — закрыть", date: "дата ", waCu: "Здравствуйте! Оставил(а) заявку на check-up на сайте.", tel: "Телефон: " };
+  const T = KK ? { slots: [["Таң", "08:00–12:00"], ["Күндіз", "12:00–17:00"], ["Кеш", "17:00–20:00"], ["Кез келген", "ыңғайлы уақыт"]], book: "Жазылу: ", any: "кез келген уақыт", stac: "Стационарлық формат: палата, дәрігер бақылауы, тамақтану және емшаралар кіреді. Бағдарлама бағасына стационарда болу қосылады.", amb: "Амбулаторлық формат: ыңғайлы, икемді жоспарлау, оңтайлы баға.", plusStac: " + стационар", yours: "Сіздің бағдарламаңыз: ", bookBtn: "Жазылу", ask: "Сұрақ қалдыру", confirm: "Растау — ", callTo: "қоңыраумен: ", waBook: "Сәлеметсіз бе! Жазылғым келеді: ", none: "Ештеңе табылмады — телефон соғыңыз, көмектесеміз", hintEnter: "Enter — бірінші нәтижені ашу", hintEsc: "Esc — жабу", date: "күні ", waCu: "Сәлеметсіз бе! Сайтта check-up-қа өтінім қалдырдым.", tel: "Телефон: ", fail: "Өтінімді жіберу мүмкін болмады. Телефон соғыңыз немесе WhatsApp-қа жазыңыз — біз байланыстамыз." }
+    : { slots: [["Утро", "08:00–12:00"], ["День", "12:00–17:00"], ["Вечер", "17:00–20:00"], ["Любое", "как удобно"]], book: "Записаться: ", any: "любое время", stac: "", amb: "", plusStac: " + стационар", yours: "Ваша программа: ", bookBtn: "Записаться", ask: "Оставить вопрос", confirm: "Подтверждение — ", callTo: "звонком на ", waBook: "Здравствуйте! Хочу записаться: ", none: "Ничего не нашли — позвоните, подскажем", hintEnter: "Enter — открыть первый результат", hintEsc: "Esc — закрыть", date: "дата ", waCu: "Здравствуйте! Оставил(а) заявку на check-up на сайте.", tel: "Телефон: " };
   const SLOTS = T.slots;   // точное время подтверждает администратор
 
-  /* ── шапка: «Алматы · сегодня до 22:00» — часы на текущий день ── */
+  /* ── шапка: «Алматы · сегодня до 20:00» — часы на текущий день ── */
   $$("[data-today]").forEach((el) => { const d = new Date().getDay(), h = d === 0 || d === 6 ? el.dataset.we : el.dataset.wd; el.textContent = (KK ? "Алматы · бүгін " : "Алматы · сегодня до ") + h + (KK ? "-ге дейін" : ""); });
 
   /* ── появление при прокрутке ── */
@@ -308,7 +308,9 @@
   const contact = () => ($("#mContact .on") || {}).textContent || "";
   const summary = () => [svcLabel(), dateLabel(), $("#mTime").value].filter(Boolean).join(", ");
   let mType = "";   // тип заявки для CRM: visit | checkup | kids | vacancy | promo (data-type на кнопке, иначе воркер определит по услуге/странице)
-  function openModal(svc, type) {
+  const mTitle0 = $("#mtitle").textContent;   // «Записаться на приём»; кнопки data-ask (статьи) — «Оставить вопрос»
+  function openModal(svc, type, ask) {
+    $("#mtitle").textContent = ask ? T.ask : mTitle0;
     mType = type || ""; modal.classList.add("open"); $("#mform").hidden = false; $("#mdone").hidden = true;
     if (svc) { let o = [...mSvc.options].find((x) => x.text === svc); if (!o) { o = new Option(svc, svc); mSvc.add(o, 0); } mSvc.value = o.value; }
     if (!mDate.min) mDate.min = new Date(Date.now() - new Date().getTimezoneOffset() * 6e4).toISOString().slice(0, 10);
@@ -317,7 +319,7 @@
   }
   const closeModal = () => { modal.classList.remove("open"); document.body.style.overflow = ""; };
   $("#mContact").addEventListener("click", (e) => { const b = e.target.closest("button"); if (!b) return; $$("#mContact button").forEach((x) => x.classList.toggle("on", x === b)); });
-  document.addEventListener("click", (e) => { const b = e.target.closest("[data-book]"); if (b) { e.preventDefault(); document.body.classList.remove("mn-open"), $("#mnav").classList.remove("open"); openModal(b.dataset.svc, b.dataset.type); } });
+  document.addEventListener("click", (e) => { const b = e.target.closest("[data-book]"); if (b) { e.preventDefault(); document.body.classList.remove("mn-open"), $("#mnav").classList.remove("open"); openModal(b.dataset.svc, b.dataset.type, b.dataset.ask != null); } });
   $("#modalX").addEventListener("click", closeModal); $("#mClose2").addEventListener("click", closeModal);
   modal.addEventListener("click", (e) => { if (e.target === modal) closeModal(); });
   // иконка календаря открывает системный выбор даты

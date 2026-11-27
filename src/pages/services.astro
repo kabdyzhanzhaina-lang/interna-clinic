@@ -9,7 +9,7 @@ import services from '../data/services.json';
 import extra from '../data/services_extra.json';
 import prices from '../data/prices.json';
 import checkupsFile from '../data/checkups.json';
-import { img } from '../lib/site.js';
+import { img, priceRank } from '../lib/site.js';
 import { uslugiPrices } from '../lib/uslugi-prices.js';
 
 const total = Object.values(prices).reduce((a, v) => a + v.length, 0);
@@ -38,6 +38,7 @@ const groupDefs = [
   ['func', 'Функциональная диагностика', ['Функциональная диагностика'], ['Мониторинг глюкозы']],
   ['xray', 'Рентген диагностика', [], ['Рентген диагностика']],
   ['station', 'Стационар', ['Стационар'], ['Услуги стационара без учёта медикаментов']],
+  ['lab', 'Лабораторные анализы', [], ['Лабораторные анализы']],
   ['proc', 'Процедурный кабинет', ['Процедурный кабинет'], ['Услуги процедурного кабинета']],
   ['surg', 'Хирургические манипуляции', ['Хирургические манипуляции'], ['Хирургические манипуляции']],
   ['kids', 'Interna KIDS', ['Interna KIDS'], kidsSec],
@@ -47,11 +48,11 @@ const groups = groupDefs.map(([id, title, cats, pks]) => {
   if (id === 'checkup') return { id, title, count: cuProgs.length, rows: cuProgs.map((p) => ({ href: `/checkup#${p.id}`, t: `Check-up «${p.title}»`, d: p.sub || '', price: p.price })), href: '/checkup', word: cuProgs.length % 10 === 1 && cuProgs.length % 100 !== 11 ? 'программа' : [2, 3, 4].includes(cuProgs.length % 10) ? 'программы' : 'программ' };
   const items = all.filter((x) => cats.includes(x.cat));
   // порядок как в прайсе: по алфавиту, позиции без цены — в конце
-  const priceRows = pks.flatMap((k) => (prices[k] || []).map((r) => [...r, k])).slice().sort((x, y) => (/\d/.test(y[2]) - /\d/.test(x[2])) || x[0].localeCompare(y[0], 'ru', { sensitivity: 'base' }));
+  const priceRows = pks.flatMap((k) => (prices[k] || []).map((r) => [...r, k])).slice().sort((x, y) => (/\d/.test(y[2]) - /\d/.test(x[2])) || priceRank(x[0]) - priceRank(y[0]) || x[0].localeCompare(y[0], 'ru', { sensitivity: 'base' }));
   // добавляем позиции прайса, если в группе мало страниц услуг
   const fromPrice = items.length < 4 ? priceRows.filter((r, j) => /\d/.test(r[2]) && priceRows.findIndex((q) => q[0] === r[0]) === j && !items.some((i) => i.t.toLowerCase() === r[0].toLowerCase() || i.pr === r[0])).slice(0, 5 - items.length).map((r) => ({ href: `/prices#${encodeURIComponent(r[4])}`, t: r[0], d: '', price: r[2], cat: r[4] })) : [];
   // по алфавиту, как прайс (просьба клиники); check-up выше — по уровню программ
-  const rows = [...items, ...fromPrice].sort((x, y) => x.t.localeCompare(y.t, 'ru', { sensitivity: 'base' }));
+  const rows = [...items, ...fromPrice].sort((x, y) => priceRank(x.t) - priceRank(y.t) || x.t.localeCompare(y.t, 'ru', { sensitivity: 'base' }));
   return { id, title, count: priceRows.length || rows.length, rows, href: `/prices#${encodeURIComponent(pks[0])}` };
 }).filter((g) => g.rows.length);
 const plural = (n) => (n % 10 === 1 && n % 100 !== 11 ? 'услуга' : [2, 3, 4].includes(n % 10) && ![12, 13, 14].includes(n % 100) ? 'услуги' : 'услуг');

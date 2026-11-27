@@ -37,7 +37,7 @@ const topic = a.tag.split(' · ')[1] || 'Блог';
       <b>0%</b>
       <span class="track"><i></i></span>
       <button type="button" data-share aria-label="Поделиться"><span class="msr">share</span></button>
-      <button type="button" data-book aria-label="Записаться"><span class="msr">calendar_month</span></button>
+      <button type="button" data-book data-ask data-svc="Вопрос по статье" aria-label="Оставить вопрос"><span class="msr">chat_bubble</span></button>
     </aside>
     <article class="body abody rv">
       {a.video && <div class="acover" style="aspect-ratio:16/9;border-radius:20px;overflow:hidden;margin-bottom:32px"><iframe id="ytframe" data-video={a.video} src={`https://www.youtube-nocookie.com/embed/${a.video}`} title={a.t} loading="lazy" allowfullscreen style="width:100%;height:100%;border:0"></iframe></div>}
@@ -53,10 +53,10 @@ const topic = a.tag.split(' · ')[1] || 'Блог';
       })}
       {a.video && <p class="small" style="margin-top:28px;font-weight:600"><a class="btn btn-line sm" href={`https://www.youtube.com/watch?v=${a.video}`} target="_blank" rel="noopener">Смотреть на YouTube-канале клиники <span class="msr ai">open_in_new</span></a></p>}
       <div class="share"><span>Поделиться</span><a href="#" data-share>Скопировать ссылку</a><a href={`https://wa.me/?text=${encodeURIComponent(a.t)}`} target="_blank" rel="noopener">WhatsApp</a><a href={`https://t.me/share/url?url=&text=${encodeURIComponent(a.t)}`} target="_blank" rel="noopener" data-share-tg>Telegram</a></div>
-      {d && <div class="author"><span class="ph">{d.img && <img src={img(d.img)} alt="" />}</span><span><b>{d.n}</b><small>{d.r}</small></span><button class="btn btn-primary sm" data-book>Записаться</button></div>}
+      {d && <div class="author"><span class="ph">{d.img && <img src={img(d.img)} alt="" />}</span><span><b>{d.n}</b><small>{d.r}</small></span><button class="btn btn-primary sm" data-book data-ask data-svc="Вопрос по статье">Оставить вопрос</button></div>}
     </article>
     <aside class="side rv d2">
-      <div class="card" style="padding:22px;margin-top:28px"><p class="kicker" style="font-size:17px">Есть вопрос по теме?</p><p style="margin:0 0 14px;font-size:14px;color:var(--g600)">Оставьте заявку — администратор подтвердит время приёма.</p><button class="btn btn-primary sm" data-book style="width:100%">Записаться</button></div>
+      <div class="card" style="padding:22px;margin-top:28px"><p class="kicker" style="font-size:17px">Есть вопрос по теме?</p><p style="margin:0 0 14px;font-size:14px;color:var(--g600)">Оставьте вопрос — администратор свяжется с вами в рабочее время.</p><button class="btn btn-primary sm" data-book data-ask data-svc="Вопрос по статье" style="width:100%">Оставить вопрос</button></div>
       <div class="toc" style="margin-top:28px"><b style="font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--g600);display:block;margin-bottom:12px">Читайте также</b>{others.map((x) => <a href={`/article/${x.id}`} style="display:block;font-size:14px;color:var(--black);padding:10px 0;border-top:1px solid var(--g200)">{x.t}</a>)}</div>
     </aside>
   </div></div></section>
@@ -66,6 +66,6 @@ const topic = a.tag.split(' · ')[1] || 'Блог';
     <div class="rgrid">{others.map((x, i) => <a class={`item rv d${i + 1}`} href={`/article/${x.id}`}><span class="img"><img src={img(x.img)} alt="" loading="lazy" /></span><span class="mcat">{x.tag.split(' · ').reverse().join(' • ')}</span><b class="t">{x.t}</b></a>)}</div>
   </div></section>
 
-  <div class="stickycta" id="stickycta"><span><b>Записаться на приём</b><small>ответим в WhatsApp в рабочее время</small></span><button class="btn btn-primary sm" data-book>Записаться</button></div>
-  <Cta kicker="Вопрос врачу" title="Есть вопрос <em>к врачу</em>?" text="Задайте его на приёме — запишитесь онлайн или по телефону." />
+  <div class="stickycta" id="stickycta"><span><b>Есть вопрос по теме?</b><small>ответим в WhatsApp в рабочее время</small></span><button class="btn btn-primary sm" data-book data-ask data-svc="Вопрос по статье">Оставить вопрос</button></div>
+  <Cta kicker="Вопрос врачу" title="Есть вопрос <em>к врачу</em>?" text="Оставьте вопрос — администратор свяжется с вами в рабочее время." btn="Оставить вопрос" svc="Вопрос по статье" ask />
 </Base>

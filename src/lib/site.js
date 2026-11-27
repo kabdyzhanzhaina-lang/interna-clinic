@@ -22,6 +22,10 @@ export const NAV = [
   ['/patient', 'Пациенту'], ['/about', 'О клинике'], ['/media', 'Блог'],
 ];
 
+/** Позиции прайса, которые клиника просит показывать первыми в своём разделе (остальные — по алфавиту) */
+export const PRICE_FIRST = [/^Рентген лёгкие\/ ОГК/];
+export const priceRank = (name) => { const i = PRICE_FIRST.findIndex((re) => re.test(name)); return i < 0 ? PRICE_FIRST.length : i; };
+
 /** Акции: активны, пока не наступил день после даты `until` (YYYY-MM-DD); без даты — бессрочно */
 const GEN = ['января', 'февраля', 'марта', 'апреля', 'мая', 'июня', 'июля', 'августа', 'сентября', 'октября', 'ноября', 'декабря'];
 export const activePromos = (items) => { const today = new Date().toISOString().slice(0, 10); return (items || []).filter((p) => !p.hidden && (!p.until || p.until >= today)); };

@@ -70,5 +70,13 @@
  [
   "special_expert",
   "/uslugi/baloon"
+ ],
+ [
+  "hepatologist",
+  "/service/gastro"
+ ],
+ [
+  "uslugi/hepatologist",
+  "/service/gastro"
  ]
 ]

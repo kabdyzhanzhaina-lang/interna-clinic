@@ -11,7 +11,8 @@ import Faq from '../../components/Faq.astro';
 import Cta from '../../components/Cta.astro';
 import services from '../../data/services.json';
 import doctorsFile from '../../data/doctors.json';
-import { img, SITE } from '../../lib/site.js';
+import promosFile from '../../data/promos.json';
+import { img, SITE, activePromos, untilLabel } from '../../lib/site.js';
 const doctors = doctorsFile.items.filter((d) => !d.hidden);
 
 export function getStaticPaths() { return Object.keys(services).map((slug) => ({ params: { slug } })); }
@@ -26,7 +27,7 @@ const half = Math.ceil(rel.length / 2);
 const steps = s.steps.length > 4 ? [s.steps[0], s.steps[2], s.steps[3], s.steps[4]] : s.steps;
 const t = s.t.toLowerCase();
 // Падежи для заголовков: [зачем нужна…, кто проводит…, запишитесь на…]
-const w = { colonoscopy: ['Зачем нужна видеоколоноскопия', 'Кто проводит видеоколоноскопию', 'Запишитесь на видеоколоноскопию'], fgds: ['Зачем нужна ЭГДС', 'Кто проводит ЭГДС', 'Запишитесь на ЭГДС'], fibroscan: ['Зачем нужен фиброскан', 'Кто проводит фиброскан', 'Запишитесь на фиброскан'], ultrasound: ['Зачем нужно УЗИ', 'Кто проводит УЗИ', 'Запишитесь на УЗИ'], gastro: ['Зачем нужен приём гастроэнтеролога', 'Кто принимает', 'Запишитесь на приём'], endo: ['Зачем нужен приём эндокринолога', 'Кто принимает', 'Запишитесь на приём'] }[slug] || [`Зачем нужна ${t}`, 'Кто проводит', 'Запишитесь на приём'];
+const w = { colonoscopy: ['Зачем нужна видеоколоноскопия', 'Кто проводит видеоколоноскопию', 'Запишитесь на видеоколоноскопию'], fgds: ['Зачем нужна ЭГДС', 'Кто проводит ЭГДС', 'Запишитесь на ЭГДС'], fibroscan: ['Зачем нужен фиброскан', 'Кто проводит фиброскан', 'Запишитесь на фиброскан'], ultrasound: ['Зачем нужно УЗИ', 'Кто проводит УЗИ', 'Запишитесь на УЗИ'], gastro: ['Зачем нужен приём гастроэнтеролога-гепатолога', 'Кто принимает', 'Запишитесь на приём'], endo: ['Зачем нужен приём эндокринолога', 'Кто принимает', 'Запишитесь на приём'] }[slug] || [`Зачем нужна ${t}`, 'Кто проводит', 'Запишитесь на приём'];
 const jsonld = { '@context': 'https://schema.org', '@type': 'MedicalProcedure', name: s.t, description: s.sub, offers: s.prices.map((p) => ({ '@type': 'Offer', name: p[0], price: p[2].replace(/[^\d]/g, ''), priceCurrency: 'KZT' })) };
 const whyP = s.why.split(/(?<=\.)\s+(?=[А-ЯA-Z])/);
 const specs = s.equip.specs || [];
@@ -34,6 +35,9 @@ const specs = s.equip.specs || [];
 const prep = s.prep;
 // Связанные услуги (макет Related): три карточки по полю related
 const related = (s.related || []).map((k) => [k, services[k]]).filter(([, x]) => x).slice(0, 3);
+// Акция, в которую входит услуга: карточка рядом с ценами (комбо «ЭГДС + видеоколоноскопия» — на обеих страницах)
+const promoKey = { colonoscopy: /колоноскоп/i, fgds: /ЭГДС/ }[slug];
+const promo = promoKey && activePromos(promosFile.items).find((p) => promoKey.test(p.t));
 const catShort = { 'Эндоскопия': 'Эндоскопия', 'Диагностика': 'Диагностика', 'Приём': 'Консультации' };
 ---
 <Base og="services" title={`${s.h1} — цена, запись | Interna Clinic`} description={s.sub} active="services" jsonld={jsonld}>
@@ -80,11 +84,13 @@ const catShort = { 'Эндоскопия': 'Эндоскопия', 'Диагно
   </div></section>
 
   <section id="price" style="padding:80px 0 96px"><div class="shell"><div class="lay g60">
-    <div class="pcard w560 rv"><p class="kicker">Стоимость</p>
+    <div class="pcol w560"><div class="pcard rv"><p class="kicker">Стоимость</p>
       {s.prices.map((p) => <div class="r"><span>{p[0]}{p[1] && <small> · {p[1]}</small>}</span><span>{p[2]}</span></div>)}
       {/* priceCat — раздел прайса этой услуги: ссылка на все позиции раздела */}
       {s.priceCat && <a class="link blue" style="margin-top:16px" href={`/prices#${encodeURIComponent(s.priceCat)}`}>Все цены раздела «{s.priceCat}»<span class="msr" aria-hidden="true">arrow_forward</span></a>}
       <div class="b"><button class="btn btn-primary" data-book data-svc={s.t}>Записаться на приём</button><a class="btn btn-wa" href="#" data-wa={`Здравствуйте! Хочу записаться: ${s.t}.`}><span class="msr">chat</span>Спросить в WhatsApp</a></div>
+    </div>
+      {promo && <div class="dkcard rv d2"><p class="kicker">{untilLabel(promo)}</p><b>{promo.t}</b><p>{promo.d}</p><div class="pp"><span class="new">{promo.p}</span>{promo.old && <s>{promo.old}</s>}<span class="off">{promo.off}</span></div><a class="link w" href="/promo">Подробнее об акции <span class="msr">arrow_forward</span></a></div>}
     </div>
     <div class="main" id="faq"><Faq items={s.faq} /></div>
   </div></div></section>

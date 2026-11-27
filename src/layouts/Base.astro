@@ -19,7 +19,7 @@ const org = {
   '@context': 'https://schema.org', '@type': 'MedicalClinic', name: SITE.name, url: Astro.site?.href,
   telephone: SITE.phone, email: SITE.email,
   address: { '@type': 'PostalAddress', streetAddress: 'ул. Богенбай батыра, 248', addressLocality: 'Алматы', addressCountry: 'KZ' },
-  openingHours: ['Mo-Fr 08:00-22:00', 'Sa-Su 09:00-17:00'],
+  openingHours: ['Mo-Fr 08:00-20:00', 'Sa-Su 09:00-17:00'],
 };
 ---
 <!doctype html>
@@ -84,7 +84,7 @@ const org = {
             {isKk ? <a class="lang" href={ruPath} hreflang="ru" data-lang-switch>RU</a> : <a class="lang" href={`/kk${ruPath === '/' ? '/' : ruPath}`} hreflang="kk" data-lang-switch>KZ</a>}
             <a class="hcall" href={SITE.phoneHref} aria-label="Позвонить"><span class="msr">call</span></a>
             <button class="hsearch" id="hsearch" aria-label="Поиск по сайту" title="Поиск"><span class="msr">search</span></button>
-            <a class="hdr-phone" href={SITE.phoneHref}><b>{SITE.phone}</b><span class="hinfo" data-today data-wd="22:00" data-we="17:00">Алматы · сегодня до 22:00</span></a>
+            <a class="hdr-phone" href={SITE.phoneHref}><b>{SITE.phone}</b><span class="hinfo" data-today data-wd="20:00" data-we="17:00">Алматы · сегодня до 20:00</span></a>
             <button class="btn btn-primary" data-book>Записаться на приём</button>
             <button class="burger" id="burger" aria-label="Меню"><span class="msr">menu</span></button>
           </div>
@@ -194,7 +194,7 @@ const org = {
             <div class="sel"><select id="mSvc">{Object.values(services).map((s) => <option>{s.t}</option>)}<option>Check-up</option><option>Детский приём (KIDS)</option><option>Не знаю, нужна консультация</option></select><span class="msr" aria-hidden="true">keyboard_arrow_down</span></div></div>
           <div class="mrow">
             <div class="field"><label for="mDate">Дата</label><div class="sel"><input id="mDate" type="date" /><span class="msr" aria-hidden="true">calendar_month</span></div></div>
-            <div class="field"><label for="mTime">Время</label><div class="sel"><select id="mTime"><option>Утро · 08:00–12:00</option><option>День · 12:00–17:00</option><option>Вечер · 17:00–22:00</option><option>Любое время</option></select><span class="msr" aria-hidden="true">keyboard_arrow_down</span></div></div>
+            <div class="field"><label for="mTime">Время</label><div class="sel"><select id="mTime"><option>Утро · 08:00–12:00</option><option>День · 12:00–17:00</option><option>Вечер · 17:00–20:00</option><option>Любое время</option></select><span class="msr" aria-hidden="true">keyboard_arrow_down</span></div></div>
           </div>
           <div class="field"><span class="lbl">Как связаться</span>
             <div class="mpick" id="mContact"><button type="button" class="on">WhatsApp</button><button type="button">Звонок</button></div></div>

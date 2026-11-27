@@ -7,7 +7,7 @@ import Cta from '../components/Cta.astro';
 import { SITE, img } from '../lib/site.js';
 const rows = [
   ['location_on', 'Богенбай батыра, 248', 'Алматы'],
-  ['schedule', 'Пн–Пт 08:00–22:00', 'Сб–Вс 09:00–17:00 · приём по записи'],
+  ['schedule', 'Пн–Пт 08:00–20:00', 'Сб–Вс 09:00–17:00 · приём по записи'],
   ['call', SITE.phone, 'Звонок'],
   ['mail', SITE.email, 'Документы, партнёры, корпоративные запросы'],
 ];
@@ -17,7 +17,7 @@ const ways = [
   ['chat', 'Вопросы по маршруту', 'Напишите администратору в WhatsApp — подскажем, как доехать.'],
   ['location_on', 'Маршрут в 2ГИС', 'Откройте адрес в 2ГИС и постройте маршрут на машине, транспорте или пешком.'],
 ];
-const jsonld = { '@context': 'https://schema.org', '@type': 'MedicalClinic', name: 'Interna Clinic', telephone: SITE.phone, email: SITE.email, address: { '@type': 'PostalAddress', streetAddress: 'ул. Богенбай батыра, 248', addressLocality: 'Алматы', addressCountry: 'KZ' }, openingHours: ['Mo-Fr 08:00-22:00', 'Sa-Su 09:00-17:00'] };
+const jsonld = { '@context': 'https://schema.org', '@type': 'MedicalClinic', name: 'Interna Clinic', telephone: SITE.phone, email: SITE.email, address: { '@type': 'PostalAddress', streetAddress: 'ул. Богенбай батыра, 248', addressLocality: 'Алматы', addressCountry: 'KZ' }, openingHours: ['Mo-Fr 08:00-20:00', 'Sa-Su 09:00-17:00'] };
 ---
 <Base og="contacts" title="Контакты — Interna Clinic, Алматы, Богенбай батыра 248" description="Адрес, телефон, WhatsApp и часы работы клиники Interna Clinic. Работаем без выходных." active="contacts" jsonld={jsonld}>
   <PageHero crumbs={[['Контакты']]} title="Контакты" sub="Работаем без выходных, приём по записи." />

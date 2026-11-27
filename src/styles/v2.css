@@ -1654,3 +1654,6 @@ body:has(#cuPick) :is(#how,#dirs,#reviews,#faq){padding-top:64px!important}
 .docrow.zav{padding-top:0}
 @media(max-width:800px){.stcmp{grid-template-columns:1fr}.stcard{padding:24px}.stcard b.h{font-size:22px}}
 @media(max-width:560px){.stcard dl>div{grid-template-columns:1fr;gap:4px}.stcard .btn{align-self:stretch;justify-content:center}}
+/* Цены услуги + карточка акции под ними */
+.pcol{display:flex;flex-direction:column;gap:24px}.pcol.w560{width:560px;flex:none}
+@media(max-width:1000px){.pcol.w560{width:100%}}

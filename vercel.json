@@ -35,106 +35,6 @@
   ],
   "redirects": [
     {
-      "source": "/uslugi/esg",
-      "destination": "/services/",
-      "statusCode": 301
-    },
-    {
-      "source": "/uslugi/esg/",
-      "destination": "/services/",
-      "statusCode": 301
-    },
-    {
-      "source": "/kk/uslugi/esg",
-      "destination": "/kk/services/",
-      "statusCode": 301
-    },
-    {
-      "source": "/kk/uslugi/esg/",
-      "destination": "/kk/services/",
-      "statusCode": 301
-    },
-    {
-      "source": "/uslugi/sudoscan",
-      "destination": "/services/",
-      "statusCode": 301
-    },
-    {
-      "source": "/uslugi/sudoscan/",
-      "destination": "/services/",
-      "statusCode": 301
-    },
-    {
-      "source": "/kk/uslugi/sudoscan",
-      "destination": "/kk/services/",
-      "statusCode": 301
-    },
-    {
-      "source": "/kk/uslugi/sudoscan/",
-      "destination": "/kk/services/",
-      "statusCode": 301
-    },
-    {
-      "source": "/kk/uslugi/coloproctologist",
-      "destination": "/kk/services/",
-      "statusCode": 301
-    },
-    {
-      "source": "/kk/uslugi/coloproctologist/",
-      "destination": "/kk/services/",
-      "statusCode": 301
-    },
-    {
-      "source": "/kk/doctor/gainutdin",
-      "destination": "/kk/doctors/",
-      "statusCode": 301
-    },
-    {
-      "source": "/kk/doctor/gainutdin/",
-      "destination": "/kk/doctors/",
-      "statusCode": 301
-    },
-    {
-      "source": "/kk/doctor/kasteeva-aiim-shalkarkizi",
-      "destination": "/kk/doctors/",
-      "statusCode": 301
-    },
-    {
-      "source": "/kk/doctor/kasteeva-aiim-shalkarkizi/",
-      "destination": "/kk/doctors/",
-      "statusCode": 301
-    },
-    {
-      "source": "/uslugi/coloproctologist",
-      "destination": "/services/",
-      "statusCode": 301
-    },
-    {
-      "source": "/uslugi/coloproctologist/",
-      "destination": "/services/",
-      "statusCode": 301
-    },
-    {
-      "source": "/doctor/gainutdin",
-      "destination": "/doctors/",
-      "statusCode": 301
-    },
-    {
-      "source": "/doctor/gainutdin/",
-      "destination": "/doctors/",
-      "statusCode": 301
-    },
-    {
-      "source": "/doctor/kasteeva-aiim-shalkarkizi",
-      "destination": "/doctors/",
-      "statusCode": 301
-    },
-    {
-      "source": "/doctor/kasteeva-aiim-shalkarkizi/",
-      "destination": "/doctors/",
-      "statusCode": 301
-    },
-    {
       "source": "/:path*",
       "has": [
         {
@@ -316,6 +216,26 @@
       "statusCode": 301
     },
     {
+      "source": "/hepatologist",
+      "destination": "/service/gastro/",
+      "statusCode": 301
+    },
+    {
+      "source": "/hepatologist/",
+      "destination": "/service/gastro/",
+      "statusCode": 301
+    },
+    {
+      "source": "/uslugi/hepatologist",
+      "destination": "/service/gastro/",
+      "statusCode": 301
+    },
+    {
+      "source": "/uslugi/hepatologist/",
+      "destination": "/service/gastro/",
+      "statusCode": 301
+    },
+    {
       "source": "/sedation",
       "destination": "/uslugi/sedation/",
       "statusCode": 301
@@ -323,16 +243,6 @@
     {
       "source": "/sedation/",
       "destination": "/uslugi/sedation/",
-      "statusCode": 301
-    },
-    {
-      "source": "/hepatologist",
-      "destination": "/uslugi/hepatologist/",
-      "statusCode": 301
-    },
-    {
-      "source": "/hepatologist/",
-      "destination": "/uslugi/hepatologist/",
       "statusCode": 301
     },
     {
@@ -536,16 +446,6 @@
       "statusCode": 301
     },
     {
-      "source": "/coloproctologist",
-      "destination": "/services/",
-      "statusCode": 301
-    },
-    {
-      "source": "/coloproctologist/",
-      "destination": "/services/",
-      "statusCode": 301
-    },
-    {
       "source": "/inbody",
       "destination": "/uslugi/inbody/",
       "statusCode": 301
@@ -553,16 +453,6 @@
     {
       "source": "/inbody/",
       "destination": "/uslugi/inbody/",
-      "statusCode": 301
-    },
-    {
-      "source": "/sudoscan",
-      "destination": "/services/",
-      "statusCode": 301
-    },
-    {
-      "source": "/sudoscan/",
-      "destination": "/services/",
       "statusCode": 301
     },
     {
@@ -623,16 +513,6 @@
     {
       "source": "/ph-metr/",
       "destination": "/uslugi/ph-metr/",
-      "statusCode": 301
-    },
-    {
-      "source": "/esg",
-      "destination": "/services/",
-      "statusCode": 301
-    },
-    {
-      "source": "/esg/",
-      "destination": "/services/",
       "statusCode": 301
     },
     {
@@ -826,16 +706,6 @@
       "statusCode": 301
     },
     {
-      "source": "/kids/tproduct/1072600311-277639453794-detskii-revmatolog-v-interna-kids-s-5-le",
-      "destination": "/kids/detskii-revmatolog/",
-      "statusCode": 301
-    },
-    {
-      "source": "/kids/tproduct/1072600311-277639453794-detskii-revmatolog-v-interna-kids-s-5-le/",
-      "destination": "/kids/detskii-revmatolog/",
-      "statusCode": 301
-    },
-    {
       "source": "/kids/tproduct/1072600311-376604238864-detskii-gematolog-v-interna-kids",
       "destination": "/kids/detskii-gematolog/",
       "statusCode": 301
@@ -883,16 +753,6 @@
     {
       "source": "/kids/tproduct/1072600311-349445828784-detskii-fibroskan-v-interna-kids/",
       "destination": "/kids/detskii-fibroskan/",
-      "statusCode": 301
-    },
-    {
-      "source": "/kids/tproduct/1072600311-450119260664-detskii-nefrolog-v-interna-kids",
-      "destination": "/kids/detskii-nefrolog/",
-      "statusCode": 301
-    },
-    {
-      "source": "/kids/tproduct/1072600311-450119260664-detskii-nefrolog-v-interna-kids/",
-      "destination": "/kids/detskii-nefrolog/",
       "statusCode": 301
     },
     {
@@ -1323,106 +1183,6 @@
     {
       "source": "/interna_cal_team/",
       "destination": "/doctors/",
-      "statusCode": 301
-    },
-    {
-      "source": "/doctor/maikenova",
-      "destination": "/doctors/",
-      "statusCode": 301
-    },
-    {
-      "source": "/doctor/maikenova/",
-      "destination": "/doctors/",
-      "statusCode": 301
-    },
-    {
-      "source": "/kk/doctor/maikenova",
-      "destination": "/kk/doctors/",
-      "statusCode": 301
-    },
-    {
-      "source": "/kk/doctor/maikenova/",
-      "destination": "/kk/doctors/",
-      "statusCode": 301
-    },
-    {
-      "source": "/doctor/baiekeeva",
-      "destination": "/doctors/",
-      "statusCode": 301
-    },
-    {
-      "source": "/doctor/baiekeeva/",
-      "destination": "/doctors/",
-      "statusCode": 301
-    },
-    {
-      "source": "/kk/doctor/baiekeeva",
-      "destination": "/kk/doctors/",
-      "statusCode": 301
-    },
-    {
-      "source": "/kk/doctor/baiekeeva/",
-      "destination": "/kk/doctors/",
-      "statusCode": 301
-    },
-    {
-      "source": "/doctor/duisenova",
-      "destination": "/doctors/",
-      "statusCode": 301
-    },
-    {
-      "source": "/doctor/duisenova/",
-      "destination": "/doctors/",
-      "statusCode": 301
-    },
-    {
-      "source": "/kk/doctor/duisenova",
-      "destination": "/kk/doctors/",
-      "statusCode": 301
-    },
-    {
-      "source": "/kk/doctor/duisenova/",
-      "destination": "/kk/doctors/",
-      "statusCode": 301
-    },
-    {
-      "source": "/kids/detskii-revmatolog",
-      "destination": "/kids/",
-      "statusCode": 301
-    },
-    {
-      "source": "/kids/detskii-revmatolog/",
-      "destination": "/kids/",
-      "statusCode": 301
-    },
-    {
-      "source": "/kk/kids/detskii-revmatolog",
-      "destination": "/kk/kids/",
-      "statusCode": 301
-    },
-    {
-      "source": "/kk/kids/detskii-revmatolog/",
-      "destination": "/kk/kids/",
-      "statusCode": 301
-    },
-    {
-      "source": "/kids/detskii-nefrolog",
-      "destination": "/kids/",
-      "statusCode": 301
-    },
-    {
-      "source": "/kids/detskii-nefrolog/",
-      "destination": "/kids/",
-      "statusCode": 301
-    },
-    {
-      "source": "/kk/kids/detskii-nefrolog",
-      "destination": "/kk/kids/",
-      "statusCode": 301
-    },
-    {
-      "source": "/kk/kids/detskii-nefrolog/",
-      "destination": "/kk/kids/",
       "statusCode": 301
     }
   ]

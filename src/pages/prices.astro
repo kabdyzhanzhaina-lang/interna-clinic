@@ -5,10 +5,10 @@ import PageHero from '../components/PageHero.astro';
 import Cta from '../components/Cta.astro';
 import prices from '../data/prices.json';
 import promos from '../data/promos.json';
-import { activePromos, untilLabel } from '../lib/site.js';
+import { activePromos, untilLabel, priceRank } from '../lib/site.js';
 const cats = Object.keys(prices);
-// Разделы — как в прайсе клиники (Google-таблица), позиции внутри раздела — по алфавиту; строки «по запросу» — в конце раздела
-const byName = (a, b) => { const qa = /по запросу/i.test(a[2]), qb = /по запросу/i.test(b[2]); if (qa !== qb) return qa ? 1 : -1; return a[0].localeCompare(b[0], 'ru', { sensitivity: 'base' }); };
+// Разделы — как в прайсе клиники (Google-таблица), позиции внутри раздела — по алфавиту (кроме PRICE_FIRST — первыми); строки «по запросу» — в конце раздела
+const byName = (a, b) => { const pr = priceRank(a[0]) - priceRank(b[0]); if (pr) return pr; const qa = /по запросу/i.test(a[2]), qb = /по запросу/i.test(b[2]); if (qa !== qb) return qa ? 1 : -1; return a[0].localeCompare(b[0], 'ru', { sensitivity: 'base' }); };
 cats.forEach((k) => { prices[k] = prices[k].slice().sort(byName); });
 const total = Object.values(prices).reduce((a, v) => a + v.length, 0);
 // Чипы: основные направления, остальные разделы прайса — под «Другие»; разделы на странице — как в документе
@@ -44,7 +44,7 @@ const pay = [['verified', 'Актуальные цены', 'Прайс клин�
         {pay.map(([ic, b, t]) => <div class="payrow"><span class="msr">{ic}</span><span class="i"><b>{b}</b><small>{t}</small></span></div>)}
         <div class="b"><button class="btn btn-primary" data-book>Записаться</button></div>
       </div>
-      {promo && <div class="dkcard rv d2"><p class="kicker">{untilLabel(promo).replace(/^До/, 'Акция до')}</p><b>{promo.t}</b><p>{promo.d}</p><div class="pp"><span class="new">{promo.p}</span><s>{promo.old}</s><span class="off">{promo.off}</span></div><a class="link w" href={promo.link}>Подробнее <span class="msr">arrow_forward</span></a></div>}
+      {promo && <div class="dkcard rv d2"><p class="kicker">{untilLabel(promo).replace(/^До/, 'Акция до')}</p><b>{promo.t}</b><p>{promo.d}</p><div class="pp"><span class="new">{promo.p}</span><s>{promo.old}</s><span class="off">{promo.off}</span></div><a class="link w" href="/promo">Подробнее <span class="msr">arrow_forward</span></a></div>}
       <button type="button" class="srow sm dl rv d3" data-print><span class="msr ai">download</span><span class="i"><b>Полный прайс-лист PDF</b><small>{total} позиций, {cats.length} разделов · распечатать или сохранить</small></span><span class="msr ai">arrow_outward</span></button>
     </aside>
   </div></div></section>
